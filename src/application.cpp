@@ -19,7 +19,7 @@
 #include "application.h"
 #include "model.h"
 
-Application::Application(int width, int height, const char *title) : title(title) { }
+Application::Application(int width, int height, const char *title) : width(width), height(height), title(title) { }
 
 void Application::info() {
     printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -39,7 +39,7 @@ void Application::init() {
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
+    window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!window){
         glfwTerminate();
         exit(EXIT_FAILURE);
@@ -70,22 +70,36 @@ void Application::init() {
 }
 
 void Application::run() {
-    float points[] = {
+    float points1[] = {
             0.0f, 0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
             -0.5f, -0.5f, 0.0f
     };
+    Model m1 = Model(std::vector<float>(points1, points1 + sizeof(points1) / sizeof(float)));
 
-    // points to vector
-    std::vector<float> v(points, points + sizeof(points) / sizeof(float));
+    float points2[] = {
+            -0.0f, 0.5f, 0.0f,
+            -1.0f, 0.5f, 0.0f,
+            -0.5f, -0.5f, 0.0f
+    };
+    Model m2 = Model(std::vector<float>(points2, points2 + sizeof(points2) / sizeof(float)));
 
-    Model m = Model(v);
+    float points3[] = {
+            0.0f, 0.5f, 0.0f,
+            1.0f, 0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f
+    };
+    Model m3 = Model(std::vector<float>(points3, points3 + sizeof(points3) / sizeof(float)));
 
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader_programs.LoadShader("default");
-        m.draw();
+        m1.draw();
+        shader_programs.LoadShader("default_blue");
+        m2.draw();
+        shader_programs.LoadShader("default_red");
+        m3.draw();
 
         // update other events like input handling
         glfwPollEvents();

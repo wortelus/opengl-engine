@@ -26,7 +26,7 @@ void Shader::load() {
 void Shader::unload() {
     //TODO: unload
     if (!active) return;
-
+    glUseProgram(0);
     active = false;
 }
 

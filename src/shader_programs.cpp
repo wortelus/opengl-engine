@@ -13,6 +13,7 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include <algorithm>
 
 #include "shader_programs.h"
 
@@ -32,6 +33,20 @@ const char* default_fragment_shader =
         "     frag_colour = vec4 (0.5, 0.0, 0.5, 1.0);"
         "}";
 
+const char* blue_fragment_shader =
+        "#version 330\n"
+        "out vec4 frag_colour;"
+        "void main () {"
+        "     frag_colour = vec4 (0.0, 1.0, 0.5, 1.0);"
+        "}";
+
+const char* red_fragment_shader =
+        "#version 330\n"
+        "out vec4 frag_colour;"
+        "void main () {"
+        "     frag_colour = vec4 (1.0, 0.5, 0.0, 1.0);"
+        "}";
+
 
 void ShaderPrograms::LoadStaticShaders() {
 //    shaders["default_vertex_shader"] = std::make_unique<Shader>(ShaderType::VertexShader, default_vertex_shader);
@@ -39,11 +54,18 @@ void ShaderPrograms::LoadStaticShaders() {
 
     shaders["default"] = std::make_unique<Shader>(ShaderCode{ShaderType::VertexShader, default_vertex_shader},
                                                   ShaderCode{ShaderType::FragmentShader, default_fragment_shader});
+    shaders["default_blue"] = std::make_unique<Shader>(ShaderCode{ShaderType::VertexShader, default_vertex_shader},
+                                                       ShaderCode{ShaderType::FragmentShader, blue_fragment_shader});
+    shaders["default_red"] = std::make_unique<Shader>(ShaderCode{ShaderType::VertexShader, default_vertex_shader},
+                                                        ShaderCode{ShaderType::FragmentShader, red_fragment_shader});
 }
 
 void ShaderPrograms::LoadShader(const std::string &name) {
     if (shaders.find(name) == shaders.end()) return;
     // TODO: logging system
+    std::for_each(shaders.begin(), shaders.end(), [](auto& shader) {
+        shader.second->unload();
+    });
 
     shaders[name]->load();
 }
