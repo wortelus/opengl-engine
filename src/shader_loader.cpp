@@ -15,7 +15,7 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 #include <algorithm>
 
-#include "shader_programs.h"
+#include "shader_loader.h"
 
 const char* default_vertex_shader =
         "#version 330\n"
@@ -48,7 +48,7 @@ const char* red_fragment_shader =
         "}";
 
 
-void ShaderPrograms::LoadStaticShaders() {
+void ShaderLoader::LoadStaticShaders() {
 //    shaders["default_vertex_shader"] = std::make_unique<Shader>(ShaderType::VertexShader, default_vertex_shader);
 //    shaders["default_fragment_shader"] = std::make_unique<Shader>(ShaderType::FragmentShader, default_fragment_shader);
 
@@ -60,7 +60,7 @@ void ShaderPrograms::LoadStaticShaders() {
                                                         ShaderCode{ShaderType::FragmentShader, red_fragment_shader});
 }
 
-void ShaderPrograms::LoadShader(const std::string &name) {
+void ShaderLoader::LoadShader(const std::string &name) {
     if (shaders.find(name) == shaders.end()) return;
     // TODO: logging system
     std::for_each(shaders.begin(), shaders.end(), [](auto& shader) {

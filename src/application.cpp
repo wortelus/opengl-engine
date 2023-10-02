@@ -66,7 +66,7 @@ void Application::init() {
     glLoadIdentity();
     glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 
-    shader_programs.LoadStaticShaders();
+    shaderLoader.LoadStaticShaders();
 }
 
 void Application::run() {
@@ -94,11 +94,12 @@ void Application::run() {
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        shader_programs.LoadShader("default");
+        shaderLoader.LoadShader("default");
         m1.draw();
-        shader_programs.LoadShader("default_blue");
+        shaderLoader.LoadShader("default_blue");
         m2.draw();
-        shader_programs.LoadShader("default_red");
+        shaderLoader.LoadShader("default_red");
+        m3.TestTransform();
         m3.draw();
 
         // update other events like input handling

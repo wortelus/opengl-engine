@@ -22,6 +22,7 @@
 #include "observer.h"
 
 class Model {
+protected:
     std::vector<IObserver*> observers;
 
     GLuint vao = 0;
@@ -33,10 +34,12 @@ class Model {
     std::string fragment_shader_name;
 
 public:
+    Model() = default;
     Model(std::vector<float> vertices);
     ~Model();
 
     void draw() const;
+    void TestTransform();
 };
 
 

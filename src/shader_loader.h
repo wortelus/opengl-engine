@@ -2,8 +2,8 @@
 // Created by wortelus on 29.9.23.
 //
 
-#ifndef ZPG_SHADER_PROGRAMS_H
-#define ZPG_SHADER_PROGRAMS_H
+#ifndef ZPG_SHADER_LOADER_H
+#define ZPG_SHADER_LOADER_H
 
 //Include GLEW
 #include <GL/glew.h>
@@ -23,7 +23,7 @@
 #include "shader.h"
 
 
-class ShaderPrograms {
+class ShaderLoader {
 private:
     std::unique_ptr<GLuint> shaderProgram;
     std::unordered_map<std::string, std::unique_ptr<Shader>> shaders;
@@ -36,4 +36,4 @@ public:
 };
 
 
-#endif //ZPG_SHADER_PROGRAMS_H
+#endif //ZPG_SHADER_LOADER_H

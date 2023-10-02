@@ -31,7 +31,8 @@ Model::Model(std::vector<float> vertices) : vao(0), vbo(0) {
     glBindVertexArray(this->vao); //bind the VAO
     glEnableVertexAttribArray(0); //enable vertex attributes
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(0, static_cast<GLsizei>(this->vertices_count / 3),
+                          GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
 void Model::draw() const {
@@ -42,4 +43,8 @@ void Model::draw() const {
 Model::~Model() {
     glDeleteBuffers(1, &this->vbo);
     glDeleteVertexArrays(1, &this->vao);
+}
+
+void Model::TestTransform() {
+    // try to move the object
 }

@@ -22,12 +22,12 @@
 #include <string>
 
 #include "shader.h"
-#include "shader_programs.h"
+#include "shader_loader.h"
 
 class Application {
 private:
     GLFWwindow* window;
-    ShaderPrograms shader_programs;
+    ShaderLoader shaderLoader;
 
     const char* title;
 
