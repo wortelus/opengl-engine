@@ -13,6 +13,16 @@ include_directories(${GLEW_INCLUDE_DIRS})
 
 link_libraries(${GLEW_LIBRARIES})
 
-add_executable(zpg src/main.cpp src/application.cpp src/application.h src/model.cpp src/model.h src/shader_loader.cpp src/shader_loader.h src/shader.cpp src/shader.h src/observer.h src/drawable.cpp src/drawable.h src/transform.cpp src/transform.h src/transform_composite.h src/event_args.h src/transform_composite.cpp src/scene.cpp src/scene.h)
-#add_executable(zpg src/old_main.cpp)
+add_executable(zpg src/main.cpp
+        src/application.h src/application.cpp
+        src/event_args.h
+        src/observer.h
+        src/model.h src/model.cpp
+        src/shader_loader.h src/shader_loader.cpp
+        src/shader.h src/shader.cpp
+        src/drawable.h src/drawable.cpp
+        src/transform.h src/transform.cpp
+        src/transform_composite.h src/transform_composite.cpp
+        src/scene.h src/scene.cpp)
+
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)
