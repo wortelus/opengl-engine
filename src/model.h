@@ -35,11 +35,10 @@ protected:
 
 public:
     Model() = default;
-    Model(std::vector<float> vertices);
+    explicit Model(std::vector<float> vertices);
     ~Model();
 
-    void draw() const;
-    void TestTransform();
+    void Draw() const;
 };
 
 

@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
 
 //Include GLEW
 #include <GL/glew.h>
@@ -55,6 +55,8 @@ void Application::init() {
     ratio = static_cast<float>(width) / static_cast<float>(height);
     glViewport(0, 0, width, height);
 
+    glfwSetWindowUserPointer(window, this);
+
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, cursor_callback);
     glfwSetMouseButtonCallback(window, button_callback);
@@ -66,47 +68,13 @@ void Application::init() {
     glLoadIdentity();
     glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 
-    shaderLoader.LoadStaticShaders();
+    scene = new Scene(*window);
+    scene->Init();
 }
 
 void Application::run() {
-    float points1[] = {
-            0.0f, 0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f
-    };
-    Model m1 = Model(std::vector<float>(points1, points1 + sizeof(points1) / sizeof(float)));
-
-    float points2[] = {
-            -0.0f, 0.5f, 0.0f,
-            -1.0f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f
-    };
-    Model m2 = Model(std::vector<float>(points2, points2 + sizeof(points2) / sizeof(float)));
-
-    float points3[] = {
-            0.0f, 0.5f, 0.0f,
-            1.0f, 0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f
-    };
-    Model m3 = Model(std::vector<float>(points3, points3 + sizeof(points3) / sizeof(float)));
-
-    while (!glfwWindowShouldClose(window)) {
-        // clear color and depth buffer
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        shaderLoader.LoadShader("default");
-        m1.draw();
-        shaderLoader.LoadShader("default_blue");
-        m2.draw();
-        shaderLoader.LoadShader("default_red");
-        m3.TestTransform();
-        m3.draw();
-
-        // update other events like input handling
-        glfwPollEvents();
-        // put the stuff we've been drawing onto the display
-        glfwSwapBuffers(window);
-    }
+    scene->CreateObjects();
+    scene->Run();
     glfwDestroyWindow(window);
 
     glfwTerminate();
@@ -120,10 +88,19 @@ void Application::error_callback(int error, const char* description)
 
 void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+
+    // Call a member function to handle the key event
+    app->handle_key_event(key, scancode, action, mods);
+}
+
+void Application::handle_key_event(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-    printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
+    if (action == GLFW_PRESS)
+        scene->HandleKeyEvent(key, scancode, action, mods);
 }
+
 
 void Application::window_focus_callback(GLFWwindow* window, int focused)
 {
@@ -152,5 +129,5 @@ void Application::button_callback(GLFWwindow* window, int button, int action, in
 }
 
 Application::~Application() {
-
+    delete &scene;
 }

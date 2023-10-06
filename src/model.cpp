@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
 
 //Include GLEW
 #include <GL/glew.h>
@@ -19,32 +19,35 @@
 
 Model::Model(std::vector<float> vertices) : vao(0), vbo(0) {
 
-    this->vertices_count = static_cast<GLsizei>(vertices.size());
+    this->vertices_count = static_cast<GLsizei>(vertices.size() / 4 / 2);
 
     glGenBuffers(1, &this->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 static_cast<GLsizei>(this->vertices_count * sizeof(float)), &vertices[0],
+                 static_cast<GLsizei>(this->vertices_count * 8 * sizeof(float)), &vertices[0],
                  GL_STATIC_DRAW);
 
     glGenVertexArrays(1, &this->vao); //generate the VAO
     glBindVertexArray(this->vao); //bind the VAO
-    glEnableVertexAttribArray(0); //enable vertex attributes
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    glVertexAttribPointer(0, static_cast<GLsizei>(this->vertices_count / 3),
-                          GL_FLOAT, GL_FALSE, 0, NULL);
+
+    // using the following lines we will tell the GPU how to read the data
+    // vertex positions ->
+    glEnableVertexAttribArray(0); //enable vertex attributes
+    glVertexAttribPointer(0, 4,
+                          GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    // vertex colors ->
+    glEnableVertexAttribArray(1); //enable vertex attributes
+    glVertexAttribPointer(1, 4,
+                          GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
 }
 
-void Model::draw() const {
+void Model::Draw() const {
     glBindVertexArray(this->vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3); //TODO: not 3?
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, this->vertices_count);
 }
 
 Model::~Model() {
     glDeleteBuffers(1, &this->vbo);
     glDeleteVertexArrays(1, &this->vao);
-}
-
-void Model::TestTransform() {
-    // try to move the object
 }

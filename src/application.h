@@ -1,6 +1,7 @@
-//
-// Created by wortelus on 29.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
+
 
 #ifndef ZPG_APPLICATION_H
 #define ZPG_APPLICATION_H
@@ -23,11 +24,14 @@
 
 #include "shader.h"
 #include "shader_loader.h"
+#include "drawable.h"
+#include "scene.h"
 
 class Application {
 private:
     GLFWwindow* window;
-    ShaderLoader shaderLoader;
+
+    Scene* scene;
 
     const char* title;
 
@@ -41,6 +45,8 @@ public:
     void init();
     static void info();
     void run();
+
+    void handle_key_event(int key, int scancode, int action, int mods);
 
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

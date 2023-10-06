@@ -30,7 +30,7 @@ void Shader::unload() {
     active = false;
 }
 
-Shader::Shader(ShaderCode vertex_shader_code, ShaderCode fragment_shader_code) {
+Shader::Shader(const std::string& name, ShaderCode vertex_shader_code, ShaderCode fragment_shader_code) : name(std::make_shared<std::string>(name)) {
     attachShader(vertex_shader_code);
     attachShader(fragment_shader_code);
 
@@ -48,7 +48,7 @@ Shader::~Shader() {
 void Shader::attachShader(ShaderCode shader_code) {
     if (shader_code.type == ShaderType::VertexShader) {
         if (vertex_shader != 0) {
-            // TODO: notify about overwriting shader
+            // TODO: Notify about overwriting shader
             glDeleteShader(vertex_shader);
         }
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -56,11 +56,16 @@ void Shader::attachShader(ShaderCode shader_code) {
         glCompileShader(vertex_shader);
     } else if (shader_code.type == ShaderType::FragmentShader) {
         if (fragment_shader != 0) {
-            // TODO: notify about overwriting shader
+            // TODO: Notify about overwriting shader
             glDeleteShader(fragment_shader);
         }
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment_shader, 1, &shader_code.source, NULL);
         glCompileShader(fragment_shader);
     }
+}
+
+void Shader::PassTransform(const glm::mat4 &model) const {
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "transform"),
+                       1, GL_FALSE, glm::value_ptr(model));
 }

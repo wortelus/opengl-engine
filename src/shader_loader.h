@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
 
 #ifndef ZPG_SHADER_LOADER_H
 #define ZPG_SHADER_LOADER_H
@@ -25,11 +25,13 @@
 
 class ShaderLoader {
 private:
-    std::unique_ptr<GLuint> shaderProgram;
+    std::shared_ptr<std::string> active_shader;
     std::unordered_map<std::string, std::unique_ptr<Shader>> shaders;
 public:
     void LoadStaticShaders();
-    void LoadShader(const std::string &name);
+    bool LoadShader(const std::string &name);
+    bool UnloadShader();
+    void PassTransform(const glm::mat4 &model);
 //    void UnloadShader(const std::string &name);
 
     //[[nodiscard]] Shader* GetShader(const std::string& name) const;

@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 30.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
 
 #ifndef ZPG_SHADER_H
 #define ZPG_SHADER_H
@@ -16,6 +16,7 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include <memory>
 
 #include "observer.h"
 
@@ -31,7 +32,7 @@ struct ShaderCode {
 
 class Shader {
 private:
-    std::string name;
+    std::shared_ptr<std::string> name;
     GLuint shader_program = 0;
 
     GLuint vertex_shader = 0;
@@ -41,14 +42,15 @@ private:
 
     void attachShader(ShaderCode shader_code);
 public:
-    Shader(ShaderCode vertex_shader, ShaderCode fragment_shader);
+    Shader(const std::string &name, ShaderCode vertex_shader_code, ShaderCode fragment_shader_code);
     ~Shader();
 
     void load();
     void unload();
 
-//    [[nodiscard]] GLuint getShader() const { return shader_program; }
     [[nodiscard]] bool isLoaded() const { return active; }
+    [[nodiscard]] std::shared_ptr<std::string> getName() const { return name; }
+    void PassTransform(const glm::mat4 &model) const;
 };
 
 
