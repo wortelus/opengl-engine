@@ -23,22 +23,36 @@ Scene::Scene(GLFWwindow &window_reference) : window(&window_reference) {
 void Scene::Init() {
     this->shaderLoader = ShaderLoader();
     shaderLoader.LoadStaticShaders();
+    this->CreateObjects();
 }
 
 void Scene::CreateObjects() {
-
-}
-
-void Scene::Run() {
-    float b[] ={
+    float a[] ={
             -.5f, -.5f, .5f, 1, 1, 1, 0, 1,
             -.5f, .5f, .5f, 1, 1, 0, 0, 1,
             .5f, -.5f, .5f, 1, 0, 0, 1, 1,
             .5f, .5f, .5f, 1, 0, 1, 1, 1,
     };
-    Model bm = Model(std::vector<float>(b, b + sizeof(b) / sizeof(float)));
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0, 0, 0), std::make_unique<Model>(bm), "default"));
+    float b[] ={
+            .5f, -.5f, -.5f, 1, 1, 1, 0, 1,
+            .5f, .5f, -.5f, 1, 1, 0, 0, 1,
+            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
+            .5f, .5f, .5f, 1, 0, 1, 1, 1,
+    };
+    float c[] ={
+            .5f, -.5f, -.5f, 1, 1, 1, 0, 1,
+            .5f, .5f, -.5f, 1, 1, 0, 0, 1,
+            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
+            .5f, .5f, .5f, 1, 0, 1, 1, 1,
+    };
+    std::unique_ptr<Model> bm = std::make_unique<Model>(std::vector<float>(a, a + sizeof(a) / sizeof(float)));
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0, 0, 0), std::move(bm), "default"));
 
+    bm = std::make_unique<Model>(std::vector<float>(b, b + sizeof(b) / sizeof(float)));
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0), std::move(bm), "default"));
+}
+
+void Scene::Run() {
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -50,13 +64,6 @@ void Scene::Run() {
             d_obj->Draw();
         }
 
-//        m1.Draw();
-//        shaderLoader.LoadShader("default_blue");
-//        m2.Draw();
-//        shaderLoader.LoadShader("default_red");
-//        m3.TestTransform();
-//        m3.Draw();
-
         // Update other events like input handling
         glfwPollEvents();
         // put the stuff we've been drawing onto the display
@@ -66,25 +73,45 @@ void Scene::Run() {
 
 void Scene::HandleKeyEvent(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        objects[0].get()->Move(glm::vec3(-0.1, 0, 0));
+        for(const auto & object : objects){
+            object->Move(glm::vec3(-0.1f, 0, 0));
+        }
     } else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        objects[0].get()->Move(glm::vec3(0.1, 0, 0));
+        for(const auto & object : objects){
+            object->Move(glm::vec3(0.1f, 0, 0));
+        }
     } else if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-        objects[0].get()->Move(glm::vec3(0, 0.1, 0));
+        for(const auto & object : objects){
+            object->Move(glm::vec3(0, 0.1f, 0));
+        }
     } else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-        objects[0].get()->Move(glm::vec3(0, -0.1, 0));
+        for(const auto & object : objects){
+            object->Move(glm::vec3(0, -0.1f, 0));
+        }
     } else if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-        objects[0].get()->Rotate(glm::vec3(0.1, 0, 0));
+        for(const auto & object : objects){
+            object->Rotate(glm::vec3(10.f, 0, 0));
+        }
     } else if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-        objects[0].get()->Rotate(glm::vec3(-0.1, 0, 0));
+        for(const auto & object : objects){
+            object->Rotate(glm::vec3(-10.f, 0, 0));
+        }
     } else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-        objects[0].get()->Rotate(glm::vec3(0, 0.1f, 0));
+        for(const auto & object : objects){
+            object->Rotate(glm::vec3(0, 10.f, 0));
+        }
     } else if (key == GLFW_KEY_G && action == GLFW_PRESS) {
-        objects[0].get()->Rotate(glm::vec3(0, -0.1f, 0));
+        for(const auto & object : objects){
+            object->Rotate(glm::vec3(0, -10.f, 0));
+        }
     } else if (key == GLFW_KEY_T && action == GLFW_PRESS) {
-        objects[0].get()->Rotate(glm::vec3(0, 0, 0.1f));
+        for(const auto & object : objects){
+            object->Rotate(glm::vec3(0, 0, 10.f));
+        }
     } else if (key == GLFW_KEY_H && action == GLFW_PRESS) {
-        objects[0].get()->Rotate(glm::vec3(0, 0, -0.1f));
+        for(const auto & object : objects){
+            object->Rotate(glm::vec3(0, 0, -10.f));
+        }
     }
 }
 

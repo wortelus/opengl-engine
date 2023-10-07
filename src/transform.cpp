@@ -43,16 +43,18 @@ Rotation::Rotation(const glm::vec3 &initial_origin) : origin(initial_origin), ro
 void Rotation::RotateBy(const glm::vec3 &offset) {
     this->rotation += offset;
     if (offset.x != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, offset.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        this->matrix = glm::rotate(this->matrix, glm::radians(offset.x), glm::vec3(1.0f, 0.0f, 0.0f));
     } else if (offset.y != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, offset.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        this->matrix = glm::rotate(this->matrix, glm::radians(offset.y), glm::vec3(0.0f, 1.0f, 0.0f));
     } else if (offset.z != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, offset.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        this->matrix = glm::rotate(this->matrix, glm::radians(offset.z), glm::vec3(0.0f, 0.0f, 1.0f));
     }
 }
 
 void Rotation::SetRotation(const glm::vec3 &new_rotation) {
-    this->rotation = new_rotation;
+    this->rotation.x = glm::radians(new_rotation.x);
+    this->rotation.y = glm::radians(new_rotation.y);
+    this->rotation.z = glm::radians(new_rotation.z);
 }
 
 const glm::mat4& Rotation::GetMatrix() {

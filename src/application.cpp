@@ -73,7 +73,6 @@ void Application::init() {
 }
 
 void Application::run() {
-    scene->CreateObjects();
     scene->Run();
     glfwDestroyWindow(window);
 
