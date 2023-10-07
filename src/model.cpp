@@ -16,6 +16,7 @@
 
 #include "model.h"
 #include <algorithm>
+#include <stdexcept>
 
 Model::Model(std::vector<float> vertices) : vao(0), vbo(0) {
 
@@ -44,10 +45,39 @@ Model::Model(std::vector<float> vertices) : vao(0), vbo(0) {
 
 void Model::Draw() const {
     glBindVertexArray(this->vao);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, this->vertices_count);
+    glDrawArrays(this->draw_type, 0, this->vertices_count);
 }
 
 Model::~Model() {
     glDeleteBuffers(1, &this->vbo);
     glDeleteVertexArrays(1, &this->vao);
+}
+
+Model::Model(std::vector<float> vertices, int stride, bool strip) {
+    if (strip)
+        this->draw_type = GL_TRIANGLE_STRIP;
+    else
+        this->draw_type = GL_TRIANGLES;
+
+    this->vertices_count = static_cast<GLsizei>(vertices.size() / stride / 2);
+
+    glGenBuffers(1, &this->vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 static_cast<GLsizei>(this->vertices_count * stride * 2 * sizeof(float)), &vertices[0],
+                 GL_STATIC_DRAW);
+
+    glGenVertexArrays(1, &this->vao); //generate the VAO
+    glBindVertexArray(this->vao); //bind the VAO
+    glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+
+    // using the following lines we will tell the GPU how to read the data
+    // vertex positions ->
+    glEnableVertexAttribArray(0); //enable vertex attributes
+    glVertexAttribPointer(0, stride,
+                          GL_FLOAT, GL_FALSE, stride * 2 * sizeof(float), (void*)0);
+    // vertex colors ->
+    glEnableVertexAttribArray(1); //enable vertex attributes
+    glVertexAttribPointer(1, stride,
+                          GL_FLOAT, GL_FALSE, stride * 2 * sizeof(float), (void*)(stride * sizeof(float)));
 }

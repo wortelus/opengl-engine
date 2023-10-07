@@ -24,6 +24,7 @@ public:
 
     void Move(const glm::vec3& delta);
     void Rotate(const glm::vec3& delta);
+    void Scale(const glm::vec3& delta);
 
     void Draw();
 };

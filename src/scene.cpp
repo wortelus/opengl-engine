@@ -15,6 +15,7 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 #include "scene.h"
+#include "../models/sphere.h"
 
 Scene::Scene(GLFWwindow &window_reference) : window(&window_reference) {
     this->objects = std::vector<std::unique_ptr<DrawableObject>>();
@@ -39,17 +40,15 @@ void Scene::CreateObjects() {
             .5f, -.5f, .5f, 1, 0, 0, 1, 1,
             .5f, .5f, .5f, 1, 0, 1, 1, 1,
     };
-    float c[] ={
-            .5f, -.5f, -.5f, 1, 1, 1, 0, 1,
-            .5f, .5f, -.5f, 1, 1, 0, 0, 1,
-            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
-            .5f, .5f, .5f, 1, 0, 1, 1, 1,
-    };
-    std::unique_ptr<Model> bm = std::make_unique<Model>(std::vector<float>(a, a + sizeof(a) / sizeof(float)));
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0, 0, 0), std::move(bm), "default"));
+    std::unique_ptr<Model> bm = std::make_unique<Model>(std::vector<float>(a, a + sizeof(a) / sizeof(float)), 4, true);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0, 0), std::move(bm), "default"));
 
-    bm = std::make_unique<Model>(std::vector<float>(b, b + sizeof(b) / sizeof(float)));
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0), std::move(bm), "default"));
+    bm = std::make_unique<Model>(std::vector<float>(b, b + sizeof(b) / sizeof(float)), 4, true);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0.f, 0), std::move(bm), "default"));
+
+    bm = std::make_unique<Model>(
+            std::vector<float>(sphere, sphere + sizeof(sphere) / sizeof(float)), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0), std::move(bm), "normale"));
 }
 
 void Scene::Run() {
@@ -111,6 +110,14 @@ void Scene::HandleKeyEvent(int key, int scancode, int action, int mods) {
     } else if (key == GLFW_KEY_H && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->Rotate(glm::vec3(0, 0, -10.f));
+        }
+    } else if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
+        for(const auto & object : objects){
+            object->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
+        }
+    } else if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+        for(const auto & object : objects){
+            object->Scale(glm::vec3(-0.1f, -0.1f, -0.1f));
         }
     }
 }

@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
 
 #ifndef ZPG_MODEL_H
 #define ZPG_MODEL_H
@@ -33,9 +33,13 @@ protected:
     std::string vertex_shader_name;
     std::string fragment_shader_name;
 
+    // gl draw type
+    GLenum draw_type;
+
 public:
     Model() = default;
     explicit Model(std::vector<float> vertices);
+    explicit Model(std::vector<float> vertices, int stride, bool strip);
     ~Model();
 
     void Draw() const;

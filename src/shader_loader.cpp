@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/9/2023
 
 //Include GLEW
 #include <GL/glew.h>
@@ -39,9 +39,35 @@ const char* default_fragment_shader =
         "}";
 
 
+const char* normale_vertex_shader =
+        "#version 330\n"
+        "layout(location=0) in vec3 vposition;"
+        "layout(location=1) in vec3 vnormal;"
+        "uniform mat4 transform;"
+        "out vec4 frag_color;"
+        "out vec3 frag_normal;"
+        "void main () {"
+        "     gl_Position = transform * vec4(vposition, 1.0);"
+        "     frag_color = vec4 (1.0, 0.5, 0, 1.0);"
+        "     frag_normal = vnormal;"
+        "}";
+
+
+
+const char* normale_fragment_shader =
+        "#version 330\n"
+        "in vec4 frag_color;"
+        "out vec4 frag_color_out;"
+        "void main () {"
+        "     frag_color_out = frag_color;"
+        "}";
+
+
 void ShaderLoader::LoadStaticShaders() {
     shaders["default"] = std::make_unique<Shader>("default", ShaderCode{ShaderType::VertexShader, default_vertex_shader},
                                                   ShaderCode{ShaderType::FragmentShader, default_fragment_shader});
+    shaders["normale"] = std::make_unique<Shader>("normale", ShaderCode{ShaderType::VertexShader, normale_vertex_shader},
+                                                  ShaderCode{ShaderType::FragmentShader, normale_fragment_shader});
 }
 
 bool ShaderLoader::LoadShader(const std::string &name) {

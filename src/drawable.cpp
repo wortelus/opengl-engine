@@ -41,3 +41,11 @@ void DrawableObject::Rotate(const glm::vec3 &delta) {
     };
     this->model_matrix->Update(args);
 }
+
+void DrawableObject::Scale(const glm::vec3 &delta) {
+    EventArgs args {
+            .payload = delta,
+            .type = EventType::U_SCALE,
+    };
+    this->model_matrix->Update(args);
+}

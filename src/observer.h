@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 30.9.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  30/9/2023
 
 #ifndef ZPG_OBSERVER_H
 #define ZPG_OBSERVER_H
