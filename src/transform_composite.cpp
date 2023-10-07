@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 5.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  5/10/2023
 
 #include "transform_composite.h"
 #include "transform.h"
