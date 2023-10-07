@@ -5,6 +5,20 @@ The goal of the project is to create a simple 3D scene using OpenGL and GLSL.
 
 Built using CMake on Debian 12 bookworm (stable).
 
+## Current state
+- [x] Basic scene with sphere and two adjacent squares
+
+
+- **WASD** for translation
+- **E/F** for rotation along X
+- **R/G** for rotation along Y
+- **T/H** for rotation along Z
+- **Z/X** for scaling
+
+## TODO's
+- Observer on transformations is currently global. e.g. no subject->notify implemented yet
+- and more _in-code TODO's_
+
 ## Dependencies
 - [libglfw3](https://www.glfw.org/) - *version 3.3.8*
 - [libglfw3-dev](https://www.glfw.org/) - *version 3.3.8-1*
