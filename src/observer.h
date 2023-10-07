@@ -11,15 +11,15 @@
 class IObserver {
 public:
     virtual ~IObserver() = default;
-    virtual void Update(const EventArgs& event_args) = 0;
+    virtual void update(const EventArgs& event_args) = 0;
 };
 
 class ISubject {
 public:
     virtual ~ISubject() = default;
-    virtual void Attach(IObserver* observer) = 0;
-    virtual void Detach(IObserver* observer) = 0;
-    virtual void Notify() = 0;
+    virtual void attach(IObserver* observer) = 0;
+    virtual void detach(IObserver* observer) = 0;
+    virtual void notify() = 0;
 };
 
 

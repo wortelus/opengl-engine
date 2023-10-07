@@ -50,7 +50,7 @@ public:
 
     [[nodiscard]] bool isLoaded() const { return active; }
     [[nodiscard]] std::shared_ptr<std::string> getName() const { return name; }
-    void PassTransform(const glm::mat4 &model) const;
+    void passTransform(const glm::mat4 &model) const;
 };
 
 

@@ -48,7 +48,7 @@ Shader::~Shader() {
 void Shader::attachShader(ShaderCode shader_code) {
     if (shader_code.type == ShaderType::VertexShader) {
         if (vertex_shader != 0) {
-            // TODO: Notify about overwriting shader
+            // TODO: notify about overwriting shader
             glDeleteShader(vertex_shader);
         }
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -56,7 +56,7 @@ void Shader::attachShader(ShaderCode shader_code) {
         glCompileShader(vertex_shader);
     } else if (shader_code.type == ShaderType::FragmentShader) {
         if (fragment_shader != 0) {
-            // TODO: Notify about overwriting shader
+            // TODO: notify about overwriting shader
             glDeleteShader(fragment_shader);
         }
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -65,7 +65,7 @@ void Shader::attachShader(ShaderCode shader_code) {
     }
 }
 
-void Shader::PassTransform(const glm::mat4 &model) const {
+void Shader::passTransform(const glm::mat4 &model) const {
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "transform"),
                        1, GL_FALSE, glm::value_ptr(model));
 }

@@ -7,19 +7,15 @@
 //Include GLFW
 #include <GLFW/glfw3.h>
 
-//Include GLM
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
-
 #include <cstdio>
 #include <cstdlib>
 #include "application.h"
-#include "model.h"
 
 Application::Application(int width, int height, const char *title) : width(width), height(height), title(title) { }
+
+Application::~Application() {
+    delete scene;
+}
 
 void Application::info() {
     printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -69,15 +65,14 @@ void Application::init() {
     glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 
     scene = new Scene(*window);
-    scene->Init();
+    scene->init();
 }
 
 void Application::run() {
-    scene->Run();
-    glfwDestroyWindow(window);
+    scene->run();
 
+    glfwDestroyWindow(window);
     glfwTerminate();
-    exit(EXIT_SUCCESS);
 }
 
 void Application::error_callback(int error, const char* description)
@@ -97,7 +92,7 @@ void Application::handle_key_event(int key, int scancode, int action, int mods) 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
     if (action == GLFW_PRESS)
-        scene->HandleKeyEvent(key, scancode, action, mods);
+        scene->handleKeyEvent(key, scancode, action, mods);
 }
 
 
@@ -125,8 +120,4 @@ void Application::cursor_callback(GLFWwindow* window, double x, double y)
 void Application::button_callback(GLFWwindow* window, int button, int action, int mode)
 {
     if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
-}
-
-Application::~Application() {
-    delete &scene;
 }

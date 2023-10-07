@@ -15,28 +15,28 @@ TransformComposite::TransformComposite() {
     scale = std::make_unique<Scale>(glm::vec3(1.0f, 1.0f, 1.0f));
 
     // initializing model matrix
-    model_matrix = std::make_unique<glm::mat4>(translation->GetMatrix() * rotation->GetMatrix() * scale->GetMatrix());
+    model_matrix = std::make_unique<glm::mat4>(translation->getMatrix() * rotation->getMatrix() * scale->getMatrix());
 }
 
-const glm::mat4& TransformComposite::GetMatrix() {
+const glm::mat4& TransformComposite::getMatrix() {
     if (!is_dirty) {
         return *model_matrix;
     }
 
     // recalculation
-    model_matrix = std::make_unique<glm::mat4>(translation->GetMatrix() * rotation->GetMatrix() * scale->GetMatrix());
+    model_matrix = std::make_unique<glm::mat4>(translation->getMatrix() * rotation->getMatrix() * scale->getMatrix());
     is_dirty = false;
 
     return *model_matrix;
 }
 
-void TransformComposite::Update(const EventArgs &event_args) {
+void TransformComposite::update(const EventArgs &event_args) {
     if (event_args.type == EventType::U_TRANSLATION || event_args.type == EventType::S_TRANSLATION) {
-        translation->Update(event_args);
+        translation->update(event_args);
     } else if (event_args.type == EventType::U_ROTATION || event_args.type == EventType::S_ROTATION) {
-        rotation->Update(event_args);
+        rotation->update(event_args);
     } else if (event_args.type == EventType::U_SCALE || event_args.type == EventType::S_SCALE) {
-        scale->Update(event_args);
+        scale->update(event_args);
     }
     is_dirty = true;
 }

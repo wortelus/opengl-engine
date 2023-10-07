@@ -11,41 +11,46 @@ DrawableObject::DrawableObject(const glm::vec3 &position, std::unique_ptr<Model>
     this->model_matrix = std::make_unique<TransformComposite>();
 }
 
+DrawableObject::~DrawableObject() {
+//    this->model_matrix.reset();
+//    this->model.reset();
+}
 
-void DrawableObject::Draw() {
+
+void DrawableObject::draw() {
     EventArgs args {
             .payload = this->position,
             .type = EventType::S_TRANSLATION,
     };
-    this->model_matrix->Update(args);
-    this->model->Draw();
+    this->model_matrix->update(args);
+    this->model->draw();
 }
 
-const glm::mat4& DrawableObject::GetModelMatrix() const {
-    return this->model_matrix->GetMatrix();
+const glm::mat4& DrawableObject::getModelMatrix() const {
+    return this->model_matrix->getMatrix();
 }
 
-void DrawableObject::Move(const glm::vec3 &delta) {
+void DrawableObject::move(const glm::vec3 &delta) {
     this->position += delta;
     EventArgs args {
             .payload = delta,
             .type = EventType::U_TRANSLATION,
     };
-    this->model_matrix->Update(args);
+    this->model_matrix->update(args);
 }
 
-void DrawableObject::Rotate(const glm::vec3 &delta) {
+void DrawableObject::rotate(const glm::vec3 &delta) {
     EventArgs args {
             .payload = delta,
             .type = EventType::U_ROTATION,
     };
-    this->model_matrix->Update(args);
+    this->model_matrix->update(args);
 }
 
-void DrawableObject::Scale(const glm::vec3 &delta) {
+void DrawableObject::scale(const glm::vec3 &delta) {
     EventArgs args {
             .payload = delta,
             .type = EventType::U_SCALE,
     };
-    this->model_matrix->Update(args);
+    this->model_matrix->update(args);
 }

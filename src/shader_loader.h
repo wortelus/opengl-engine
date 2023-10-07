@@ -28,11 +28,11 @@ private:
     std::shared_ptr<std::string> active_shader;
     std::unordered_map<std::string, std::unique_ptr<Shader>> shaders;
 public:
-    void LoadStaticShaders();
-    bool LoadShader(const std::string &name);
-    bool UnloadShader();
-    void PassTransform(const glm::mat4 &model);
-//    void UnloadShader(const std::string &name);
+    void loadStaticShaders();
+    bool loadShader(const std::string &name);
+    bool unloadShader();
+    void passTransform(const glm::mat4 &model);
+//    void unloadShader(const std::string &name);
 
     //[[nodiscard]] Shader* GetShader(const std::string& name) const;
 };

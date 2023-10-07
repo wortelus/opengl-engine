@@ -15,7 +15,7 @@ protected:
     // TODO: unique_ptr?
     glm::mat4 matrix;
 public:
-    virtual const glm::mat4& GetMatrix() = 0;
+    virtual const glm::mat4& getMatrix() = 0;
 };
 
 class Translation : public TransformationAbstract {
@@ -24,11 +24,11 @@ private:
 public:
     explicit Translation(const glm::vec3 &translation);
 
-    void SetTranslation(const glm::vec3 &translation);
-    void MoveBy(const glm::vec3 &translation);
+    void setTranslation(const glm::vec3 &translation);
+    void moveBy(const glm::vec3 &translation);
 
-    void Update(const EventArgs &event_args) override;
-    const glm::mat4& GetMatrix() override;
+    void update(const EventArgs &event_args) override;
+    const glm::mat4& getMatrix() override;
 };
 
 class Rotation : public TransformationAbstract {
@@ -39,11 +39,11 @@ public:
     Rotation();
     explicit Rotation(const glm::vec3 &origin);
 
-    void RotateBy(const glm::vec3 &rotation);
-    void SetRotation(const glm::vec3 &rotation);
+    void rotateBy(const glm::vec3 &rotation);
+    void setRotation(const glm::vec3 &rotation);
 
-    void Update(const EventArgs &event_args) override;
-    const glm::mat4& GetMatrix() override;
+    void update(const EventArgs &event_args) override;
+    const glm::mat4& getMatrix() override;
 };
 
 class Scale : public TransformationAbstract {
@@ -52,11 +52,11 @@ private:
 public:
     explicit Scale(const glm::vec3 &scale);
 
-    void SetScale(const glm::vec3 &scale);
-    void ScaleBy(const glm::vec3 &scale);
+    void setScale(const glm::vec3 &scale);
+    void scaleBy(const glm::vec3 &scale);
 
-    void Update(const EventArgs &event_args) override;
-    const glm::mat4& GetMatrix() override;
+    void update(const EventArgs &event_args) override;
+    const glm::mat4& getMatrix() override;
 };
 
 

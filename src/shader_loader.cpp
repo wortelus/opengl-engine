@@ -63,14 +63,14 @@ const char* normale_fragment_shader =
         "}";
 
 
-void ShaderLoader::LoadStaticShaders() {
+void ShaderLoader::loadStaticShaders() {
     shaders["default"] = std::make_unique<Shader>("default", ShaderCode{ShaderType::VertexShader, default_vertex_shader},
                                                   ShaderCode{ShaderType::FragmentShader, default_fragment_shader});
     shaders["normale"] = std::make_unique<Shader>("normale", ShaderCode{ShaderType::VertexShader, normale_vertex_shader},
                                                   ShaderCode{ShaderType::FragmentShader, normale_fragment_shader});
 }
 
-bool ShaderLoader::LoadShader(const std::string &name) {
+bool ShaderLoader::loadShader(const std::string &name) {
     if (shaders.find(name) == shaders.end()) return false;
     // TODO: logging system
 //    std::for_each(shaders.begin(), shaders.end(), [](auto& shader) {
@@ -82,15 +82,15 @@ bool ShaderLoader::LoadShader(const std::string &name) {
     return true;
 }
 
-void ShaderLoader::PassTransform(const glm::mat4& model) {
+void ShaderLoader::passTransform(const glm::mat4& model) {
     if (active_shader == nullptr) {
         // TODO: log, shouldn't happen
         return;
     }
-    shaders[*active_shader]->PassTransform(model);
+    shaders[*active_shader]->passTransform(model);
 }
 
-bool ShaderLoader::UnloadShader() {
+bool ShaderLoader::unloadShader() {
     if (active_shader == nullptr) return false;
     shaders[*active_shader]->unload();
     active_shader = nullptr;

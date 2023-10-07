@@ -33,13 +33,12 @@ public:
     explicit Scene(GLFWwindow& window_reference);
     ~Scene();
 
-    void Init();
+    void init();
+    void createObjects();
 
-    void Run();
+    void run();
 
-    void HandleKeyEvent(int key, int scancode, int action, int mods);
-
-    void CreateObjects();
+    void handleKeyEvent(int key, int scancode, int action, int mods);
 };
 
 

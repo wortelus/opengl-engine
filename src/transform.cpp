@@ -9,25 +9,25 @@ Translation::Translation(const glm::vec3 &initial_translation) : translation(ini
     this->matrix = glm::translate(glm::mat4(1.0), this->translation);
 }
 
-const glm::mat4& Translation::GetMatrix() {
+const glm::mat4& Translation::getMatrix() {
     return this->matrix;
 }
 
-void Translation::MoveBy(const glm::vec3 &offset) {
-    this->translation += offset;
+void Translation::moveBy(const glm::vec3 &translation) {
+    this->translation += translation;
     this->matrix = glm::translate(glm::mat4(1.0), this->translation);
 }
 
-void Translation::SetTranslation(const glm::vec3 &new_translation) {
-    this->translation = new_translation;
+void Translation::setTranslation(const glm::vec3 &translation) {
+    this->translation = translation;
     this->matrix = glm::translate(glm::mat4(1.0), this->translation);
 }
 
-void Translation::Update(const EventArgs &event_args) {
+void Translation::update(const EventArgs &event_args) {
     if (event_args.type == EventType::U_TRANSLATION) {
-        this->MoveBy(event_args.payload);
+        this->moveBy(event_args.payload);
     } else if (event_args.type == EventType::S_TRANSLATION) {
-        this->SetTranslation(event_args.payload);
+        this->setTranslation(event_args.payload);
     }
     // TODO: log invalid operation
 }
@@ -40,32 +40,32 @@ Rotation::Rotation(const glm::vec3 &initial_origin) : origin(initial_origin), ro
     this->matrix = glm::rotate(glm::mat4(1.0), .0f, this->origin);
 }
 
-void Rotation::RotateBy(const glm::vec3 &offset) {
-    this->rotation += offset;
-    if (offset.x != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, glm::radians(offset.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    } else if (offset.y != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, glm::radians(offset.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    } else if (offset.z != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, glm::radians(offset.z), glm::vec3(0.0f, 0.0f, 1.0f));
+void Rotation::rotateBy(const glm::vec3 &rotation) {
+    this->rotation += rotation;
+    if (rotation.x != 0.0f) {
+        this->matrix = glm::rotate(this->matrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    } else if (rotation.y != 0.0f) {
+        this->matrix = glm::rotate(this->matrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    } else if (rotation.z != 0.0f) {
+        this->matrix = glm::rotate(this->matrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     }
 }
 
-void Rotation::SetRotation(const glm::vec3 &new_rotation) {
-    this->rotation.x = glm::radians(new_rotation.x);
-    this->rotation.y = glm::radians(new_rotation.y);
-    this->rotation.z = glm::radians(new_rotation.z);
+void Rotation::setRotation(const glm::vec3 &rotation) {
+    this->rotation.x = glm::radians(rotation.x);
+    this->rotation.y = glm::radians(rotation.y);
+    this->rotation.z = glm::radians(rotation.z);
 }
 
-const glm::mat4& Rotation::GetMatrix() {
+const glm::mat4& Rotation::getMatrix() {
     return this->matrix;
 }
 
-void Rotation::Update(const EventArgs &event_args) {
+void Rotation::update(const EventArgs &event_args) {
     if (event_args.type == EventType::U_ROTATION) {
-        this->RotateBy(event_args.payload);
+        this->rotateBy(event_args.payload);
     } else if (event_args.type == EventType::S_ROTATION) {
-        this->SetRotation(event_args.payload);
+        this->setRotation(event_args.payload);
     }
 }
 
@@ -73,24 +73,24 @@ Scale::Scale(const glm::vec3 &initial_scale) : scale(initial_scale) {
     this->matrix = glm::scale(glm::mat4(1.0), this->scale);
 }
 
-void Scale::SetScale(const glm::vec3 &new_scale) {
-    this->scale = new_scale;
+void Scale::setScale(const glm::vec3 &scale) {
+    this->scale = scale;
     matrix = glm::scale(glm::mat4(1.0), this->scale);
 }
 
-void Scale::ScaleBy(const glm::vec3 &offset) {
-    this->scale += offset;
+void Scale::scaleBy(const glm::vec3 &scale) {
+    this->scale += scale;
     matrix = glm::scale(glm::mat4(1.0), this->scale);
 }
 
-const glm::mat4& Scale::GetMatrix() {
+const glm::mat4& Scale::getMatrix() {
     return this->matrix;
 }
 
-void Scale::Update(const EventArgs &event_args) {
+void Scale::update(const EventArgs &event_args) {
     if (event_args.type == EventType::U_SCALE) {
-        this->ScaleBy(event_args.payload);
+        this->scaleBy(event_args.payload);
     } else if (event_args.type == EventType::S_SCALE) {
-        this->SetScale(event_args.payload);
+        this->setScale(event_args.payload);
     }
 }

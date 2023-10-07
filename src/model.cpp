@@ -43,7 +43,7 @@ Model::Model(std::vector<float> vertices) : vao(0), vbo(0) {
                           GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
 }
 
-void Model::Draw() const {
+void Model::draw() const {
     glBindVertexArray(this->vao);
     glDrawArrays(this->draw_type, 0, this->vertices_count);
 }

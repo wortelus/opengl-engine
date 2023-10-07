@@ -20,8 +20,8 @@ private:
     bool is_dirty = false;
 public:
     TransformComposite();
-    const glm::mat4& GetMatrix() override;
-    void Update(const EventArgs& event_args) override;
+    const glm::mat4& getMatrix() override;
+    void update(const EventArgs& event_args) override;
 };
 
 

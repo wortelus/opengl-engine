@@ -42,7 +42,7 @@ public:
     explicit Model(std::vector<float> vertices, int stride, bool strip);
     ~Model();
 
-    void Draw() const;
+    void draw() const;
 };
 
 

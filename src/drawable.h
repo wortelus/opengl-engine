@@ -19,14 +19,18 @@ private:
     std::string shader_name;
 public:
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string  shader_name);
-    [[nodiscard]] const glm::mat4& GetModelMatrix() const;
-    [[nodiscard]] const std::string& GetShaderName() const { return this->shader_name; }
+    ~DrawableObject();
 
-    void Move(const glm::vec3& delta);
-    void Rotate(const glm::vec3& delta);
-    void Scale(const glm::vec3& delta);
+    [[nodiscard]] const glm::vec3& GetPosition() const { return this->position; }
 
-    void Draw();
+    [[nodiscard]] const glm::mat4& getModelMatrix() const;
+    [[nodiscard]] const std::string& getShaderName() const { return this->shader_name; }
+
+    void move(const glm::vec3& delta);
+    void rotate(const glm::vec3& delta);
+    void scale(const glm::vec3& delta);
+
+    void draw();
 };
 
 
