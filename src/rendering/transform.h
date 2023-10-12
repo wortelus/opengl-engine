@@ -7,7 +7,7 @@
 
 
 #include "glm/ext/matrix_float4x4.hpp"
-#include "observer.h"
+#include "../util/observer.h"
 
 class TransformationAbstract : public IObserver {
 protected:

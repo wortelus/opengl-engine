@@ -15,9 +15,9 @@
 #include <vector>
 #include <string>
 
-#include "shader.h"
-#include "shader_loader.h"
-#include "drawable.h"
+#include "../rendering/shader.h"
+#include "../rendering/shader_loader.h"
+#include "../models/drawable.h"
 #include "scene.h"
 
 class Application {

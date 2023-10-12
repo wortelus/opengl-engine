@@ -7,8 +7,8 @@
 
 
 #include "glm/vec3.hpp"
-#include "transform_composite.h"
-#include "observer.h"
+#include "../rendering/transform_composite.h"
+#include "../util/observer.h"
 #include "model.h"
 
 class DrawableObject {

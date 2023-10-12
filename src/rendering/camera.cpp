@@ -3,7 +3,7 @@
 // Date of Creation:  9/10/2023
 
 #include "camera.h"
-#include "const.h"
+#include "../util/const.h"
 
 Camera::Camera(float aspect) {
     view = glm::lookAt(CAMERA_POS, CAMERA_TARGET, CAMERA_UP);

@@ -8,15 +8,15 @@
 #include <GLFW/glfw3.h>
 
 //Include GLM
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include "glm/vec3.hpp" // glm::vec3
+#include "glm/vec4.hpp" // glm::vec4
+#include "glm/mat4x4.hpp" // glm::mat4
+#include "glm/gtc/matrix_transform.hpp" // glm::translate, glm::rotate, glm::scale, glm::perspective
+#include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 
 #include "scene.h"
-#include "../assets/sphere.h"
-#include "../assets/suzi_smooth.h"
+#include "../../assets/sphere.h"
+#include "../../assets/suzi_smooth.h"
 
 Scene::Scene(GLFWwindow &window_reference, const int initial_width, const int initial_height) : window(&window_reference), width(initial_width), height(initial_height) {
     this->camera = std::make_unique<Camera>(width / height);
