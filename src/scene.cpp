@@ -15,8 +15,8 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 #include "scene.h"
-#include "../models/sphere.h"
-#include "../models/suzi_smooth.h"
+#include "../assets/sphere.h"
+#include "../assets/suzi_smooth.h"
 
 Scene::Scene(GLFWwindow &window_reference, const int initial_width, const int initial_height) : window(&window_reference), width(initial_width), height(initial_height) {
     this->camera = std::make_unique<Camera>(width / height);
