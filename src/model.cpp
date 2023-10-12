@@ -18,9 +18,9 @@
 #include <algorithm>
 #include <stdexcept>
 
-Model::Model(std::vector<float> vertices) : vao(0), vbo(0) {
+Model::Model(const float* vertices, int total_count) : vao(0), vbo(0) {
 
-    this->vertices_count = static_cast<GLsizei>(vertices.size() / 4 / 2);
+    this->vertices_count = static_cast<GLsizei>(total_count / 4 / 2);
 
     glGenBuffers(1, &this->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
@@ -53,13 +53,13 @@ Model::~Model() {
     glDeleteVertexArrays(1, &this->vao);
 }
 
-Model::Model(std::vector<float> vertices, int stride, bool strip) {
+Model::Model(const float* vertices, int total_count, int stride, bool strip) {
     if (strip)
         this->draw_type = GL_TRIANGLE_STRIP;
     else
         this->draw_type = GL_TRIANGLES;
 
-    this->vertices_count = static_cast<GLsizei>(vertices.size() / stride / 2);
+    this->vertices_count = static_cast<GLsizei>(total_count / stride / 2);
 
     glGenBuffers(1, &this->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);

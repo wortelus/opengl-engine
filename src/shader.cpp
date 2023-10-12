@@ -65,7 +65,17 @@ void Shader::attachShader(ShaderCode shader_code) {
     }
 }
 
-void Shader::passTransform(const glm::mat4 &model) const {
-    glUniformMatrix4fv(glGetUniformLocation(shader_program, "transform"),
+void Shader::passModelMatrix(const glm::mat4 &model) const {
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "model_matrix"),
                        1, GL_FALSE, glm::value_ptr(model));
+}
+
+void Shader::passViewMatrix(const glm::mat4 &view) const {
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "view_matrix"),
+                       1, GL_FALSE, glm::value_ptr(view));
+}
+
+void Shader::passProjectionMatrix(const glm::mat4 &projection) const {
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection_matrix"),
+                       1, GL_FALSE, glm::value_ptr(projection));
 }

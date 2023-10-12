@@ -23,14 +23,20 @@
 #include <vector>
 #include "shader_loader.h"
 #include "drawable.h"
+#include "camera.h"
 
 class Scene {
 private:
     GLFWwindow* window;
     ShaderLoader shaderLoader;
     std::vector<std::unique_ptr<DrawableObject>> objects;
+
+    std::unique_ptr<Camera> camera;
+
+    const int width;
+    const int height;
 public:
-    explicit Scene(GLFWwindow& window_reference);
+    explicit Scene(GLFWwindow& window_reference, int initial_width, int initial_height);
     ~Scene();
 
     void init();

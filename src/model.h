@@ -19,6 +19,7 @@
 
 #include <vector>
 #include <string>
+#include <array>
 #include "observer.h"
 
 class Model {
@@ -38,8 +39,8 @@ protected:
 
 public:
     Model() = default;
-    explicit Model(std::vector<float> vertices);
-    explicit Model(std::vector<float> vertices, int stride, bool strip);
+    explicit Model(const float* vertices, int total_count);
+    explicit Model(const float* vertices, int total_count, int stride, bool strip);
     ~Model();
 
     void draw() const;

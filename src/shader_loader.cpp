@@ -17,39 +17,20 @@
 
 #include "shader_loader.h"
 
-const char* default_vertex_shader =
-        "#version 330\n"
-        "layout(location=0) in vec4 vposition;"
-        "layout(location=1) in vec3 vcolor;"
-        "uniform mat4 transform;"
-        "out vec3 fragmentColor;"
-        "void main () {"
-        "     gl_Position = transform * vposition;"
-        "     fragmentColor = vcolor;"
-        "}";
-
-
-
-const char* default_fragment_shader =
-        "#version 330\n"
-        "in vec3 fragmentColor;"
-        "out vec4 frag_colour;"
-        "void main () {"
-        "     frag_colour = vec4 (fragmentColor, 1.0);"
-        "}";
-
 
 const char* normale_vertex_shader =
         "#version 330\n"
-        "layout(location=0) in vec3 vposition;"
-        "layout(location=1) in vec3 vnormal;"
-        "uniform mat4 transform;"
+        "layout(location=0) in vec3 vec_position;"
+        "layout(location=1) in vec3 vec_normal;"
+        "uniform mat4 model_matrix;"
+        "uniform mat4 view_matrix;"
+        "uniform mat4 projection_matrix;"
         "out vec4 frag_color;"
         "out vec3 frag_normal;"
         "void main () {"
-        "     gl_Position = transform * vec4(vposition, 1.0);"
-        "     frag_color = vec4 (1.0, 0.5, 0, 1.0);"
-        "     frag_normal = vnormal;"
+        "     gl_Position = projection_matrix * view_matrix * model_matrix * vec4(vec_position, 1.0);"
+        "     frag_color = vec4 (vec_normal, 1.0);"
+        "     frag_normal = vec_normal;"
         "}";
 
 
@@ -57,17 +38,15 @@ const char* normale_vertex_shader =
 const char* normale_fragment_shader =
         "#version 330\n"
         "in vec4 frag_color;"
-        "out vec4 frag_color_out;"
+        "out vec4 out_color;"
         "void main () {"
-        "     frag_color_out = frag_color;"
+        "     out_color = frag_color;"
         "}";
 
 
 void ShaderLoader::loadStaticShaders() {
-    shaders["default"] = std::make_unique<Shader>("default", ShaderCode{ShaderType::VertexShader, default_vertex_shader},
-                                                  ShaderCode{ShaderType::FragmentShader, default_fragment_shader});
     shaders["normale"] = std::make_unique<Shader>("normale", ShaderCode{ShaderType::VertexShader, normale_vertex_shader},
-                                                  ShaderCode{ShaderType::FragmentShader, normale_fragment_shader});
+                                                        ShaderCode{ShaderType::FragmentShader, normale_fragment_shader});
 }
 
 bool ShaderLoader::loadShader(const std::string &name) {
@@ -82,12 +61,12 @@ bool ShaderLoader::loadShader(const std::string &name) {
     return true;
 }
 
-void ShaderLoader::passTransform(const glm::mat4& model) {
+void ShaderLoader::passModelMatrix(const glm::mat4& model) {
     if (active_shader == nullptr) {
         // TODO: log, shouldn't happen
         return;
     }
-    shaders[*active_shader]->passTransform(model);
+    shaders[*active_shader]->passModelMatrix(model);
 }
 
 bool ShaderLoader::unloadShader() {
@@ -95,4 +74,20 @@ bool ShaderLoader::unloadShader() {
     shaders[*active_shader]->unload();
     active_shader = nullptr;
     return true;
+}
+
+void ShaderLoader::passViewMatrix(const glm::mat4 &view) {
+    if (active_shader == nullptr) {
+        // TODO: log, shouldn't happen
+        return;
+    }
+    shaders[*active_shader]->passViewMatrix(view);
+}
+
+void ShaderLoader::passProjectionMatrix(const glm::mat4 &projection) {
+    if (active_shader == nullptr) {
+        // TODO: log, shouldn't happen
+        return;
+    }
+    shaders[*active_shader]->passProjectionMatrix(projection);
 }

@@ -7,7 +7,7 @@
 #include <utility>
 
 DrawableObject::DrawableObject(const glm::vec3 &position, std::unique_ptr<Model>&& model,
-                               std::string shader_name) : position(position), shader_name(std::move(shader_name)), model(std::move(model)) {
+                               std::string  shader_name) : position(position), shader_name(std::move(shader_name)), model(std::move(model)) {
     this->model_matrix = std::make_unique<TransformComposite>();
 }
 

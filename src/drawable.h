@@ -18,7 +18,7 @@ private:
     std::unique_ptr<Model> model;
     std::string shader_name;
 public:
-    DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string  shader_name);
+    DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name);
     ~DrawableObject();
 
     [[nodiscard]] const glm::vec3& GetPosition() const { return this->position; }

@@ -15,6 +15,7 @@ link_libraries(${GLEW_LIBRARIES})
 
 add_executable(zpg src/main.cpp
         src/application.h src/application.cpp
+        src/const.h
         src/event_args.h
         src/observer.h
         src/model.h src/model.cpp
@@ -23,6 +24,7 @@ add_executable(zpg src/main.cpp
         src/drawable.h src/drawable.cpp
         src/transform.h src/transform.cpp
         src/transform_composite.h src/transform_composite.cpp
-        src/scene.h src/scene.cpp)
+        src/scene.h src/scene.cpp
+        src/camera.h src/camera.cpp)
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)

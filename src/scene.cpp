@@ -16,8 +16,10 @@
 
 #include "scene.h"
 #include "../models/sphere.h"
+#include "../models/suzi_smooth.h"
 
-Scene::Scene(GLFWwindow &window_reference) : window(&window_reference) {
+Scene::Scene(GLFWwindow &window_reference, const int initial_width, const int initial_height) : window(&window_reference), width(initial_width), height(initial_height) {
+    this->camera = std::make_unique<Camera>(width / height);
     this->objects = std::vector<std::unique_ptr<DrawableObject>>();
 }
 
@@ -28,27 +30,32 @@ void Scene::init() {
 }
 
 void Scene::createObjects() {
-    float a[] ={
-            -.5f, -.5f, .5f, 1, 1, 1, 0, 1,
-            -.5f, .5f, .5f, 1, 1, 0, 0, 1,
-            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
-            .5f, .5f, .5f, 1, 0, 1, 1, 1,
-    };
-    float b[] ={
-            .5f, -.5f, -.5f, 1, 1, 1, 0, 1,
-            .5f, .5f, -.5f, 1, 1, 0, 0, 1,
-            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
-            .5f, .5f, .5f, 1, 0, 1, 1, 1,
-    };
-    std::unique_ptr<Model> bm = std::make_unique<Model>(std::vector<float>(a, a + sizeof(a) / sizeof(float)), 4, true);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0, 0), std::move(bm), "default"));
+//    float a[] ={
+//            -.5f, -.5f, .5f, 1, 1, 1, 0, 1,
+//            -.5f, .5f, .5f, 1, 1, 0, 0, 1,
+//            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
+//            .5f, .5f, .5f, 1, 0, 1, 1, 1,
+//    };
+//    float b[] ={
+//            .5f, -.5f, -.5f, 1, 1, 1, 0, 1,
+//            .5f, .5f, -.5f, 1, 1, 0, 0, 1,
+//            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
+//            .5f, .5f, .5f, 1, 0, 1, 1, 1,
+//    };
+//    std::unique_ptr<Model> bm = std::make_unique<Model>(a, sizeof(a) / sizeof(float), 4, true);
+//    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0, 0), std::move(bm), "default"));
+//
+//    bm = std::make_unique<Model>(b, sizeof(b) / sizeof(float), 4, true);
+//    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0.f, 0), std::move(bm), "default"));
+//
+//    bm = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
+//    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0), std::move(bm), "normale_lite"));
 
-    bm = std::make_unique<Model>(std::vector<float>(b, b + sizeof(b) / sizeof(float)), 4, true);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0.f, 0), std::move(bm), "default"));
+    std::unique_ptr<Model> sphere_model = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_model), "normale"));
 
-    bm = std::make_unique<Model>(
-            std::vector<float>(sphere, sphere + sizeof(sphere) / sizeof(float)), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0), std::move(bm), "normale"));
+    std::unique_ptr<Model> suzanne = std::make_unique<Model>(suziSmooth, sizeof(suziSmooth) / sizeof(float), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0.f), std::move(suzanne), "normale"));
 }
 
 void Scene::run() {
@@ -59,7 +66,9 @@ void Scene::run() {
         for(const auto & object : objects){
             DrawableObject* d_obj = object.get();
             shaderLoader.loadShader(d_obj->getShaderName());
-            shaderLoader.passTransform(d_obj->getModelMatrix());
+            shaderLoader.passModelMatrix(d_obj->getModelMatrix());
+            shaderLoader.passViewMatrix(this->camera->getView());
+            shaderLoader.passProjectionMatrix(this->camera->getProjection());
             d_obj->draw();
         }
 
@@ -71,23 +80,44 @@ void Scene::run() {
 }
 
 void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+    //
+    // camera movement
+    //
+    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+
+    } else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+
+    } else if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+
+    } else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+
+    } else if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+
+    }
+    //
+    // translations
+    //
+    else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->move(glm::vec3(-0.1f, 0, 0));
         }
-    } else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->move(glm::vec3(0.1f, 0, 0));
         }
-    } else if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->move(glm::vec3(0, 0.1f, 0));
         }
-    } else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->move(glm::vec3(0, -0.1f, 0));
         }
-    } else if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+    }
+    //
+    // rotation along x-axis
+    //
+    else if (key == GLFW_KEY_E && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(10.f, 0, 0));
         }
@@ -95,7 +125,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(-10.f, 0, 0));
         }
-    } else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+    }
+    //
+    // rotation along y-axis
+    //
+    else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, 10.f, 0));
         }
@@ -103,7 +137,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, -10.f, 0));
         }
-    } else if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+    }
+    //
+    // rotation along z-axis
+    //
+    else if (key == GLFW_KEY_T && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, 0, 10.f));
         }
@@ -111,7 +149,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, 0, -10.f));
         }
-    } else if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
+    }
+    //
+    // scaling
+    //
+    else if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
         for(const auto & object : objects){
             object->scale(glm::vec3(0.1f, 0.1f, 0.1f));
         }

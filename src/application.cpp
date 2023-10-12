@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include "application.h"
 
-Application::Application(int width, int height, const char *title) : width(width), height(height), title(title) { }
+Application::Application(const int width, const int height, const char *title) : width(width), height(height), title(title) { }
 
 Application::~Application() {
     delete scene;
@@ -53,6 +53,11 @@ void Application::init() {
 
     glfwSetWindowUserPointer(window, this);
 
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     glfwSetKeyCallback(window, key_callback);
     glfwSetCursorPosCallback(window, cursor_callback);
     glfwSetMouseButtonCallback(window, button_callback);
@@ -60,11 +65,11 @@ void Application::init() {
     glfwSetWindowIconifyCallback(window, window_iconify_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 
-    scene = new Scene(*window);
+    scene = new Scene(*window, width, height);
     scene->init();
 }
 

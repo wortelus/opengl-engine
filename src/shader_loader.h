@@ -31,7 +31,9 @@ public:
     void loadStaticShaders();
     bool loadShader(const std::string &name);
     bool unloadShader();
-    void passTransform(const glm::mat4 &model);
+    void passModelMatrix(const glm::mat4 &model);
+    void passViewMatrix(const glm::mat4 &view);
+    void passProjectionMatrix(const glm::mat4 &projection);
 //    void unloadShader(const std::string &name);
 
     //[[nodiscard]] Shader* GetShader(const std::string& name) const;
