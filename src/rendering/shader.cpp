@@ -79,3 +79,7 @@ void Shader::passProjectionMatrix(const glm::mat4 &projection) const {
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection_matrix"),
                        1, GL_FALSE, glm::value_ptr(projection));
 }
+
+void Shader::update(const EventArgs &event_args) {
+
+}

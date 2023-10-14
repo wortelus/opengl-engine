@@ -30,7 +30,7 @@ struct ShaderCode {
     const char* source;
 };
 
-class Shader {
+class Shader : public IObserver {
 private:
     std::shared_ptr<std::string> name;
     GLuint shader_program = 0;
@@ -54,6 +54,8 @@ public:
     void passModelMatrix(const glm::mat4 &model) const;
     void passViewMatrix(const glm::mat4 &view) const;
     void passProjectionMatrix(const glm::mat4 &projection) const;
+
+    void update(const EventArgs& event_args) override;
 };
 
 
