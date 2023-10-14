@@ -11,6 +11,14 @@
 
 // Mouse sensitivity for camera movement
 const double MOUSE_SENSITIVITY = 0.1;
+const bool DISABLE_CURSOR = true;
+
+// Movement speed for camera movement
+const float CAMERA_SPEED = 0.1;
+
+// Jumping
+const float INITIAL_JUMP_VELOCITY = 0.25;
+const float GRAVITY = 0.025;
 
 // Initial camera position
 const glm::vec3 CAMERA_POS = glm::vec3(0.0f, 0.0f, 3.0f);

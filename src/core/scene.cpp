@@ -63,9 +63,16 @@ void Scene::createObjects() {
 
 void Scene::run() {
     while (!glfwWindowShouldClose(window)) {
+
+//        float current_frame_time = (float)glfwGetTime();
+//        float delta_time = current_frame_time - last_frame_time;
+//        last_frame_time = current_frame_time;
+
+        continuousMovement(1);
+        camera->jumpProgress(1);
+
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         for(const auto & object : objects){
             DrawableObject* d_obj = object.get();
             shaderLoader.loadShader(d_obj->getShaderName());
@@ -82,37 +89,47 @@ void Scene::run() {
     }
 }
 
-void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
+bool Scene::handleKeyEventMovement(int key, int scancode, int action, int mods) {
     //
     // camera movement
     //
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-
-    } else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-
-    } else if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-
-    } else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-
-    } else if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
-
+    if (key == GLFW_KEY_W) {
+        camera->moveCharacterFront(CAMERA_SPEED);
+        return true;
+    } else if (key == GLFW_KEY_S) {
+        camera->moveCharacterFront(-CAMERA_SPEED);
+        return true;
+    } else if (key == GLFW_KEY_A) {
+        camera->moveCharacterSide(-CAMERA_SPEED);
+        return true;
+    } else if (key == GLFW_KEY_D) {
+        camera->moveCharacterSide(CAMERA_SPEED);
+        return true;
     }
+    return false;
+}
+
+void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
     //
     // translations
     //
-    else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+//    if (handleKeyEventMovement(key, scancode, action, mods))
+//        return;
+    if (key == GLFW_KEY_SPACE) {
+        camera->jump();
+    } else if (key == GLFW_KEY_LEFT) {
         for(const auto & object : objects){
             object->move(glm::vec3(-0.1f, 0, 0));
         }
-    } else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_RIGHT) {
         for(const auto & object : objects){
             object->move(glm::vec3(0.1f, 0, 0));
         }
-    } else if (key == GLFW_KEY_UP && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_UP) {
         for(const auto & object : objects){
             object->move(glm::vec3(0, 0.1f, 0));
         }
-    } else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_DOWN) {
         for(const auto & object : objects){
             object->move(glm::vec3(0, -0.1f, 0));
         }
@@ -120,11 +137,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
     //
     // rotation along x-axis
     //
-    else if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+    else if (key == GLFW_KEY_E) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(10.f, 0, 0));
         }
-    } else if (key == GLFW_KEY_F && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_F) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(-10.f, 0, 0));
         }
@@ -132,11 +149,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
     //
     // rotation along y-axis
     //
-    else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+    else if (key == GLFW_KEY_R) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, 10.f, 0));
         }
-    } else if (key == GLFW_KEY_G && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_G) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, -10.f, 0));
         }
@@ -144,11 +161,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
     //
     // rotation along z-axis
     //
-    else if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+    else if (key == GLFW_KEY_T) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, 0, 10.f));
         }
-    } else if (key == GLFW_KEY_H && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_H) {
         for(const auto & object : objects){
             object->rotate(glm::vec3(0, 0, -10.f));
         }
@@ -156,11 +173,11 @@ void Scene::handleKeyEvent(int key, int scancode, int action, int mods) {
     //
     // scaling
     //
-    else if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
+    else if (key == GLFW_KEY_Z) {
         for(const auto & object : objects){
             object->scale(glm::vec3(0.1f, 0.1f, 0.1f));
         }
-    } else if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+    } else if (key == GLFW_KEY_X) {
         for(const auto & object : objects){
             object->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
         }
@@ -183,4 +200,15 @@ void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
     y_offset *= MOUSE_SENSITIVITY;
 
     camera->move(x_offset, y_offset);
+}
+
+inline void Scene::continuousMovement(const float& delta_time) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera->moveCharacterFront(CAMERA_SPEED * delta_time);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera->moveCharacterFront(-CAMERA_SPEED * delta_time);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera->moveCharacterSide(-CAMERA_SPEED * delta_time);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera->moveCharacterSide(CAMERA_SPEED * delta_time);
 }

@@ -35,7 +35,7 @@ void Application::init() {
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(width, height, title, NULL, NULL);
+    window = glfwCreateWindow(width, height, title, nullptr, nullptr);
     if (!window){
         glfwTerminate();
         exit(EXIT_FAILURE);
@@ -65,6 +65,9 @@ void Application::init() {
     glfwSetWindowIconifyCallback(window, windowIconifyCallback);
     glfwSetWindowSizeCallback(window, windowSizeCallback);
 
+    if (DISABLE_CURSOR)
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     scene = new Scene(*window, width, height);
     scene->init();
 }
@@ -92,8 +95,10 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-    if (action == GLFW_PRESS)
-        scene->handleKeyEvent(key, scancode, action, mods);
+    else if (action == GLFW_REPEAT) {
+//        scene->handleKeyEventMovement(key, scancode, action, mods);
+    } else if (action == GLFW_PRESS)
+        scene->handleKeyEventPress(key, scancode, action, mods);
 }
 
 

@@ -3,15 +3,16 @@
 // Date of Creation:  9/10/2023
 
 #include <algorithm>
+#include <cstdio>
 #include "camera.h"
-#include "../util/const.h"
 
-Camera::Camera(float aspect) : front(CAMERA_TARGET - CAMERA_POS), pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
+Camera::Camera(float aspect) : position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
+                                                          pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
     view = glm::lookAt(CAMERA_POS, CAMERA_TARGET, CAMERA_UP);
     projection = glm::perspective(PROJECTION_FOV, aspect, PROJECTION_NEAR, PROJECTION_FAR);
 }
 
-void Camera::move(double x_offset, double y_offset) {
+void Camera::move(const double& x_offset, const double& y_offset) {
     yaw += x_offset;
     pitch += y_offset;
 
@@ -26,5 +27,57 @@ void Camera::move(double x_offset, double y_offset) {
     auto right = glm::normalize(glm::cross(front, CAMERA_UP));
     auto up = glm::normalize(glm::cross(right, front));
 
-    view = glm::lookAt(CAMERA_POS, CAMERA_POS + front, up);
+    view = glm::lookAt(position, position + front, up);
+}
+
+void Camera::moveCharacterSide(const float& offset) {
+    // cross product creates perpendicular vector, then we normalize it to length of 1
+    glm::vec3 right = glm::normalize(glm::cross(front, CAMERA_UP));
+    float y = position.y;
+    position += right * offset;
+    position.y = y;
+    view = glm::lookAt(position, position + front, CAMERA_UP);
+}
+
+void Camera::moveCharacterFront(const float& offset) {
+    float y = position.y;
+    position += front * offset;
+    position.y = y;
+    view = glm::lookAt(position, position + front, CAMERA_UP);
+}
+
+void Camera::jumpProgress(const float& delta_time) {
+    if(is_jumping) {
+        current_jump_speed -= GRAVITY * delta_time;
+        position.y += current_jump_speed * delta_time;
+
+        // Check for landing
+        if(position.y <= 0) {
+            position.y = 0;
+            current_jump_speed = 0;
+            is_jumping = false;
+        }
+    }
+    view = glm::lookAt(position, position + front, CAMERA_UP);
+}
+
+void Camera::jump() {
+    if (!is_jumping && position.y == 0) {
+        is_jumping = true;
+        current_jump_speed = INITIAL_JUMP_VELOCITY;
+    }
+}
+
+void Camera::attach(IObserver *observer) {
+    observers.push_back(observer);
+}
+
+void Camera::detach(IObserver *observer) {
+    observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+}
+
+void Camera::notify(const EventArgs& event_args) {
+    for (auto observer : observers) {
+        observer->update(event_args);
+    }
 }
