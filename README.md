@@ -26,7 +26,7 @@ Built using CMake on Debian 12 bookworm (stable).
 ## TODO's
 - Observer on transformations is currently not used. 
 We call globally directly in scene all transformation operations (*no notify*).
-- Observer on camera is not used, but implemented. We have no idea what purpose it should serve.
+- Observer on camera is not used, but implemented.
 - and more _in-code TODO's_
 
 ## Dependencies

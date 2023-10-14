@@ -95,9 +95,7 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-    else if (action == GLFW_REPEAT) {
-//        scene->handleKeyEventMovement(key, scancode, action, mods);
-    } else if (action == GLFW_PRESS)
+    else if (action == GLFW_PRESS)
         scene->handleKeyEventPress(key, scancode, action, mods);
 }
 

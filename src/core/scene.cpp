@@ -89,32 +89,10 @@ void Scene::run() {
     }
 }
 
-bool Scene::handleKeyEventMovement(int key, int scancode, int action, int mods) {
-    //
-    // camera movement
-    //
-    if (key == GLFW_KEY_W) {
-        camera->moveCharacterFront(CAMERA_SPEED);
-        return true;
-    } else if (key == GLFW_KEY_S) {
-        camera->moveCharacterFront(-CAMERA_SPEED);
-        return true;
-    } else if (key == GLFW_KEY_A) {
-        camera->moveCharacterSide(-CAMERA_SPEED);
-        return true;
-    } else if (key == GLFW_KEY_D) {
-        camera->moveCharacterSide(CAMERA_SPEED);
-        return true;
-    }
-    return false;
-}
-
 void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
     //
     // translations
     //
-//    if (handleKeyEventMovement(key, scancode, action, mods))
-//        return;
     if (key == GLFW_KEY_SPACE) {
         camera->jump();
     } else if (key == GLFW_KEY_LEFT) {

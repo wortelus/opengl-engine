@@ -51,8 +51,6 @@ public:
 
     void run();
 
-    bool handleKeyEventMovement(int key, int scancode, int action, int mods);
-
     inline void continuousMovement(const float& delta_time);
 
     void handleKeyEventPress(int key, int scancode, int action, int mods);
