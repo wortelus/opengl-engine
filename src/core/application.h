@@ -41,16 +41,16 @@ public:
     static void info();
     void run();
 
-    void handle_key_event(int key, int scancode, int action, int mods);
-    void handle_cursor_event(double x_pos, double y_pos);
+    void handleKeyEvent(int key, int scancode, int action, int mods);
+    void handleCursorEvent(double x_pos, double y_pos);
 
-    static void error_callback(int error, const char* description);
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    static void window_focus_callback(GLFWwindow* window, int focused);
-    static void window_iconify_callback(GLFWwindow* window, int iconified);
-    static void window_size_callback(GLFWwindow* window, int width, int height);
-    static void cursor_callback(GLFWwindow* window, double x, double y);
-    static void button_callback(GLFWwindow* window, int button, int action, int mode);
+    static void errorCallback(int error, const char* description);
+    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void windowFocusCallback(GLFWwindow* window, int focused);
+    static void windowIconifyCallback(GLFWwindow* window, int iconified);
+    static void windowSizeCallback(GLFWwindow* window, int width, int height);
+    static void cursorCallback(GLFWwindow* window, double x, double y);
+    static void buttonCallback(GLFWwindow* window, int button, int action, int mode);
 };
 
 

@@ -29,7 +29,7 @@ void Application::info() {
 }
 
 void Application::init() {
-    glfwSetErrorCallback(error_callback);
+    glfwSetErrorCallback(errorCallback);
     if (!glfwInit()) {
         fprintf(stderr, "ERROR: could not start GLFW3\n");
         exit(EXIT_FAILURE);
@@ -58,12 +58,12 @@ void Application::init() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetCursorPosCallback(window, cursor_callback);
-    glfwSetMouseButtonCallback(window, button_callback);
-    glfwSetWindowFocusCallback(window, window_focus_callback);
-    glfwSetWindowIconifyCallback(window, window_iconify_callback);
-    glfwSetWindowSizeCallback(window, window_size_callback);
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, cursorCallback);
+    glfwSetMouseButtonCallback(window, buttonCallback);
+    glfwSetWindowFocusCallback(window, windowFocusCallback);
+    glfwSetWindowIconifyCallback(window, windowIconifyCallback);
+    glfwSetWindowSizeCallback(window, windowSizeCallback);
 
 //    glMatrixMode(GL_PROJECTION);
 //    glLoadIdentity();
@@ -80,20 +80,20 @@ void Application::run() {
     glfwTerminate();
 }
 
-void Application::error_callback(int error, const char* description)
+void Application::errorCallback(int error, const char* description)
 {
     fputs(description, stderr);
 }
 
-void Application::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
 
     // Call a member function to handle the key event
-    app->handle_key_event(key, scancode, action, mods);
+    app->handleKeyEvent(key, scancode, action, mods);
 }
 
-void Application::handle_key_event(int key, int scancode, int action, int mods) {
+void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
     if (action == GLFW_PRESS)
@@ -101,33 +101,33 @@ void Application::handle_key_event(int key, int scancode, int action, int mods) 
 }
 
 
-void Application::window_focus_callback(GLFWwindow* window, int focused)
+void Application::windowFocusCallback(GLFWwindow* window, int focused)
 {
-    printf("window_focus_callback \n");
+    printf("windowFocusCallback \n");
 }
 
-void Application::window_iconify_callback(GLFWwindow* window, int iconified)
+void Application::windowIconifyCallback(GLFWwindow* window, int iconified)
 {
-    printf("window_iconify_callback \n");
+    printf("windowIconifyCallback \n");
 }
 
-void Application::window_size_callback(GLFWwindow* window, int width, int height)
+void Application::windowSizeCallback(GLFWwindow* window, int width, int height)
 {
     printf("resize %d, %d \n", width, height);
     glViewport(0, 0, width, height);
 }
 
-void Application::cursor_callback(GLFWwindow* window, double x, double y)
+void Application::cursorCallback(GLFWwindow* window, double x, double y)
 {
     auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-    app->handle_cursor_event(x, y);
+    app->handleCursorEvent(x, y);
 }
 
-void Application::handle_cursor_event(double x_pos, double y_pos) {
+void Application::handleCursorEvent(double x_pos, double y_pos) {
     scene->handleMouseMovementEvent(x_pos, y_pos);
 }
 
-void Application::button_callback(GLFWwindow* window, int button, int action, int mode)
+void Application::buttonCallback(GLFWwindow* window, int button, int action, int mode)
 {
-    if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+    if (action == GLFW_PRESS) printf("buttonCallback [%d,%d,%d]\n", button, action, mode);
 }
