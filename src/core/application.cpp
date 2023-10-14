@@ -65,10 +65,6 @@ void Application::init() {
     glfwSetWindowIconifyCallback(window, windowIconifyCallback);
     glfwSetWindowSizeCallback(window, windowSizeCallback);
 
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-
     scene = new Scene(*window, width, height);
     scene->init();
 }
