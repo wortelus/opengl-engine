@@ -31,6 +31,8 @@ private:
     float ratio;
     int width;
     int height;
+
+    typedef void (*cursorHandler)(double, double);
 public:
     Application(int width, int height, const char* title);
     ~Application();
@@ -40,6 +42,7 @@ public:
     void run();
 
     void handle_key_event(int key, int scancode, int action, int mods);
+    void handle_cursor_event(double x_pos, double y_pos);
 
     static void error_callback(int error, const char* description);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

@@ -119,7 +119,12 @@ void Application::window_size_callback(GLFWwindow* window, int width, int height
 
 void Application::cursor_callback(GLFWwindow* window, double x, double y)
 {
-    printf("cursor_callback \n");
+    auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+    app->handle_cursor_event(x, y);
+}
+
+void Application::handle_cursor_event(double x_pos, double y_pos) {
+    scene->handleMouseMovementEvent(x_pos, y_pos);
 }
 
 void Application::button_callback(GLFWwindow* window, int button, int action, int mode)

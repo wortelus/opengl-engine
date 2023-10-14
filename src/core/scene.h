@@ -35,6 +35,10 @@ private:
 
     const int width;
     const int height;
+
+
+    double last_x = 0.0;
+    double last_y = 0.0;
 public:
     explicit Scene(GLFWwindow& window_reference, int initial_width, int initial_height);
     ~Scene();
@@ -45,6 +49,7 @@ public:
     void run();
 
     void handleKeyEvent(int key, int scancode, int action, int mods);
+    void handleMouseMovementEvent(double x_pos, double y_pos);
 };
 
 

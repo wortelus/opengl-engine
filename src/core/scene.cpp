@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 //Include GLFW
 #include <GLFW/glfw3.h>
+#include <algorithm>
 
 //Include GLM
 #include "glm/vec3.hpp" // glm::vec3
@@ -18,7 +19,9 @@
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
-Scene::Scene(GLFWwindow &window_reference, const int initial_width, const int initial_height) : window(&window_reference), width(initial_width), height(initial_height) {
+Scene::Scene(GLFWwindow &window_reference, const int initial_width, const int initial_height) :
+    window(&window_reference), width(initial_width), height(initial_height),
+    last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
     this->camera = std::make_unique<Camera>(width / height);
     this->objects = std::vector<std::unique_ptr<DrawableObject>>();
 }
@@ -168,4 +171,16 @@ Scene::~Scene() {
     for(auto & object : objects){
 //        object.reset();
     }
+}
+
+void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
+    double x_offset = x_pos - last_x;
+    double y_offset = last_y - y_pos;
+    last_x = x_pos;
+    last_y = y_pos;
+
+    x_offset *= MOUSE_SENSITIVITY;
+    y_offset *= MOUSE_SENSITIVITY;
+
+    camera->move(x_offset, y_offset);
 }
