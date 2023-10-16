@@ -35,15 +35,12 @@ private:
 
     const glm::vec3 scene_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-    const int width;
-    const int height;
-
     double last_x = 0.0;
     double last_y = 0.0;
 
     float last_frame_time = 0.0f;
 public:
-    explicit Scene(GLFWwindow& window_reference, int initial_width, int initial_height);
+    explicit Scene(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
 
     void init();
@@ -52,6 +49,8 @@ public:
     void run();
 
     inline void continuousMovement(const float& delta_time);
+
+    void update_aspect_ratio(const int& new_width, const int& new_height);
 
     void handleKeyEventPress(int key, int scancode, int action, int mods);
     void handleMouseMovementEvent(double x_pos, double y_pos);

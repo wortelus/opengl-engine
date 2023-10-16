@@ -6,7 +6,7 @@
 #include <cstdio>
 #include "camera.h"
 
-Camera::Camera(float aspect) : position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
+Camera::Camera(float aspect) : aspect_ratio(aspect), position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
                                                           pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
     view = glm::lookAt(CAMERA_POS, CAMERA_TARGET, CAMERA_UP);
     projection = glm::perspective(PROJECTION_FOV, aspect, PROJECTION_NEAR, PROJECTION_FAR);
@@ -52,8 +52,8 @@ void Camera::jumpProgress(const float& delta_time) {
         position.y += current_jump_speed * delta_time;
 
         // Check for landing
-        if(position.y <= 0) {
-            position.y = 0;
+        if(position.y <= GROUND_LEVEL) {
+            position.y = GROUND_LEVEL;
             current_jump_speed = 0;
             is_jumping = false;
         }
@@ -62,7 +62,7 @@ void Camera::jumpProgress(const float& delta_time) {
 }
 
 void Camera::jump() {
-    if (!is_jumping && position.y == 0) {
+    if (!is_jumping && position.y == GROUND_LEVEL) {
         is_jumping = true;
         current_jump_speed = INITIAL_JUMP_VELOCITY;
     }
@@ -80,4 +80,8 @@ void Camera::notify(const EventArgs& event_args) {
     for (auto observer : observers) {
         observer->update(event_args);
     }
+}
+
+void Camera::update_aspect_ratio(const int& width, const int& height) {
+    projection = glm::perspective(PROJECTION_FOV, aspect_ratio, PROJECTION_NEAR, PROJECTION_FAR);
 }

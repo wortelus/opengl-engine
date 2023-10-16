@@ -32,7 +32,7 @@ private:
     int width;
     int height;
 
-    typedef void (*cursorHandler)(double, double);
+    void update_scene_aspect(const int& new_width, const int& new_height);
 public:
     Application(int width, int height, const char* title);
     ~Application();

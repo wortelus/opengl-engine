@@ -35,11 +35,15 @@ private:
     bool is_jumping = false;
     float current_jump_speed = 0;
 
+    float aspect_ratio ;
+
     std::vector<IObserver*> observers;
 public:
     explicit Camera(float aspect);
 
     void move(const double& x_offset, const double& y_offset);
+
+    void update_aspect_ratio(const int& width, const int& height);
 
     void moveCharacterSide(const float& offset);
     void moveCharacterFront(const float& offset);

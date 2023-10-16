@@ -19,13 +19,14 @@ const float CAMERA_SPEED = 0.1;
 // Jumping
 const float INITIAL_JUMP_VELOCITY = 0.25;
 const float GRAVITY = 0.025;
+const float GROUND_LEVEL = 2.0;
 
 // Initial camera position
-const glm::vec3 CAMERA_POS = glm::vec3(0.0f, 0.0f, 3.0f);
+const glm::vec3 CAMERA_POS = glm::vec3(0.0f, GROUND_LEVEL, 3.0f);
 // Looking at the origin
-const glm::vec3 CAMERA_TARGET = glm::vec3(0.0f, 0.0f, 0.0f);
+const glm::vec3 CAMERA_TARGET = glm::vec3(0.0f, GROUND_LEVEL, 0.0f);
 // Up vector for the camera
-const glm::vec3 CAMERA_UP = glm::vec3(0.0f, 1.0f, 0.0f);
+const glm::vec3 CAMERA_UP = glm::vec3(0.0f, GROUND_LEVEL + 1.0f, 0.0f);
 
 // Initial camera yaw
 // -90.0 degre

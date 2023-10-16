@@ -95,6 +95,12 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+    else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        else if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
     else if (action == GLFW_PRESS)
         scene->handleKeyEventPress(key, scancode, action, mods);
 }
@@ -114,6 +120,13 @@ void Application::windowSizeCallback(GLFWwindow* window, int width, int height)
 {
     printf("resize %d, %d \n", width, height);
     glViewport(0, 0, width, height);
+
+    auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+    app->update_scene_aspect(width, height);
+}
+
+void Application::update_scene_aspect(const int& new_width, const int& new_height) {
+    scene->update_aspect_ratio(new_width, new_height);
 }
 
 void Application::cursorCallback(GLFWwindow* window, double x, double y)

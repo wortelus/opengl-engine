@@ -19,10 +19,11 @@
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
-Scene::Scene(GLFWwindow &window_reference, const int initial_width, const int initial_height) :
-    window(&window_reference), width(initial_width), height(initial_height),
+Scene::Scene(GLFWwindow &window_reference, const int& initial_width, const int& initial_height) :
+    window(&window_reference),
     last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
-    this->camera = std::make_unique<Camera>(width / height);
+    float ratio = (float)initial_width / (float)initial_height;
+    this->camera = std::make_unique<Camera>(ratio);
     this->objects = std::vector<std::unique_ptr<DrawableObject>>();
 }
 
@@ -33,32 +34,18 @@ void Scene::init() {
 }
 
 void Scene::createObjects() {
-//    float a[] ={
-//            -.5f, -.5f, .5f, 1, 1, 1, 0, 1,
-//            -.5f, .5f, .5f, 1, 1, 0, 0, 1,
-//            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
-//            .5f, .5f, .5f, 1, 0, 1, 1, 1,
-//    };
-//    float b[] ={
-//            .5f, -.5f, -.5f, 1, 1, 1, 0, 1,
-//            .5f, .5f, -.5f, 1, 1, 0, 0, 1,
-//            .5f, -.5f, .5f, 1, 0, 0, 1, 1,
-//            .5f, .5f, .5f, 1, 0, 1, 1, 1,
-//    };
-//    std::unique_ptr<Model> bm = std::make_unique<Model>(a, sizeof(a) / sizeof(float), 4, true);
-//    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0, 0), std::move(bm), "default"));
-//
-//    bm = std::make_unique<Model>(b, sizeof(b) / sizeof(float), 4, true);
-//    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-1.f, 0.f, 0), std::move(bm), "default"));
-//
-//    bm = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-//    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0), std::move(bm), "normale_lite"));
+    std::unique_ptr<Model> sphere_north = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 2.f), std::move(sphere_north), "normale"));
 
-    std::unique_ptr<Model> sphere_model = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_model), "normale"));
+    std::unique_ptr<Model> sphere_south = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, -2.f), std::move(sphere_south), "normale"));
 
-    std::unique_ptr<Model> suzanne = std::make_unique<Model>(suziSmooth, sizeof(suziSmooth) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 0.f), std::move(suzanne), "normale"));
+    std::unique_ptr<Model> sphere_east = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(2.f, 0.f, 0.f), std::move(sphere_east), "normale"));
+
+    std::unique_ptr<Model> sphere_west = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_west), "normale"));
+
 }
 
 void Scene::run() {
@@ -189,4 +176,8 @@ inline void Scene::continuousMovement(const float& delta_time) {
         camera->moveCharacterSide(-CAMERA_SPEED * delta_time);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera->moveCharacterSide(CAMERA_SPEED * delta_time);
+}
+
+void Scene::update_aspect_ratio(const int& new_width, const int& new_height) {
+    camera->update_aspect_ratio(new_width, new_height);
 }
