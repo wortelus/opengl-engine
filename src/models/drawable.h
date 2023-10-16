@@ -7,7 +7,7 @@
 
 
 #include "glm/vec3.hpp"
-#include "../rendering/transform_composite.h"
+#include "../transform/transform_composite.h"
 #include "../util/observer.h"
 #include "model.h"
 

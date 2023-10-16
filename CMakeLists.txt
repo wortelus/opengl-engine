@@ -22,8 +22,8 @@ add_executable(zpg src/main.cpp
         src/rendering/shader_loader.h src/rendering/shader_loader.cpp
         src/rendering/shader.h src/rendering/shader.cpp
         src/models/drawable.h src/models/drawable.cpp
-        src/rendering/transform.h src/rendering/transform.cpp
-        src/rendering/transform_composite.h src/rendering/transform_composite.cpp
+        src/transform/transform.h src/transform/transform.cpp
+        src/transform/transform_composite.h src/transform/transform_composite.cpp
         src/core/scene.h src/core/scene.cpp
         src/rendering/camera.h src/rendering/camera.cpp)
 
