@@ -27,8 +27,10 @@ class ShaderLoader {
 private:
     std::shared_ptr<std::string> active_shader;
     std::unordered_map<std::string, std::unique_ptr<Shader>> shaders;
+
+    static std::string loadShaderFromFile(const std::string& path);
 public:
-    void loadStaticShaders();
+    void loadShaders();
     bool loadShader(const std::string &name);
     bool unloadShader();
     void passModelMatrix(const glm::mat4 &model);

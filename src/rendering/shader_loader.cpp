@@ -14,47 +14,52 @@
 #include "glm/gtc/matrix_transform.hpp" // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 #include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 #include "shader_loader.h"
+#include "../util/const.h"
 
 
-const char* normale_vertex_shader =
-        "#version 330\n"
-        "layout(location=0) in vec3 vec_position;"
-        "layout(location=1) in vec3 vec_normal;"
-        "uniform mat4 model_matrix;"
-        "uniform mat4 view_matrix;"
-        "uniform mat4 projection_matrix;"
-        "out vec4 frag_color;"
-        "out vec3 frag_normal;"
-        "void main () {"
-        "     gl_Position = projection_matrix * view_matrix * model_matrix * vec4(vec_position, 1.0);"
-        "     frag_color = vec4 (vec_normal, 1.0);"
-        "     frag_normal = vec_normal;"
-        "}";
+std::string ShaderLoader::loadShaderFromFile(const std::string &path) {
+    std::ifstream file(path);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
 
+void ShaderLoader::loadShaders() {
+    for (const auto & entry : std::filesystem::directory_iterator(SHADERS_PATH)) {
+        if (entry.is_directory()) continue;
+        std::string path = entry.path().string();
+        std::string name = entry.path().stem().string();
+        std::string extension = entry.path().extension().string();
 
+        if (extension != ".vert")
+            continue;
 
-const char* normale_fragment_shader =
-        "#version 330\n"
-        "in vec4 frag_color;"
-        "out vec4 out_color;"
-        "void main () {"
-        "     out_color = frag_color;"
-        "}";
+        std::string fragment_path = path.substr(0, path.size() - 4) + "frag";
 
+        if (!std::filesystem::exists(fragment_path)) {
+            printf("Fragment shader for %s not found\n", name.c_str());
+            exit(22);
+        }
 
-void ShaderLoader::loadStaticShaders() {
-    shaders["normale"] = std::make_unique<Shader>("normale", ShaderCode{ShaderType::VertexShader, normale_vertex_shader},
-                                                        ShaderCode{ShaderType::FragmentShader, normale_fragment_shader});
+        std::string vertex_shader = loadShaderFromFile(path);
+        std::string fragment_shader = loadShaderFromFile(fragment_path);
+
+        shaders[name] = std::make_unique<Shader>(name,
+                                                 ShaderCode{ShaderType::VertexShader,
+                                                            vertex_shader.c_str()},
+                                                 ShaderCode{ShaderType::FragmentShader,
+                                                            fragment_shader.c_str()
+                                                 });
+    }
 }
 
 bool ShaderLoader::loadShader(const std::string &name) {
-    if (shaders.find(name) == shaders.end()) return false;
-    // TODO: logging system
-//    std::for_each(shaders.begin(), shaders.end(), [](auto& shader) {
-//        shader.second->unload();
-//    });
+    if (shaders.find(name) == shaders.end()) return false; // <<< TODO: log, shouldn't happen
+
     if (active_shader != nullptr) shaders[*active_shader]->unload();
     shaders[name]->load();
     active_shader = shaders[name].get()->getName();
@@ -62,32 +67,25 @@ bool ShaderLoader::loadShader(const std::string &name) {
 }
 
 void ShaderLoader::passModelMatrix(const glm::mat4& model) {
-    if (active_shader == nullptr) {
-        // TODO: log, shouldn't happen
-        return;
-    }
+    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
+
     shaders[*active_shader]->passModelMatrix(model);
 }
 
 bool ShaderLoader::unloadShader() {
-    if (active_shader == nullptr) return false;
+    if (active_shader == nullptr) return false; // <<< TODO: log, shouldn't happen
+
     shaders[*active_shader]->unload();
     active_shader = nullptr;
     return true;
 }
 
 void ShaderLoader::passViewMatrix(const glm::mat4 &view) {
-    if (active_shader == nullptr) {
-        // TODO: log, shouldn't happen
-        return;
-    }
+    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
     shaders[*active_shader]->passViewMatrix(view);
 }
 
 void ShaderLoader::passProjectionMatrix(const glm::mat4 &projection) {
-    if (active_shader == nullptr) {
-        // TODO: log, shouldn't happen
-        return;
-    }
+    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
     shaders[*active_shader]->passProjectionMatrix(projection);
 }

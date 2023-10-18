@@ -9,6 +9,9 @@
 #include "glm/trigonometric.hpp"
 
 
+const char* const ASSETS_PATH = "assets";
+const char* const SHADERS_PATH = "shaders";
+
 // Mouse sensitivity for camera movement
 const double MOUSE_SENSITIVITY = 0.1;
 const bool DISABLE_CURSOR = true;

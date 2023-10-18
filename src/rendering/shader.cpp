@@ -30,7 +30,7 @@ void Shader::unload() {
     active = false;
 }
 
-Shader::Shader(const std::string& name, ShaderCode vertex_shader_code, ShaderCode fragment_shader_code) : name(std::make_shared<std::string>(name)) {
+Shader::Shader(const std::string& name, const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code) : name(std::make_shared<std::string>(name)) {
     attachShader(vertex_shader_code);
     attachShader(fragment_shader_code);
 
@@ -45,14 +45,14 @@ Shader::~Shader() {
     glDeleteProgram(shader_program);
 }
 
-void Shader::attachShader(ShaderCode shader_code) {
+void Shader::attachShader(const ShaderCode& shader_code) {
     if (shader_code.type == ShaderType::VertexShader) {
         if (vertex_shader != 0) {
             // TODO: notify about overwriting shader
             glDeleteShader(vertex_shader);
         }
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex_shader, 1, &shader_code.source, NULL);
+        glShaderSource(vertex_shader, 1, &shader_code.source, nullptr);
         glCompileShader(vertex_shader);
     } else if (shader_code.type == ShaderType::FragmentShader) {
         if (fragment_shader != 0) {
@@ -60,7 +60,7 @@ void Shader::attachShader(ShaderCode shader_code) {
             glDeleteShader(fragment_shader);
         }
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, 1, &shader_code.source, NULL);
+        glShaderSource(fragment_shader, 1, &shader_code.source, nullptr);
         glCompileShader(fragment_shader);
     }
 }

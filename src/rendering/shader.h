@@ -40,9 +40,9 @@ private:
 
     bool active = false;
 
-    void attachShader(ShaderCode shader_code);
+    void attachShader(const ShaderCode& shader_code);
 public:
-    Shader(const std::string &name, ShaderCode vertex_shader_code, ShaderCode fragment_shader_code);
+    Shader(const std::string &name, const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code);
     ~Shader();
 
     void load();

@@ -25,6 +25,7 @@ add_executable(zpg src/main.cpp
         src/transform/transform.h src/transform/transform.cpp
         src/transform/transform_composite.h src/transform/transform_composite.cpp
         src/core/scene.h src/core/scene.cpp
-        src/rendering/camera.h src/rendering/camera.cpp)
+        src/rendering/camera.h src/rendering/camera.cpp
+        src/rendering/light.h src/rendering/light.cpp)
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)

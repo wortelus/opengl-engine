@@ -83,5 +83,6 @@ void Camera::notify(const EventArgs& event_args) {
 }
 
 void Camera::update_aspect_ratio(const int& width, const int& height) {
+    aspect_ratio = (float) width / (float) height;
     projection = glm::perspective(PROJECTION_FOV, aspect_ratio, PROJECTION_NEAR, PROJECTION_FAR);
 }
