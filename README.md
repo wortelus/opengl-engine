@@ -6,10 +6,12 @@ The goal of the project is to create a simple 3D scene using OpenGL and GLSL.
 Built using CMake on Debian 12 bookworm (stable).
 
 ## Current state
-- [x] Basic scene with sphere and monkey named Suzanne
+- [x] Basic scene with 4 spheres
 - [x] Camera
 - [x] Global transformations
 - [x] WASD Movement + jumping
+- [x] Lighting
+- [x] Dynamic shader loading
 
 ## Controls
 ### Camera

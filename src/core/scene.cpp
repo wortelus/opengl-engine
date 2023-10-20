@@ -35,23 +35,23 @@ void Scene::init() {
 
 void Scene::createObjects() {
     std::unique_ptr<Model> sphere_north = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 2.f), std::move(sphere_north), "mvp_empty"));
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 2.f), std::move(sphere_north), "lambert"));
 
     std::unique_ptr<Model> sphere_south = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, -2.f), std::move(sphere_south), "mvp_empty"));
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, -2.f), std::move(sphere_south), "lambert"));
 
     std::unique_ptr<Model> sphere_east = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(2.f, 0.f, 0.f), std::move(sphere_east), "mvp_empty"));
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(2.f, 0.f, 0.f), std::move(sphere_east), "lambert"));
 
     std::unique_ptr<Model> sphere_west = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_west), "mvp_empty"));
+    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_west), "lambert"));
 
 }
 
 void Scene::run() {
     while (!glfwWindowShouldClose(window)) {
 
-//        float current_frame_time = (float)glfwGetTime();
+//        auto current_frame_time = (float)glfwGetTime() * 300.0f;
 //        float delta_time = current_frame_time - last_frame_time;
 //        last_frame_time = current_frame_time;
 
@@ -66,6 +66,7 @@ void Scene::run() {
             shaderLoader.passModelMatrix(d_obj->getModelMatrix());
             shaderLoader.passViewMatrix(this->camera->getView());
             shaderLoader.passProjectionMatrix(this->camera->getProjection());
+            shaderLoader.passNormalMatrix(glm::mat3(1.0));
             d_obj->draw();
         }
 
