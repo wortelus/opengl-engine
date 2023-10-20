@@ -16,6 +16,7 @@ private:
     std::unique_ptr<Scale> scale;
 
     // model matrix cache
+    // TODO: shared_ptr?
     std::unique_ptr<glm::mat4> model_matrix;
     bool is_dirty = false;
 public:
