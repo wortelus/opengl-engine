@@ -62,11 +62,16 @@ void Scene::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for(const auto & object : objects){
             DrawableObject* d_obj = object.get();
+            auto model_matrix = *d_obj->getModelMatrix();
+
             shaderLoader.loadShader(d_obj->getShaderName());
-            shaderLoader.passModelMatrix(d_obj->getModelMatrix());
+            shaderLoader.passModelMatrix(model_matrix);
             shaderLoader.passViewMatrix(this->camera->getView());
             shaderLoader.passProjectionMatrix(this->camera->getProjection());
-            shaderLoader.passNormalMatrix(glm::mat3(1.0));
+
+            // TODO: lazy normal matrix
+            shaderLoader.passNormalMatrix(glm::transpose(glm::inverse(model_matrix)));
+
             d_obj->draw();
         }
 

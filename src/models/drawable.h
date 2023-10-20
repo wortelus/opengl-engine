@@ -23,7 +23,7 @@ public:
 
     [[nodiscard]] const glm::vec3& GetPosition() const { return this->position; }
 
-    [[nodiscard]] const glm::mat4& getModelMatrix() const;
+    [[nodiscard]] std::shared_ptr<glm::mat4> getModelMatrix() const;
     [[nodiscard]] const std::string& getShaderName() const { return this->shader_name; }
 
     void move(const glm::vec3& delta);

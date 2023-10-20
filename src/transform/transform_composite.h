@@ -11,17 +11,13 @@
 
 class TransformComposite : public TransformationAbstract {
 private:
+    // composite components
     std::unique_ptr<Translation> translation;
     std::unique_ptr<Rotation> rotation;
     std::unique_ptr<Scale> scale;
-
-    // model matrix cache
-    // TODO: shared_ptr?
-    std::unique_ptr<glm::mat4> model_matrix;
-    bool is_dirty = false;
 public:
     TransformComposite();
-    const glm::mat4& getMatrix() override;
+    std::shared_ptr<glm::mat4> getMatrix() override;
     void update(const EventArgs& event_args) override;
 };
 

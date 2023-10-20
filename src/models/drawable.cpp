@@ -26,7 +26,7 @@ void DrawableObject::draw() {
     this->model->draw();
 }
 
-const glm::mat4& DrawableObject::getModelMatrix() const {
+std::shared_ptr<glm::mat4> DrawableObject::getModelMatrix() const {
     return this->model_matrix->getMatrix();
 }
 

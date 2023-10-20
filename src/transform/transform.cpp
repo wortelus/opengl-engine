@@ -6,21 +6,25 @@
 #include "glm/ext/matrix_transform.hpp"
 
 Translation::Translation(const glm::vec3 &initial_translation) : translation(initial_translation) {
-    this->matrix = glm::translate(glm::mat4(1.0), this->translation);
+    this->matrix = std::make_shared<glm::mat4>(glm::translate(glm::mat4(1.0), this->translation));
 }
 
-const glm::mat4& Translation::getMatrix() {
+std::shared_ptr<glm::mat4> Translation::getMatrix() {
+    if (this->is_dirty) {
+        this->matrix = std::make_shared<glm::mat4>(glm::translate(glm::mat4(1.0), this->translation));
+        this->is_dirty = false;
+    }
     return this->matrix;
 }
 
-void Translation::moveBy(const glm::vec3 &translation) {
-    this->translation += translation;
-    this->matrix = glm::translate(glm::mat4(1.0), this->translation);
+void Translation::moveBy(const glm::vec3 &offset) {
+    this->translation += offset;
+    this->is_dirty = true;
 }
 
-void Translation::setTranslation(const glm::vec3 &translation) {
-    this->translation = translation;
-    this->matrix = glm::translate(glm::mat4(1.0), this->translation);
+void Translation::setTranslation(const glm::vec3 &new_translation) {
+    this->translation = new_translation;
+    this->is_dirty = true;
 }
 
 void Translation::update(const EventArgs &event_args) {
@@ -33,31 +37,33 @@ void Translation::update(const EventArgs &event_args) {
 }
 
 Rotation::Rotation() : origin(glm::vec3(1.0f, 0.0f, 0.0f)), rotation(glm::vec3(0.0f, 0.0f, 0.0f)) {
-    this->matrix = glm::rotate(glm::mat4(1.0), .0f, this->origin);
+    this->matrix = std::make_shared<glm::mat4>(glm::rotate(glm::mat4(1.0), .0f, this->origin));
 }
 
 Rotation::Rotation(const glm::vec3 &initial_origin) : origin(initial_origin), rotation(glm::vec3(0.0f, 0.0f, 0.0f)) {
-    this->matrix = glm::rotate(glm::mat4(1.0), .0f, this->origin);
+    this->matrix = std::make_shared<glm::mat4>(glm::rotate(glm::mat4(1.0), .0f, this->origin));
 }
 
-void Rotation::rotateBy(const glm::vec3 &rotation) {
-    this->rotation += rotation;
-    if (rotation.x != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    } else if (rotation.y != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    } else if (rotation.z != 0.0f) {
-        this->matrix = glm::rotate(this->matrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+void Rotation::rotateBy(const glm::vec3 &offset) {
+    this->rotation += offset;
+    this->is_dirty = true;
+}
+
+void Rotation::setRotation(const glm::vec3 &new_rotation) {
+    this->rotation.x = new_rotation.x;
+    this->rotation.y = new_rotation.y;
+    this->rotation.z = new_rotation.z;
+    this->is_dirty = true;
+}
+
+std::shared_ptr<glm::mat4> Rotation::getMatrix() {
+    if (this->is_dirty) {
+        this->matrix = std::make_shared<glm::mat4>(
+                glm::rotate(glm::mat4(1.0), glm::radians(this->rotation.x), glm::vec3(1.0, 0.0, 0.0)) *
+                glm::rotate(glm::mat4(1.0), glm::radians(this->rotation.y), glm::vec3(0.0, 1.0, 0.0)) *
+                glm::rotate(glm::mat4(1.0), glm::radians(this->rotation.z), glm::vec3(0.0, 0.0, 1.0)));
+        this->is_dirty = false;
     }
-}
-
-void Rotation::setRotation(const glm::vec3 &rotation) {
-    this->rotation.x = glm::radians(rotation.x);
-    this->rotation.y = glm::radians(rotation.y);
-    this->rotation.z = glm::radians(rotation.z);
-}
-
-const glm::mat4& Rotation::getMatrix() {
     return this->matrix;
 }
 
@@ -70,20 +76,24 @@ void Rotation::update(const EventArgs &event_args) {
 }
 
 Scale::Scale(const glm::vec3 &initial_scale) : scale(initial_scale) {
-    this->matrix = glm::scale(glm::mat4(1.0), this->scale);
+    this->matrix = std::make_shared<glm::mat4>(glm::scale(glm::mat4(1.0), this->scale));
 }
 
-void Scale::setScale(const glm::vec3 &scale) {
-    this->scale = scale;
-    matrix = glm::scale(glm::mat4(1.0), this->scale);
+void Scale::scaleBy(const glm::vec3 &offset) {
+    this->scale += offset;
+    this->is_dirty = true;
 }
 
-void Scale::scaleBy(const glm::vec3 &scale) {
-    this->scale += scale;
-    matrix = glm::scale(glm::mat4(1.0), this->scale);
+void Scale::setScale(const glm::vec3 &new_scale) {
+    this->scale = new_scale;
+    this->is_dirty = true;
 }
 
-const glm::mat4& Scale::getMatrix() {
+std::shared_ptr<glm::mat4> Scale::getMatrix() {
+    if (this->is_dirty) {
+        matrix = std::make_shared<glm::mat4>(glm::scale(glm::mat4(1.0), this->scale));
+        this->is_dirty = false;
+    }
     return this->matrix;
 }
 

@@ -15,19 +15,15 @@ TransformComposite::TransformComposite() {
     scale = std::make_unique<Scale>(glm::vec3(1.0f, 1.0f, 1.0f));
 
     // initializing model matrix
-    model_matrix = std::make_unique<glm::mat4>(translation->getMatrix() * rotation->getMatrix() * scale->getMatrix());
+    matrix = std::make_unique<glm::mat4>(*translation->getMatrix() * *rotation->getMatrix() * *scale->getMatrix());
 }
 
-const glm::mat4& TransformComposite::getMatrix() {
-    if (!is_dirty) {
-        return *model_matrix;
+std::shared_ptr<glm::mat4> TransformComposite::getMatrix() {
+    if (this->is_dirty) {
+        matrix = std::make_unique<glm::mat4>(*translation->getMatrix() * *rotation->getMatrix() * *scale->getMatrix());
+        this->is_dirty = false;
     }
-
-    // recalculation
-    model_matrix = std::make_unique<glm::mat4>(translation->getMatrix() * rotation->getMatrix() * scale->getMatrix());
-    is_dirty = false;
-
-    return *model_matrix;
+    return matrix;
 }
 
 void TransformComposite::update(const EventArgs &event_args) {
@@ -38,5 +34,5 @@ void TransformComposite::update(const EventArgs &event_args) {
     } else if (event_args.type == EventType::U_SCALE || event_args.type == EventType::S_SCALE) {
         scale->update(event_args);
     }
-    is_dirty = true;
+    this->is_dirty = true;
 }

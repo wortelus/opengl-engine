@@ -6,16 +6,17 @@
 #define ZPG_TRANSFORM_H
 
 
+#include <memory>
 #include "glm/ext/matrix_float4x4.hpp"
 #include "../util/observer.h"
 
 class TransformationAbstract : public IObserver {
 protected:
     const float default_w = 1.0f;
-    // TODO: unique_ptr?
-    glm::mat4 matrix;
+    std::shared_ptr<glm::mat4> matrix;
+    bool is_dirty = false;
 public:
-    virtual const glm::mat4& getMatrix() = 0;
+    virtual std::shared_ptr<glm::mat4> getMatrix() = 0;
 };
 
 class Translation : public TransformationAbstract {
@@ -25,10 +26,10 @@ public:
     explicit Translation(const glm::vec3 &translation);
 
     void setTranslation(const glm::vec3 &translation);
-    void moveBy(const glm::vec3 &translation);
+    void moveBy(const glm::vec3 &offset);
 
     void update(const EventArgs &event_args) override;
-    const glm::mat4& getMatrix() override;
+    std::shared_ptr<glm::mat4> getMatrix() override;
 };
 
 class Rotation : public TransformationAbstract {
@@ -39,11 +40,11 @@ public:
     Rotation();
     explicit Rotation(const glm::vec3 &origin);
 
-    void rotateBy(const glm::vec3 &rotation);
+    void rotateBy(const glm::vec3 &offset);
     void setRotation(const glm::vec3 &rotation);
 
     void update(const EventArgs &event_args) override;
-    const glm::mat4& getMatrix() override;
+    std::shared_ptr<glm::mat4> getMatrix() override;
 };
 
 class Scale : public TransformationAbstract {
@@ -52,11 +53,11 @@ private:
 public:
     explicit Scale(const glm::vec3 &scale);
 
+    void scaleBy(const glm::vec3 &offset);
     void setScale(const glm::vec3 &scale);
-    void scaleBy(const glm::vec3 &scale);
 
     void update(const EventArgs &event_args) override;
-    const glm::mat4& getMatrix() override;
+    std::shared_ptr<glm::mat4> getMatrix() override;
 };
 
 
