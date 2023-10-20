@@ -54,6 +54,7 @@ public:
     void passModelMatrix(const glm::mat4 &model) const;
     void passViewMatrix(const glm::mat4 &view) const;
     void passProjectionMatrix(const glm::mat4 &projection) const;
+    void passNormalMatrix(const glm::mat3 &normal) const;
 
     void update(const EventArgs& event_args) override;
 };

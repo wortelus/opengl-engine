@@ -36,6 +36,7 @@ public:
     void passModelMatrix(const glm::mat4 &model);
     void passViewMatrix(const glm::mat4 &view);
     void passProjectionMatrix(const glm::mat4 &projection);
+    void passNormalMatrix(const glm::mat3 &normal);
 //    void unloadShader(const std::string &name);
 
     //[[nodiscard]] Shader* GetShader(const std::string& name) const;

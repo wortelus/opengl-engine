@@ -83,3 +83,8 @@ void Shader::passProjectionMatrix(const glm::mat4 &projection) const {
 void Shader::update(const EventArgs &event_args) {
 
 }
+
+void Shader::passNormalMatrix(const glm::mat3 &normal) const {
+    glUniformMatrix3fv(glGetUniformLocation(shader_program, "normal_matrix"),
+                       1, GL_FALSE, glm::value_ptr(normal));
+}

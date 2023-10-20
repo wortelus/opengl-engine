@@ -54,6 +54,8 @@ void ShaderLoader::loadShaders() {
                                                  ShaderCode{ShaderType::FragmentShader,
                                                             fragment_shader.c_str()
                                                  });
+
+        printf("Successfully loaded shader %s\n", name.c_str());
     }
 }
 
@@ -88,4 +90,9 @@ void ShaderLoader::passViewMatrix(const glm::mat4 &view) {
 void ShaderLoader::passProjectionMatrix(const glm::mat4 &projection) {
     if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
     shaders[*active_shader]->passProjectionMatrix(projection);
+}
+
+void ShaderLoader::passNormalMatrix(const glm::mat3 &normal) {
+    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
+    shaders[*active_shader]->passNormalMatrix(normal);
 }
