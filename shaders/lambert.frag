@@ -26,8 +26,8 @@ uniform int num_lights;
 
 out vec4 out_Color;
 
-vec3 calcLambertLight(PointLight light, vec3 normal, vec3 fragPos) {
-    vec3 light_vector = normalize(light.position - fragPos);
+vec3 calcLambertLight(PointLight light, vec3 normal, vec3 frag_pos_world) {
+    vec3 light_vector = normalize(light.position - frag_pos_world);
     float dot_product = max(dot(light_vector, normalize(normal)), 0.0);
 
     vec3 ambient = material.ambient * object_color;
