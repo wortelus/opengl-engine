@@ -42,31 +42,32 @@ DrawableObject *Scene::newObject(const float *vertices, const unsigned int &vert
 }
 
 void Scene::createObjects() {
-    auto sphere_north_object = newObject(sphere, sizeof(sphere),
-                                         glm::vec3(0.f, 0.f, 2.f), "phong");
-    sphere_north_object->setProperties(glm::vec3(0.0, 1.0, 1.0),
-                                       glm::vec3(0.0, 1.0, 0.0),
-                                       1.f);
-
     auto sphere_south_object = newObject(sphere, sizeof(sphere),
                                          glm::vec3(0.f, 0.f, -2.f), "lambert");
-    sphere_south_object->setProperties(glm::vec3(0.5, 1.0, 0.0),
+    sphere_south_object->setProperties(glm::vec3(1.0, 1.0, 0.0),
                                        glm::vec3(1.0, 1.0, 0.0),
                                        1.f);
 
+    auto sphere_west_object = newObject(sphere, sizeof(sphere),
+                                        glm::vec3(-2.f, 0.f, 0.f), "phong");
+    sphere_west_object->setColor(glm::vec3(1.0, 1.0, 0.0));
+    sphere_west_object->setProperties(glm::vec3(0.25, 1.0, 0.0),
+                                      glm::vec3(0.25, 1.0, 0.0),
+                                      1.f);
+
+    auto sphere_north_object = newObject(sphere, sizeof(sphere),
+                                         glm::vec3(0.f, 0.f, 2.f), "blinn");
+    sphere_north_object->setColor(glm::vec3(0.0, 1.0, 0.0));
+    sphere_north_object->setProperties(glm::vec3(0.0, 1.0, 0.25),
+                                       glm::vec3(0.0, 1.0, 0.75),
+                                       1.f);
 
     auto sphere_east_object = newObject(sphere, sizeof(sphere),
                                         glm::vec3(2.f, 0.f, 0.f), "constant");
-    sphere_east_object->setColor(glm::vec3(1.0, 0.0, 1.0));
-
-    auto sphere_west_object = newObject(sphere, sizeof(sphere),
-                                        glm::vec3(-2.f, 0.f, 0.f), "phong");
-    sphere_west_object->setProperties(glm::vec3(0.5, 1.0, 0.0),
-                                      glm::vec3(1.0, 1.0, 0.0),
-                                      1.f);
+    sphere_east_object->setColor(glm::vec3(0.0, 1.0, 1.0));
 
     std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(glm::vec3(0.f, 0.f, 0.f),
-                                                                           glm::vec3(0.f, 1.f, 1.f),
+                                                                           glm::vec3(1.f, 1.f, 1.f),
                                                                            3.f,
                                                                            1.f, 1.f, 1.f);
     this->light_manager.addLight(std::move(phong_light));
