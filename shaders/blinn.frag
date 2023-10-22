@@ -29,15 +29,15 @@ uniform int num_lights;
 
 out vec4 out_color;
 
-vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 light_direction_n = normalize(light.position - fragPos);
+vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 view_direction_norm) {
+    vec3 light_direction_n = normalize(light.position - frag_pos_world);
     float diff = max(dot(normal, light_direction_n), 0.0);
 
     // blinn-phong modification
-    vec3 halfway_dir = normalize(-light_direction_n + viewDir);
+    vec3 halfway_dir = normalize(-light_direction_n + view_direction_norm);
     float spec = pow(max(dot(normal, halfway_dir), 0.0), material.shininess);
 
-    float dist = length(light.position - fragPos);
+    float dist = length(light.position - frag_pos_world);
     float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
     vec3 ambient = material.ambient;
