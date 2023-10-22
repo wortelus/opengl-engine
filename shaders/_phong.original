@@ -1,0 +1,58 @@
+#version 330
+
+in vec4 ex_world_position;
+in vec3 ex_world_normal;
+in vec3 ex_view_direction;
+
+uniform vec3 light_position;
+uniform vec3 light_color;
+uniform float light_intensity;
+
+uniform float constant;
+uniform float linear;
+uniform float quadratic;
+
+uniform float shininess;
+uniform vec3 ambient_intensity;
+uniform vec3 diffuse_intensity;
+uniform vec3 specular_intensity;
+
+out vec4 out_color;
+
+
+void main(void) {
+    // vec3 light_position = vec3(0.0, 0.0, 0.0);
+    float dist = length(light_position - ex_world_position.xyz);
+
+    vec3 light_vector_n = normalize(light_position - ex_world_position.xyz);
+    vec3 ex_view_direction_n = normalize(ex_view_direction);
+    vec3 ex_world_normal_n = normalize(ex_world_normal);
+
+    // ambient part
+    // vec4 light_color = vec4(0.812, 0.647, 0.385, 1.0);
+    // vec4 ambient_intensity = vec4(0.5, 0.3, 0.0, 0.0);
+    vec3 ambient = ambient_intensity;
+
+
+    // diffuse part
+    float diff = max(dot(light_vector_n, ex_world_normal_n), 0.0);
+    vec3 diffuse = diffuse_intensity * diff;
+
+    // specular part
+    // float specular_strength = 0.5;  // dummy value
+    // vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);  // white light color as dummy value
+    vec3 reflect_dir = reflect(-light_vector_n, ex_world_normal_n);
+    float spec = pow(max(dot(ex_view_direction_n, reflect_dir), 0.0), shininess);
+    vec3 specular = specular_intensity * spec;
+
+    // vec4 object_color = vec4(0.385, 0.647, 0.812, 1.0);
+
+    // attenuation part
+    float attenuation = 1.0 / (constant + linear * dist + quadratic * (dist * dist));
+
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
+
+    out_color = vec4((ambient + diffuse + specular), 1.0);
+}

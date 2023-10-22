@@ -10,6 +10,7 @@
 #include "../transform/transform_composite.h"
 #include "../util/observer.h"
 #include "model.h"
+#include "../rendering/shader.h"
 
 class DrawableObject {
 private:
@@ -17,6 +18,11 @@ private:
     std::unique_ptr<TransformComposite> model_matrix;
     std::unique_ptr<Model> model;
     std::string shader_name;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+    float shininess;
 public:
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name);
     ~DrawableObject();
@@ -29,6 +35,9 @@ public:
     void move(const glm::vec3& delta);
     void rotate(const glm::vec3& delta);
     void scale(const glm::vec3& delta);
+
+    void setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
+    void passUniforms(Shader* shader) const;
 
     void draw();
 };

@@ -58,6 +58,7 @@ public:
     [[nodiscard]] bool isJumping() const { return is_jumping; }
     [[nodiscard]] const glm::mat4& getView() const { return view; }
     [[nodiscard]] const glm::mat4& getProjection() const { return projection; }
+    [[nodiscard]] const glm::vec3& getPosition() const { return position; }
 };
 
 

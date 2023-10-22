@@ -65,6 +65,10 @@ void Shader::attachShader(const ShaderCode& shader_code) {
     }
 }
 
+void Shader::update(const EventArgs &event_args) {
+
+}
+
 void Shader::passModelMatrix(const glm::mat4 &model) const {
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "model_matrix"),
                        1, GL_FALSE, glm::value_ptr(model));
@@ -80,11 +84,40 @@ void Shader::passProjectionMatrix(const glm::mat4 &projection) const {
                        1, GL_FALSE, glm::value_ptr(projection));
 }
 
-void Shader::update(const EventArgs &event_args) {
-
-}
-
 void Shader::passNormalMatrix(const glm::mat3 &normal) const {
     glUniformMatrix3fv(glGetUniformLocation(shader_program, "normal_matrix"),
                        1, GL_FALSE, glm::value_ptr(normal));
+}
+
+void Shader::passCameraPosition(const glm::vec3 &camera_pos) const {
+    glUniform3fv(glGetUniformLocation(shader_program, "camera_position"),
+                 1, glm::value_ptr(camera_pos));
+}
+
+void Shader::passUniform1i(const std::string &uniform_name, int value) const {
+    glUniform1i(glGetUniformLocation(shader_program, uniform_name.c_str()), value);
+}
+
+void Shader::passUniform1f(const std::string &uniform_name, float value) const {
+    glUniform1f(glGetUniformLocation(shader_program, uniform_name.c_str()), value);
+}
+
+void Shader::passUniform3fv(const std::string &uniform_name, const glm::vec3 &value) const {
+    glUniform3fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
+                 1, glm::value_ptr(value));
+}
+
+void Shader::passUniform4fv(const std::string &uniform_name, const glm::vec4 &value) const {
+    glUniform4fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
+                 1, glm::value_ptr(value));
+}
+
+void Shader::passUniformMatrix3fv(const std::string &uniform_name, const glm::mat3 &value) const {
+    glUniformMatrix3fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
+                       1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::passUniformMatrix4fv(const std::string &uniform_name, const glm::mat4 &value) const {
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
+                       1, GL_FALSE, glm::value_ptr(value));
 }

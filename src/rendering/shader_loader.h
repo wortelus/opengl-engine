@@ -31,7 +31,7 @@ private:
     static std::string loadShaderFromFile(const std::string& path);
 public:
     void loadShaders();
-    bool loadShader(const std::string &name);
+    Shader* loadShader(const std::string &name);
     bool unloadShader();
     void passModelMatrix(const glm::mat4 &model);
     void passViewMatrix(const glm::mat4 &view);
@@ -40,6 +40,7 @@ public:
 //    void unloadShader(const std::string &name);
 
     //[[nodiscard]] Shader* GetShader(const std::string& name) const;
+    void passCameraPosition(const glm::vec3 &camera_pos);
 };
 
 

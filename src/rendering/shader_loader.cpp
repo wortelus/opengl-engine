@@ -59,13 +59,13 @@ void ShaderLoader::loadShaders() {
     }
 }
 
-bool ShaderLoader::loadShader(const std::string &name) {
-    if (shaders.find(name) == shaders.end()) return false; // <<< TODO: log, shouldn't happen
+Shader* ShaderLoader::loadShader(const std::string &name) {
+    if (shaders.find(name) == shaders.end()) return nullptr; // <<< TODO: log, shouldn't happen
 
     if (active_shader != nullptr) shaders[*active_shader]->unload();
     shaders[name]->load();
     active_shader = shaders[name].get()->getName();
-    return true;
+    return shaders[name].get();
 }
 
 void ShaderLoader::passModelMatrix(const glm::mat4& model) {
@@ -95,4 +95,9 @@ void ShaderLoader::passProjectionMatrix(const glm::mat4 &projection) {
 void ShaderLoader::passNormalMatrix(const glm::mat3 &normal) {
     if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
     shaders[*active_shader]->passNormalMatrix(normal);
+}
+
+void ShaderLoader::passCameraPosition(const glm::vec3 &camera_pos) {
+    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
+    shaders[*active_shader]->passCameraPosition(camera_pos);
 }

@@ -54,3 +54,20 @@ void DrawableObject::scale(const glm::vec3 &delta) {
     };
     this->model_matrix->update(args);
 }
+
+void DrawableObject::passUniforms(Shader* shader) const {
+    shader->passUniform3fv("material.ambient", this->ambient);
+    shader->passUniform3fv("material.diffuse", this->diffuse);
+    shader->passUniform3fv("material.specular", this->specular);
+    shader->passUniform1f("material.shininess", this->shininess);
+
+}
+
+void DrawableObject::setProperties(const glm::vec3 &_ambient, const glm::vec3 &_diffuse, const glm::vec3 &_specular,
+                                   float _shininess) {
+    this->ambient = _ambient;
+    this->diffuse = _diffuse;
+    this->specular = _specular;
+    this->shininess = _shininess;
+
+}

@@ -24,12 +24,16 @@
 #include "../rendering/shader_loader.h"
 #include "../models/drawable.h"
 #include "../rendering/camera.h"
+#include "../rendering/light/light.h"
+#include "../rendering/light_manager.h"
 
 class Scene {
 private:
     GLFWwindow* window;
     ShaderLoader shaderLoader;
+
     std::vector<std::unique_ptr<DrawableObject>> objects;
+    LightManager light_manager;
 
     std::unique_ptr<Camera> camera;
 
