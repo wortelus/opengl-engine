@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 22.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  22/10/2023
 
 #ifndef ZPG_LIGHT_MANAGER_H
 #define ZPG_LIGHT_MANAGER_H
