@@ -16,11 +16,13 @@ TransformComposite::TransformComposite() {
 
     // initializing model matrix
     matrix = std::make_unique<glm::mat4>(*translation->getMatrix() * *rotation->getMatrix() * *scale->getMatrix());
+    normal_matrix = std::make_shared<glm::mat3>(glm::transpose(glm::inverse(glm::mat3(*matrix))));
 }
 
 std::shared_ptr<glm::mat4> TransformComposite::getMatrix() {
     if (this->is_dirty) {
         matrix = std::make_unique<glm::mat4>(*translation->getMatrix() * *rotation->getMatrix() * *scale->getMatrix());
+        normal_matrix = std::make_shared<glm::mat3>(glm::transpose(glm::inverse(glm::mat3(*matrix))));
         this->is_dirty = false;
     }
     return matrix;
@@ -35,4 +37,13 @@ void TransformComposite::update(const EventArgs &event_args) {
         scale->update(event_args);
     }
     this->is_dirty = true;
+}
+
+std::shared_ptr<glm::mat3> TransformComposite::getNormalMatrix() {
+    if (this->is_dirty) {
+        matrix = std::make_unique<glm::mat4>(*translation->getMatrix() * *rotation->getMatrix() * *scale->getMatrix());
+        normal_matrix = std::make_shared<glm::mat3>(glm::transpose(glm::inverse(glm::mat3(*matrix))));
+        this->is_dirty = false;
+    }
+    return normal_matrix;
 }

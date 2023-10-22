@@ -51,12 +51,20 @@ public:
     [[nodiscard]] bool isLoaded() const { return active; }
     [[nodiscard]] std::shared_ptr<std::string> getName() const { return name; }
 
+    void update(const EventArgs& event_args) override;
+
     void passModelMatrix(const glm::mat4 &model) const;
     void passViewMatrix(const glm::mat4 &view) const;
     void passProjectionMatrix(const glm::mat4 &projection) const;
     void passNormalMatrix(const glm::mat3 &normal) const;
+    void passCameraPosition(const glm::vec3 &camera_pos) const;
 
-    void update(const EventArgs& event_args) override;
+    void passUniform1i(const std::string &uniform_name, int value) const;
+    void passUniform1f(const std::string &uniform_name, float value) const;
+    void passUniform3fv(const std::string &uniform_name, const glm::vec3 &value) const;
+    void passUniform4fv(const std::string &uniform_name, const glm::vec4 &value) const;
+    void passUniformMatrix3fv(const std::string &uniform_name, const glm::mat3 &value) const;
+    void passUniformMatrix4fv(const std::string &uniform_name, const glm::mat4 &value) const;
 };
 
 

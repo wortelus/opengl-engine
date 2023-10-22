@@ -11,15 +11,19 @@
 
 class TransformComposite : public TransformationAbstract {
 private:
-    // composite components
+    // composite components for the transformation
     std::unique_ptr<Translation> translation;
     std::unique_ptr<Rotation> rotation;
     std::unique_ptr<Scale> scale;
+
+    // normal matrix
+    // TODO: think about this
+    std::shared_ptr<glm::mat3> normal_matrix;
 public:
     TransformComposite();
     std::shared_ptr<glm::mat4> getMatrix() override;
+    std::shared_ptr<glm::mat3> getNormalMatrix();
     void update(const EventArgs& event_args) override;
 };
-
 
 #endif //ZPG_TRANSFORM_COMPOSITE_H

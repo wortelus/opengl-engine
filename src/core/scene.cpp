@@ -19,10 +19,10 @@
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
-Scene::Scene(GLFWwindow &window_reference, const int& initial_width, const int& initial_height) :
-    window(&window_reference),
-    last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
-    float ratio = (float)initial_width / (float)initial_height;
+Scene::Scene(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) :
+        window(&window_reference),
+        last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
+    float ratio = (float) initial_width / (float) initial_height;
     this->camera = std::make_unique<Camera>(ratio);
     this->objects = std::vector<std::unique_ptr<DrawableObject>>();
 }
@@ -33,19 +33,49 @@ void Scene::init() {
     this->createObjects();
 }
 
+DrawableObject *Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
+                                 const std::string &shader_name) {
+    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model), shader_name);
+    objects.push_back(std::move(object));
+    return objects.back().get();
+}
+
 void Scene::createObjects() {
-    std::unique_ptr<Model> sphere_north = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 2.f), std::move(sphere_north), "lambert"));
+    auto sphere_south_object = newObject(sphere, sizeof(sphere),
+                                         glm::vec3(0.f, 0.f, -2.f), "lambert");
+    sphere_south_object->setProperties(glm::vec3(1.0, 1.0, 0.0),
+                                       glm::vec3(1.0, 1.0, 0.0),
+                                       1.f);
 
-    std::unique_ptr<Model> sphere_south = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, -2.f), std::move(sphere_south), "lambert"));
+    auto sphere_west_object = newObject(sphere, sizeof(sphere),
+                                        glm::vec3(-2.f, 0.f, 0.f), "phong");
+    sphere_west_object->setColor(glm::vec3(1.0, 1.0, 0.0));
+    sphere_west_object->setProperties(glm::vec3(0.25, 1.0, 0.0),
+                                      glm::vec3(0.25, 1.0, 0.0),
+                                      1.f);
 
-    std::unique_ptr<Model> sphere_east = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(2.f, 0.f, 0.f), std::move(sphere_east), "lambert"));
+    auto sphere_north_object = newObject(sphere, sizeof(sphere),
+                                         glm::vec3(0.f, 0.f, 2.f), "blinn");
+    sphere_north_object->setColor(glm::vec3(0.0, 1.0, 0.0));
+    sphere_north_object->setProperties(glm::vec3(0.0, 1.0, 0.25),
+                                       glm::vec3(0.0, 1.0, 0.75),
+                                       1.f);
 
-    std::unique_ptr<Model> sphere_west = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_west), "lambert"));
+    auto sphere_east_object = newObject(sphere, sizeof(sphere),
+                                        glm::vec3(2.f, 0.f, 0.f), "constant");
+    sphere_east_object->setColor(glm::vec3(0.0, 1.0, 1.0));
 
+    std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(glm::vec3(0.f, 0.f, 0.f),
+                                                                           glm::vec3(1.f, 1.f, 1.f),
+                                                                           3.f,
+                                                                           1.f, 1.f, 1.f);
+    this->light_manager.addLight(std::move(phong_light));
+
+//    std::unique_ptr<Light> lambert_light = std::make_unique<Light>(glm::vec3(0.f, 0.f, 0.f),
+//                                                                   glm::vec3(0.f, 1.f, 0.f),
+//                                                                   1.f);
+//    this->light_manager.addLight(std::move(lambert_light));
 }
 
 void Scene::run() {
@@ -60,17 +90,14 @@ void Scene::run() {
 
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for(const auto & object : objects){
-            DrawableObject* d_obj = object.get();
-            auto model_matrix = *d_obj->getModelMatrix();
+        for (const auto &object: objects) {
+            DrawableObject *d_obj = object.get();
+            Shader *sh = shaderLoader.loadShader(d_obj->getShaderName());
 
-            shaderLoader.loadShader(d_obj->getShaderName());
-            shaderLoader.passModelMatrix(model_matrix);
-            shaderLoader.passViewMatrix(this->camera->getView());
-            shaderLoader.passProjectionMatrix(this->camera->getProjection());
-
-            // TODO: lazy normal matrix
-            shaderLoader.passNormalMatrix(glm::transpose(glm::inverse(model_matrix)));
+            d_obj->passUniforms(sh);
+            camera->passUniforms(sh);
+            if (d_obj->isIlluminated())
+                light_manager.passUniforms(sh);
 
             d_obj->draw();
         }
@@ -89,74 +116,74 @@ void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_SPACE) {
         camera->jump();
     } else if (key == GLFW_KEY_LEFT) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->move(glm::vec3(-0.1f, 0, 0));
         }
     } else if (key == GLFW_KEY_RIGHT) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->move(glm::vec3(0.1f, 0, 0));
         }
     } else if (key == GLFW_KEY_UP) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->move(glm::vec3(0, 0.1f, 0));
         }
     } else if (key == GLFW_KEY_DOWN) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->move(glm::vec3(0, -0.1f, 0));
         }
     }
-    //
-    // rotation along x-axis
-    //
+        //
+        // rotation along x-axis
+        //
     else if (key == GLFW_KEY_E) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->rotate(glm::vec3(10.f, 0, 0));
         }
     } else if (key == GLFW_KEY_F) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->rotate(glm::vec3(-10.f, 0, 0));
         }
     }
-    //
-    // rotation along y-axis
-    //
+        //
+        // rotation along y-axis
+        //
     else if (key == GLFW_KEY_R) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->rotate(glm::vec3(0, 10.f, 0));
         }
     } else if (key == GLFW_KEY_G) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->rotate(glm::vec3(0, -10.f, 0));
         }
     }
-    //
-    // rotation along z-axis
-    //
+        //
+        // rotation along z-axis
+        //
     else if (key == GLFW_KEY_T) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->rotate(glm::vec3(0, 0, 10.f));
         }
     } else if (key == GLFW_KEY_H) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->rotate(glm::vec3(0, 0, -10.f));
         }
     }
-    //
-    // scaling
-    //
+        //
+        // scaling
+        //
     else if (key == GLFW_KEY_Z) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->scale(glm::vec3(0.1f, 0.1f, 0.1f));
         }
     } else if (key == GLFW_KEY_X) {
-        for(const auto & object : objects){
+        for (const auto &object: objects) {
             object->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
         }
     }
 }
 
 Scene::~Scene() {
-    for(auto & object : objects){
+    for (auto &object: objects) {
 //        object.reset();
     }
 }
@@ -173,7 +200,7 @@ void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
     camera->move(x_offset, y_offset);
 }
 
-inline void Scene::continuousMovement(const float& delta_time) {
+inline void Scene::continuousMovement(const float &delta_time) {
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera->moveCharacterFront(CAMERA_SPEED * delta_time);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -184,6 +211,6 @@ inline void Scene::continuousMovement(const float& delta_time) {
         camera->moveCharacterSide(CAMERA_SPEED * delta_time);
 }
 
-void Scene::update_aspect_ratio(const int& new_width, const int& new_height) {
+void Scene::update_aspect_ratio(const int &new_width, const int &new_height) {
     camera->update_aspect_ratio(new_width, new_height);
 }

@@ -24,12 +24,16 @@
 #include "../rendering/shader_loader.h"
 #include "../models/drawable.h"
 #include "../rendering/camera.h"
+#include "../rendering/light/light.h"
+#include "../rendering/light_manager.h"
 
 class Scene {
 private:
     GLFWwindow* window;
     ShaderLoader shaderLoader;
+
     std::vector<std::unique_ptr<DrawableObject>> objects;
+    LightManager light_manager;
 
     std::unique_ptr<Camera> camera;
 
@@ -39,6 +43,8 @@ private:
     double last_y = 0.0;
 
     float last_frame_time = 0.0f;
+
+    DrawableObject* newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
 public:
     explicit Scene(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
