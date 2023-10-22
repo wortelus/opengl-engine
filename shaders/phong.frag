@@ -22,6 +22,7 @@ struct PointLight {
     float quadratic;
 };
 
+uniform vec3 object_color;
 uniform Material material;
 uniform PointLight lights[MAX_LIGHTS];
 uniform int num_lights;
@@ -38,8 +39,8 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     float dist = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
-    vec3 ambient = material.ambient;
-    vec3 diffuse = material.diffuse * diff;
+    vec3 ambient = material.ambient * object_color;
+    vec3 diffuse = material.diffuse * diff * object_color;
     vec3 specular = material.specular * spec;
 
     ambient *= light.intensity * attenuation;

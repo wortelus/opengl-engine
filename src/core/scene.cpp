@@ -33,30 +33,48 @@ void Scene::init() {
     this->createObjects();
 }
 
-void Scene::createObjects() {
-    std::unique_ptr<Model> sphere_north = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, 2.f), std::move(sphere_north), "lambert"));
+DrawableObject *Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
+                                 const std::string &shader_name) {
+    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model), shader_name);
+    objects.push_back(std::move(object));
+    return objects.back().get();
+}
 
-    std::unique_ptr<Model> sphere_south = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    std::unique_ptr<DrawableObject> sphere_south_object = std::make_unique<DrawableObject>(glm::vec3(0.f, 0.f, -2.f), std::move(sphere_south), "phong");
-    sphere_south_object->setProperties(glm::vec3(0.5, 0.3, 0.9),
+void Scene::createObjects() {
+    auto sphere_north_object = newObject(sphere, sizeof(sphere),
+                                         glm::vec3(0.f, 0.f, 2.f), "phong");
+    sphere_north_object->setProperties(glm::vec3(0.0, 1.0, 1.0),
                                        glm::vec3(0.0, 1.0, 0.0),
+                                       1.f);
+
+    auto sphere_south_object = newObject(sphere, sizeof(sphere),
+                                         glm::vec3(0.f, 0.f, -2.f), "lambert");
+    sphere_south_object->setProperties(glm::vec3(0.5, 1.0, 0.0),
                                        glm::vec3(1.0, 1.0, 0.0),
                                        1.f);
-    objects.push_back(std::move(sphere_south_object));
 
-    std::unique_ptr<Model> sphere_east = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(2.f, 0.f, 0.f), std::move(sphere_east), "lambert"));
 
-    std::unique_ptr<Model> sphere_west = std::make_unique<Model>(sphere, sizeof(sphere) / sizeof(float), 3, false);
-    objects.push_back(std::make_unique<DrawableObject>(glm::vec3(-2.f, 0.f, 0.f), std::move(sphere_west), "lambert"));
+    auto sphere_east_object = newObject(sphere, sizeof(sphere),
+                                        glm::vec3(2.f, 0.f, 0.f), "constant");
+    sphere_east_object->setColor(glm::vec3(1.0, 0.0, 1.0));
 
-    std::unique_ptr<PhongLight> light = std::make_unique<PhongLight>(glm::vec3(0.f, 0.f, 0.f),
-                                  glm::vec3(0.f, 1.f, 1.f),
-                                  3.f,
-                                  1.f, 1.f, 1.f);
+    auto sphere_west_object = newObject(sphere, sizeof(sphere),
+                                        glm::vec3(-2.f, 0.f, 0.f), "phong");
+    sphere_west_object->setProperties(glm::vec3(0.5, 1.0, 0.0),
+                                      glm::vec3(1.0, 1.0, 0.0),
+                                      1.f);
 
-    this->light_manager.addLight(std::move(light));
+    std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(glm::vec3(0.f, 0.f, 0.f),
+                                                                           glm::vec3(0.f, 1.f, 1.f),
+                                                                           3.f,
+                                                                           1.f, 1.f, 1.f);
+    this->light_manager.addLight(std::move(phong_light));
+
+//    std::unique_ptr<Light> lambert_light = std::make_unique<Light>(glm::vec3(0.f, 0.f, 0.f),
+//                                                                   glm::vec3(0.f, 1.f, 0.f),
+//                                                                   1.f);
+//    this->light_manager.addLight(std::move(lambert_light));
 }
 
 void Scene::run() {
@@ -73,21 +91,12 @@ void Scene::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (const auto &object: objects) {
             DrawableObject *d_obj = object.get();
-            auto model_matrix = *d_obj->getModelMatrix();
+            Shader *sh = shaderLoader.loadShader(d_obj->getShaderName());
 
-            Shader* sh = shaderLoader.loadShader(d_obj->getShaderName());
-            shaderLoader.passModelMatrix(model_matrix);
-            shaderLoader.passViewMatrix(this->camera->getView());
-            shaderLoader.passProjectionMatrix(this->camera->getProjection());
-            shaderLoader.passCameraPosition(this->camera->getPosition());
-
-            // TODO: lazy normal matrix
-            shaderLoader.passNormalMatrix(glm::transpose(glm::inverse(model_matrix)));
-
-            if (d_obj->getShaderName() == "phong") {
-                d_obj->passUniforms(sh);
+            d_obj->passUniforms(sh);
+            camera->passUniforms(sh);
+            if (d_obj->isIlluminated())
                 light_manager.passUniforms(sh);
-            }
 
             d_obj->draw();
         }

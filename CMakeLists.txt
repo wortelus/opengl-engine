@@ -19,6 +19,7 @@ add_executable(zpg src/main.cpp
         src/util/const.h
         src/util/event_args.h
         src/util/observer.h
+        src/models/material.h
         src/models/drawable.h src/models/drawable.cpp
         src/models/model.h src/models/model.cpp
         src/rendering/shader_loader.h src/rendering/shader_loader.cpp

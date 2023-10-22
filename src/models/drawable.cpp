@@ -30,6 +30,10 @@ std::shared_ptr<glm::mat4> DrawableObject::getModelMatrix() const {
     return this->model_matrix->getMatrix();
 }
 
+std::shared_ptr<glm::mat3> DrawableObject::getNormalMatrix() const {
+    return this->model_matrix->getNormalMatrix();
+}
+
 void DrawableObject::move(const glm::vec3 &delta) {
     this->position += delta;
     EventArgs args {
@@ -56,18 +60,33 @@ void DrawableObject::scale(const glm::vec3 &delta) {
 }
 
 void DrawableObject::passUniforms(Shader* shader) const {
-    shader->passUniform3fv("material.ambient", this->ambient);
-    shader->passUniform3fv("material.diffuse", this->diffuse);
-    shader->passUniform3fv("material.specular", this->specular);
-    shader->passUniform1f("material.shininess", this->shininess);
+    shader->passModelMatrix(*this->getModelMatrix());
+    shader->passNormalMatrix(*this->getNormalMatrix());
 
+    shader->passUniform3fv("object_color", this->object_color);
+    shader->passUniform3fv("material.ambient", this->ambient);
+
+    if (isIlluminated()) {
+        shader->passUniform3fv("material.diffuse", this->material->diffuse);
+        shader->passUniform3fv("material.specular", this->material->specular);
+        shader->passUniform1f("material.shininess", this->material->shininess);
+    }
 }
 
-void DrawableObject::setProperties(const glm::vec3 &_ambient, const glm::vec3 &_diffuse, const glm::vec3 &_specular,
+void DrawableObject::setAmbient(const glm::vec3 &_ambient) {
+    this->ambient = _ambient;
+}
+
+void DrawableObject::setProperties(const glm::vec3 &_diffuse, const glm::vec3 &_specular, float _shininess) {
+    material = std::make_unique<Material>(_diffuse, _specular, _shininess);
+}
+
+void DrawableObject::setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular,
                                    float _shininess) {
     this->ambient = _ambient;
-    this->diffuse = _diffuse;
-    this->specular = _specular;
-    this->shininess = _shininess;
+    material = std::make_unique<Material>(_diffuse, _specular, _shininess);
+}
 
+void DrawableObject::setColor(const glm::vec3 &color) {
+    this->object_color = color;
 }

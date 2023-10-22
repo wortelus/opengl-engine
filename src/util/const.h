@@ -12,6 +12,9 @@
 const char* const ASSETS_PATH = "assets";
 const char* const SHADERS_PATH = "shaders";
 
+const glm::vec3 OBJECT_COLOR = glm::vec3(0.0f, 0.25f, 0.75f);
+const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.25f, 0.25f, 0.25f);
+
 // Mouse sensitivity for camera movement
 const double MOUSE_SENSITIVITY = 0.1;
 const bool DISABLE_CURSOR = true;

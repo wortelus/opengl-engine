@@ -30,8 +30,6 @@ private:
     glm::vec3 position;
     glm::vec3 color;
     float intensity;
-
-    constexpr static const glm::vec3 DEFAULT_AMBIENT = glm::vec3(0.1f, 0.1f, 0.1f);
 public:
     Light(const glm::vec3& position,
           const glm::vec3& color,

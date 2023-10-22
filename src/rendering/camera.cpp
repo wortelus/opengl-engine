@@ -86,3 +86,9 @@ void Camera::update_aspect_ratio(const int& width, const int& height) {
     aspect_ratio = (float) width / (float) height;
     projection = glm::perspective(PROJECTION_FOV, aspect_ratio, PROJECTION_NEAR, PROJECTION_FAR);
 }
+
+void Camera::passUniforms(Shader *shader) {
+    shader->passViewMatrix(view);
+    shader->passProjectionMatrix(projection);
+    shader->passCameraPosition(position);
+}
