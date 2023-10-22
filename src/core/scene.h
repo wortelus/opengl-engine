@@ -44,15 +44,18 @@ private:
 
     float last_frame_time = 0.0f;
 
-    DrawableObject* newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
+    bool is_finished = false;
 public:
-    explicit Scene(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+    DrawableObject* newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
+    void appendLight(std::unique_ptr<Light>&& light);
+public:
+    Scene(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
 
     void init();
-    void createObjects();
-
     void run();
+
+    void finish() { is_finished = true; }
 
     inline void continuousMovement(const float& delta_time);
 

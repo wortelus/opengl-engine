@@ -15,16 +15,20 @@
 #include <vector>
 #include <string>
 
+#include "scene.h"
+#include "scene_loader.h"
 #include "../rendering/shader.h"
 #include "../rendering/shader_loader.h"
 #include "../models/drawable.h"
-#include "scene.h"
 
 class Application {
 private:
     GLFWwindow* window;
 
-    Scene* scene;
+    std::shared_ptr<ShaderLoader> shaderLoader;
+
+    int current_scene_id = 0;
+    std::unique_ptr<Scene> scene;
 
     const char* title;
 

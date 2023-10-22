@@ -30,10 +30,9 @@ Scene::Scene(GLFWwindow &window_reference, const int &initial_width, const int &
 void Scene::init() {
     this->shaderLoader = ShaderLoader();
     shaderLoader.loadShaders();
-    this->createObjects();
 }
 
-DrawableObject *Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
+DrawableObject* Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
                                  const std::string &shader_name) {
     std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
     std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model), shader_name);
@@ -41,45 +40,13 @@ DrawableObject *Scene::newObject(const float *vertices, const unsigned int &vert
     return objects.back().get();
 }
 
-void Scene::createObjects() {
-    auto sphere_south_object = newObject(sphere, sizeof(sphere),
-                                         glm::vec3(0.f, 0.f, -2.f), "lambert");
-    sphere_south_object->setProperties(glm::vec3(1.0, 1.0, 0.0),
-                                       glm::vec3(1.0, 1.0, 0.0),
-                                       1.f);
-
-    auto sphere_west_object = newObject(sphere, sizeof(sphere),
-                                        glm::vec3(-2.f, 0.f, 0.f), "phong");
-    sphere_west_object->setColor(glm::vec3(1.0, 1.0, 0.0));
-    sphere_west_object->setProperties(glm::vec3(0.25, 1.0, 0.0),
-                                      glm::vec3(0.25, 1.0, 0.0),
-                                      1.f);
-
-    auto sphere_north_object = newObject(sphere, sizeof(sphere),
-                                         glm::vec3(0.f, 0.f, 2.f), "blinn");
-    sphere_north_object->setColor(glm::vec3(0.0, 1.0, 0.0));
-    sphere_north_object->setProperties(glm::vec3(0.0, 1.0, 0.25),
-                                       glm::vec3(0.0, 1.0, 0.75),
-                                       1.f);
-
-    auto sphere_east_object = newObject(sphere, sizeof(sphere),
-                                        glm::vec3(2.f, 0.f, 0.f), "constant");
-    sphere_east_object->setColor(glm::vec3(0.0, 1.0, 1.0));
-
-    std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(glm::vec3(0.f, 0.f, 0.f),
-                                                                           glm::vec3(1.f, 1.f, 1.f),
-                                                                           3.f,
-                                                                           1.f, 1.f, 1.f);
-    this->light_manager.addLight(std::move(phong_light));
-
-//    std::unique_ptr<Light> lambert_light = std::make_unique<Light>(glm::vec3(0.f, 0.f, 0.f),
-//                                                                   glm::vec3(0.f, 1.f, 0.f),
-//                                                                   1.f);
-//    this->light_manager.addLight(std::move(lambert_light));
+void Scene::appendLight(std::unique_ptr<Light>&& light) {
+    light_manager.addLight(std::move(light));
 }
 
+
 void Scene::run() {
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window) && !is_finished) {
 
 //        auto current_frame_time = (float)glfwGetTime() * 300.0f;
 //        float delta_time = current_frame_time - last_frame_time;
@@ -184,7 +151,7 @@ void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
 
 Scene::~Scene() {
     for (auto &object: objects) {
-//        object.reset();
+        object.reset();
     }
 }
 

@@ -14,7 +14,8 @@
 Application::Application(const int width, const int height, const char *title) : width(width), height(height), title(title) { }
 
 Application::~Application() {
-    delete scene;
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
 void Application::info() {
@@ -68,15 +69,12 @@ void Application::init() {
     if (DISABLE_CURSOR)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    scene = new Scene(*window, width, height);
+    scene = SceneLoader::loadScene(&current_scene_id, *window, width, height);
     scene->init();
 }
 
 void Application::run() {
     scene->run();
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
 }
 
 void Application::errorCallback(int error, const char* description)
@@ -95,6 +93,9 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+    if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
+        // TODO: runtime scene change
+    }
     else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
         if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
