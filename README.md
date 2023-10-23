@@ -1,34 +1,50 @@
 # ZPG
-This project is a semester work for the course Computer Graphics 
-at the Faculty of Computer Science at VSB - Technical University of Ostrava. 
-The goal of the project is to create a simple 3D scene using OpenGL and GLSL.
+In the days of academic endeavors, a project was conceived under the 
+esteemed halls of the Faculty of Computer Science at VSB - 
+Technical University of Ostrava. This undertaking was a 
+testament for the course **Principles of Computer Graphics**.
 
-Built using CMake on Debian 12 bookworm (stable).
+"Let there be a 3D realm," it was decreed, and thus, using the sacred 
+tools of OpenGL and GLSL, a scene was birthed.
+
+Crafted upon the foundation of Debian 12 bookworm, the steadfast and 
+unyielding, using the scriptures of CMake.
 
 ## Current state
 - [x] Basic scene with 4 spheres
 - [x] Camera
 - [x] Global transformations
 - [x] WASD Movement + jumping
-- [x] Lighting
+- [x] Lighting, ambient, diffuse, specular point lights
 - [x] Dynamic shader loading
+- [x] Materials
+- [x] Global illumination, constant, Phong, Blinn-Phong point lights
+- [x] Multiple scenes
 
 ## Controls
 ### Camera
-- **W/A/S/D** for movement
-- **Space** for jumping
+- Wander with W/A/S/D.
+- Jump using Space key.
 
 ### Global transformations
-- **arrows** for translation
-- **E/F** for rotation along X
-- **R/G** for rotation along Y
-- **T/H** for rotation along Z
+- **arrows** to translate
+- **E/F** for spin along the X-axis
+- **R/G** for rotation along the Y-axis
+- **T/H** for rotation along the Z-axis
 - **Z/X** for scaling
 
-## TODO's
+### Scene selection
+- using `current_scene_id` *(0-2)* in application.h, dynamic scene loading is in the works
+
+## TODO's - Tablets of Future Endeavors
 - Observer on transformations is currently not used. 
 We call globally directly in scene all transformation operations (*no notify*).
 - Observer on camera is not used, but implemented.
+- We have kinda optimized the MVP matrix calculation, 
+but it could be maybe better to pass it as a whole to the shader.
+- Maybe better scene loading, the way we make it now breaks encapsulation.
+- Review light intensity in lambert shader, it lit up the whole object, while blinn and phong didn't.
+- Reduce implementation dependencies by applying the observer pattern.
 - and more _in-code TODO's_
 
 ## Dependencies
@@ -38,7 +54,7 @@ We call globally directly in scene all transformation operations (*no notify*).
 - libglew-dev - *2.2.0-4+b1*
 - glew-utils - *2.2.0-4+b1*
 
-## Contact
-Daniel Slavík
+## Seek the Scribe
+Daniel Slavík, keeper of the chronicles.
 
-www.wortelus.eu
+[The digital temple - wortelus.eu](https://www.wortelus.eu) 
