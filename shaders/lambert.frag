@@ -16,8 +16,10 @@ struct PointLight {
     vec3 position;
     vec3 color;
     float intensity;
+    float constant;
+    float linear;
+    float quadratic;
 };
-
 
 uniform vec3 object_color;
 uniform Material material;
@@ -30,11 +32,13 @@ vec3 calcLambertLight(PointLight light, vec3 normal, vec3 frag_pos_world) {
     vec3 light_vector = normalize(light.position - frag_pos_world);
     float dot_product = max(dot(light_vector, normalize(normal)), 0.0);
 
-    vec3 ambient = material.ambient * object_color;
-    vec3 diffuse = dot_product * material.diffuse * object_color;
+    float dist = length(light.position - frag_pos_world);
+    float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
-    // Scale the result by the light's intensity.
-    return (ambient + diffuse) * light.intensity;
+    vec3 ambient = material.ambient;
+    vec3 diffuse = dot_product * material.diffuse * light.intensity * light.color;
+
+    return (ambient + diffuse) * attenuation * object_color;
 }
 
 void main(void) {

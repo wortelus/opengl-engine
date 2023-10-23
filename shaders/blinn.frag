@@ -34,24 +34,19 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 vie
     float diff = max(dot(normal, light_direction_n), 0.0);
 
     // blinn-phong modification
-    vec3 halfway_dir = normalize(-light_direction_n + view_direction_norm);
-    // -halfway_dir ?
-    float spec = pow(max(dot(normal, -halfway_dir), 0.0), material.shininess);
+    vec3 halfway_dir = normalize(light_direction_n + view_direction_norm);
+    float spec = pow(max(dot(normal, halfway_dir), 0.0), material.shininess);
+    // end of blinn-phong modification
 
     float dist = length(light.position - frag_pos_world);
     float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
-    vec3 ambient = material.ambient;
-    vec3 diffuse = material.diffuse * diff;
+    // TODO: optimize vector multiplication
+    vec3 ambient  = material.ambient                                         * object_color;
+    vec3 diffuse  = material.diffuse  * diff * light.intensity * light.color * object_color;
+    vec3 specular = material.specular * spec * light.intensity * light.color;
 
-    // TODO: specular color based on light color
-    vec3 specular = material.specular * spec;
-
-    ambient *= light.intensity * attenuation;
-    diffuse *= light.intensity * attenuation;
-    specular *= light.intensity * attenuation;
-
-    return (ambient + diffuse + specular) * object_color;
+    return (ambient + diffuse + specular) * attenuation;
 }
 
 void main(void) {
