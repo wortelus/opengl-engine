@@ -69,12 +69,26 @@ void Application::init() {
     if (DISABLE_CURSOR)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+    shaderLoader = std::make_shared<ShaderLoader>();
+    shaderLoader->loadShaders();
+
     scene = SceneLoader::loadScene(&current_scene_id, *window, width, height);
-    scene->init();
+    scene->init(shaderLoader);
+}
+
+void Application::nextScene() {
+    current_scene_id++;
+    scene->finish();
 }
 
 void Application::run() {
-    scene->run();
+    do {
+        if (scene->getSceneId() != this->current_scene_id) {
+            scene = SceneLoader::loadScene(&current_scene_id, *window, width, height);
+            scene->init(shaderLoader);
+        }
+        scene->run();
+    } while (!glfwWindowShouldClose(window));
 }
 
 void Application::errorCallback(int error, const char* description)
@@ -91,18 +105,17 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 }
 
 void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
-    if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
-        // TODO: runtime scene change
-    }
-    else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
+        scene->finish();
+    } else if (key == GLFW_KEY_F2 && action == GLFW_PRESS) {
+        nextScene();
+    } else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) {
         if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-    else if (action == GLFW_PRESS)
+    } else if (action == GLFW_PRESS)
         scene->handleKeyEventPress(key, scancode, action, mods);
 }
 

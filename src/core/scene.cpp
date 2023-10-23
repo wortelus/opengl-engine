@@ -7,6 +7,7 @@
 //Include GLFW
 #include <GLFW/glfw3.h>
 #include <algorithm>
+#include <utility>
 
 //Include GLM
 #include "glm/vec3.hpp" // glm::vec3
@@ -19,34 +20,35 @@
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
-Scene::Scene(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) :
-        window(&window_reference),
+Scene::Scene(const char &id, GLFWwindow &window_reference, const int &initial_width, const int &initial_height) :
+        scene_id(id), window(&window_reference),
         last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
     float ratio = (float) initial_width / (float) initial_height;
     this->camera = std::make_unique<Camera>(ratio);
     this->objects = std::vector<std::unique_ptr<DrawableObject>>();
 }
 
-void Scene::init() {
-    this->shaderLoader = ShaderLoader();
-    shaderLoader.loadShaders();
+void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
+    this->shaderLoader = std::move(shader_loader);
 }
 
-DrawableObject* Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
-                                 const std::string &shader_name) {
+DrawableObject *
+Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
+                 const std::string &shader_name) {
     std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
-    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model), shader_name);
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
+                                                                              shader_name);
     objects.push_back(std::move(object));
     return objects.back().get();
 }
 
-void Scene::appendLight(std::unique_ptr<Light>&& light) {
+void Scene::appendLight(std::unique_ptr<Light> &&light) {
     light_manager.addLight(std::move(light));
 }
 
 
 void Scene::run() {
-    while (!glfwWindowShouldClose(window) && !is_finished) {
+    while (!is_finished) {
 
 //        auto current_frame_time = (float)glfwGetTime() * 300.0f;
 //        float delta_time = current_frame_time - last_frame_time;
@@ -59,7 +61,7 @@ void Scene::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (const auto &object: objects) {
             DrawableObject *d_obj = object.get();
-            Shader *sh = shaderLoader.loadShader(d_obj->getShaderName());
+            Shader *sh = shaderLoader->loadShader(d_obj->getShaderName());
 
             d_obj->passUniforms(sh);
             camera->passUniforms(sh);

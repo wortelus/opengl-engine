@@ -24,18 +24,17 @@
 class Application {
 private:
     GLFWwindow* window;
-
     std::shared_ptr<ShaderLoader> shaderLoader;
 
-    int current_scene_id = 0;
+    int current_scene_id = DEFAULT_SCENE;
     std::unique_ptr<Scene> scene;
 
     const char* title;
-
     float ratio;
     int width;
     int height;
 
+    void nextScene();
     void update_scene_aspect(const int& new_width, const int& new_height);
 public:
     Application(int width, int height, const char* title);

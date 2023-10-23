@@ -12,6 +12,7 @@
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int *scene_id, GLFWwindow &window_reference, const int &initial_width,
                                               const int &initial_height) {
+    // here, a thought has passed, if we ever would want to preload all scenes
     switch (*scene_id) {
         case 0:
             return loadSceneA(window_reference, initial_width, initial_height);
@@ -23,14 +24,13 @@ std::unique_ptr<Scene> SceneLoader::loadScene(int *scene_id, GLFWwindow &window_
             *scene_id = 0;
             return loadSceneA(window_reference, initial_width, initial_height);
     }
-
 }
 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneA(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
     const float height = -3.5;
 
-    std::unique_ptr<Scene> scene = std::make_unique<Scene>(window_reference, initial_width, initial_height);
+    std::unique_ptr<Scene> scene = std::make_unique<Scene>(0, window_reference, initial_width, initial_height);
     auto sphere_south_object = scene->newObject(sphere, sizeof(sphere),
                                                 glm::vec3(0.f, height, -2.f), "lambert");
     sphere_south_object->setColor(glm::vec3(0.385, 0.647, 0.812));
@@ -66,21 +66,12 @@ SceneLoader::loadSceneA(GLFWwindow &window_reference, const int &initial_width, 
 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneB(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
-    std::unique_ptr<Scene> scene = std::make_unique<Scene>(window_reference, initial_width, initial_height);
+    std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
     auto sphere_south_object = scene->newObject(sphere, sizeof(sphere),
                                                 glm::vec3(0.f, 0.f, -2.f), "phong");
     sphere_south_object->setColor(glm::vec3(1.0, 1.0, 1.0));
     sphere_south_object->setAmbient(glm::vec3(1.0, 1.0, 0.0));
     sphere_south_object->setProperties(glm::vec3(1.0, 1.0, 0.0),
-                                       glm::vec3(1.0, 1.0, 1.0),
-                                       52.f);
-
-
-    auto sphere_north_object = scene->newObject(sphere, sizeof(sphere),
-                                                glm::vec3(0.f, 0.f, 0.f), "phong");
-    sphere_north_object->setColor(glm::vec3(1.0, 1.0, 1.0));
-    sphere_north_object->setAmbient(glm::vec3(1.0, 1.0, 0.0));
-    sphere_north_object->setProperties(glm::vec3(1.0, 1.0, 0.0),
                                        glm::vec3(1.0, 1.0, 1.0),
                                        52.f);
 
@@ -97,7 +88,7 @@ SceneLoader::loadSceneB(GLFWwindow &window_reference, const int &initial_width, 
 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneC(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
-    std::unique_ptr<Scene> scene = std::make_unique<Scene>(window_reference, initial_width, initial_height);
+    std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
     auto sphere_obj = scene->newObject(sphere, sizeof(sphere),
                                        glm::vec3(-1.f, 1.f, -1.f), "phong");
     sphere_obj->setColor(glm::vec3(1.0, 1.0, 1.0));

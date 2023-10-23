@@ -29,12 +29,12 @@
 
 class Scene {
 private:
+    char scene_id;
     GLFWwindow* window;
-    ShaderLoader shaderLoader;
+    std::shared_ptr<ShaderLoader> shaderLoader;
 
     std::vector<std::unique_ptr<DrawableObject>> objects;
     LightManager light_manager;
-
     std::unique_ptr<Camera> camera;
 
     const glm::vec3 scene_up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -49,12 +49,14 @@ public:
     DrawableObject* newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
     void appendLight(std::unique_ptr<Light>&& light);
 public:
-    Scene(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+    Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
 
-    void init();
+    void init(std::shared_ptr<ShaderLoader> shader_loader);
     void run();
 
+    char getSceneId() const { return scene_id; }
+    bool isFinished() const { return is_finished; }
     void finish() { is_finished = true; }
 
     inline void continuousMovement(const float& delta_time);
