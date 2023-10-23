@@ -56,11 +56,11 @@ SceneLoader::loadSceneA(GLFWwindow &window_reference, const int &initial_width, 
                                                glm::vec3(2.f, height, 0.f), "constant");
     sphere_west_object->setColor(glm::vec3(0.385, 0.647, 0.812));
 
-    std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(glm::vec3(0.f, height + 1, 0.f),
-                                                                           glm::vec3(1.f, 1.f, 1.f),
-                                                                           1.f,
-                                                                           1.f, 0.1f, 0.01f);
-    scene->appendLight(std::move(phong_light));
+    std::unique_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, height + 1, 0.f),
+                                                             glm::vec3(1.f, 1.f, 1.f),
+                                                             1.f,
+                                                             1.f, 0.1f, 0.01f);
+    scene->appendLight(std::move(light_a));
     return std::move(scene);
 }
 
@@ -75,12 +75,12 @@ SceneLoader::loadSceneB(GLFWwindow &window_reference, const int &initial_width, 
                                        glm::vec3(1.0, 1.0, 1.0),
                                        52.f);
 
-    std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(glm::vec3(0.f, 0.f, -4.f),
-                                                                           glm::vec3(1.f, 1.f, 1.f),
-                                                                           1.f,
-                                                                           1.f, 1.f, 1.f);
+    std::unique_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 0.f, -4.f),
+                                                             glm::vec3(1.f, 1.f, 1.f),
+                                                             1.f,
+                                                             1.f, 1.f, 1.f);
 
-    scene->appendLight(std::move(phong_light));
+    scene->appendLight(std::move(light_a));
 
     return std::move(scene);
 }
@@ -137,11 +137,11 @@ SceneLoader::loadSceneC(GLFWwindow &window_reference, const int &initial_width, 
     sun_obj->setColor(glm::vec3(1.0, 0.5, 0.0));
     sun_obj->setAmbient(glm::vec3(1.0, 1.0, 1.0));
 
-    std::unique_ptr<PhongLight> phong_light = std::make_unique<PhongLight>(sun_position,
-                                                                           glm::vec3(1.f, 1.f, 0.f),
-                                                                           12.f,
-                                                                           1.f, 1.f, 1.f);
-    scene->appendLight(std::move(phong_light));
+    std::unique_ptr<Light> light_a = std::make_unique<Light>(sun_position,
+                                                             glm::vec3(1.f, 1.f, 0.f),
+                                                             12.f,
+                                                             1.f, 1.f, 1.f);
+    scene->appendLight(std::move(light_a));
 
     return std::move(scene);
 }

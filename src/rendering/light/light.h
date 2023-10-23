@@ -30,32 +30,18 @@ private:
     glm::vec3 position;
     glm::vec3 color;
     float intensity;
-public:
-    Light(const glm::vec3& position,
-          const glm::vec3& color,
-          const float& intensity) :
-          position(position), color(color), intensity(intensity) { };
-    virtual void setUniforms(Shader *shader, const std::string& prefix) const;
-};
-
-class PhongLight : public Light {
-private:
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-
     Attenuation attenuation;
 public:
-    PhongLight(
-            const glm::vec3& position,
-            const glm::vec3& color,
-            const float& intensity,
-            const float& constant,
-            const float& linear,
-            const float& quadratic) : Light(position, color, intensity),
-            attenuation({constant, linear, quadratic}) { };
-    void setUniforms(Shader* shader, const std::string& prefix) const override;
-};
+    Light(const glm::vec3 &position,
+          const glm::vec3 &color,
+          const float &intensity,
+          const float &constant, const float &linear, const float &quadratic)
+            : position(position),
+              color(color),
+              intensity(intensity),
+              attenuation({constant, linear, quadratic}) { };
 
+    virtual void setUniforms(Shader *shader, const std::string &prefix) const;
+};
 
 #endif //ZPG_LIGHT_H
