@@ -57,7 +57,7 @@ executables from the ethereal realm of source code.
 
 With the rites completed, the executable artifact is now amongst us. 
 Run it, and bask in the glory of your creation. For it is the digital alchemy, 
-turning lines of text into a living, breathing entity.
+turning lines of text into a mosaic of pixels and logic, painting stories in real-time.
 ## Controls
 ### Camera
 - Wander with W/A/S/D.
@@ -79,17 +79,16 @@ We call globally directly in scene all transformation operations (*no notify*).
 - Observer on camera is not used, but implemented.
 - We have kinda optimized the MVP matrix calculation, 
 but it could be maybe better to pass it as a whole to the shader.
-- Maybe better scene loading, the way we make it now breaks encapsulation.
-- Review light intensity in lambert shader, it lit up the whole object, while blinn and phong didn't.
 - Reduce implementation dependencies by applying the observer pattern.
+- Models could be shared between DrawableObjects, for it is a waste of memory to have multiple copies of the same model.
 - and more _in-code TODO's_
 
 ## The Sacred Relics
 - [libglfw3](https://www.glfw.org/) - *version 3.3.8*
 - [libglfw3-dev](https://www.glfw.org/) - *version 3.3.8-1*
-- libgl1-mesa-dev - *v22.3.6-1+deb12u1*
-- libglew-dev - *2.2.0-4+b1*
-- glew-utils - *2.2.0-4+b1*
+- [libgl1-mesa-dev](https://www.mesa3d.org/) - *v22.3.6-1+deb12u1*
+- [libglew-dev](https://glew.sourceforge.net/) - *2.2.0-4+b1*
+- [glew-utils](https://glew.sourceforge.net/) - *2.2.0-4+b1*
 
 ## Seek the Scribe
 Daniel Slavík, _known in revered circles as wortelus_, keeper of the chronicles.

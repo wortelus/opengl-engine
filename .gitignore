@@ -2,3 +2,4 @@ libs/
 cmake-build-debug
 .idea/
 massif.out.*
+/build/
