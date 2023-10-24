@@ -77,6 +77,7 @@ void Application::init() {
 }
 
 void Application::nextScene() {
+    glfwSetCursorPos(window, width / 2., height / 2.);
     current_scene_id++;
     scene->finish();
 }
@@ -140,6 +141,8 @@ void Application::windowSizeCallback(GLFWwindow* window, int width, int height)
 }
 
 void Application::update_scene_aspect(const int& new_width, const int& new_height) {
+    width = new_width;
+    height = new_height;
     scene->update_aspect_ratio(new_width, new_height);
 }
 
