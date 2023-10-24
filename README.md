@@ -21,10 +21,47 @@ unyielding, using the scriptures of CMake.
 - [x] Global illumination, constant, Phong, Blinn-Phong point lights
 - [x] Multiple scenes
 
+## Sacred Scripts of Luminescence
+- **Constant**: The foundational beacon, it emanates unwavering light, 
+gracing every form with steadfast illumination.
+- **Lambert**: Echoing the wisdom of yore, it scatters diffuse 
+reflections with equanimity, painting every crevice and crest with its gentle touch.
+- **Phong**: Renowned as the luminary elite, it ushers in a dance of specular 
+reflections, lending a glint reminiscent of stars. 
+- **Blinn-Phong**: An evolved descendant of Phong, it merges 
+the essence of view and light, casting reflections that dazzle 
+with a sophistication only matched by its predecessors.
+
+## Building the Shrine
+1. **Invoking the Oracle, `CMake`**
+
+With reverence and a dash of bravado, navigate thy terminal to 
+the root temple (directory) of "zpg". Then chant the incantation:
+
+```shell
+mkdir build
+cd build
+cmake ..
+```
+2. **Summoning the Constructor, `Make`**
+
+With the prophecies of CMake now revealed, call forth the ancient builder:
+```shell
+make
+```
+
+Behold, as "Make", the grand architect, brings "zpg" to life, forging 
+executables from the ethereal realm of source code.
+
+3. **Rejoice and Run**
+
+With the rites completed, the executable artifact is now amongst us. 
+Run it, and bask in the glory of your creation. For it is the digital alchemy, 
+turning lines of text into a living, breathing entity.
 ## Controls
 ### Camera
 - Wander with W/A/S/D.
-- Jump using Space key.
+- Ascend with the gift of Space.
 
 ### Global transformations
 - **arrows** to translate
@@ -34,9 +71,9 @@ unyielding, using the scriptures of CMake.
 - **Z/X** for scaling
 
 ### Scene selection
-- using `current_scene_id` *(0-2)* in application.h, dynamic scene loading is in the works
+- **F2** for the next scene
 
-## TODO's - Tablets of Future Endeavors
+## Tablets of Future Endeavors
 - Observer on transformations is currently not used. 
 We call globally directly in scene all transformation operations (*no notify*).
 - Observer on camera is not used, but implemented.
@@ -47,7 +84,7 @@ but it could be maybe better to pass it as a whole to the shader.
 - Reduce implementation dependencies by applying the observer pattern.
 - and more _in-code TODO's_
 
-## Dependencies
+## The Sacred Relics
 - [libglfw3](https://www.glfw.org/) - *version 3.3.8*
 - [libglfw3-dev](https://www.glfw.org/) - *version 3.3.8-1*
 - libgl1-mesa-dev - *v22.3.6-1+deb12u1*
@@ -55,6 +92,6 @@ but it could be maybe better to pass it as a whole to the shader.
 - glew-utils - *2.2.0-4+b1*
 
 ## Seek the Scribe
-Daniel Slavík, keeper of the chronicles.
+Daniel Slavík, _known in revered circles as wortelus_, keeper of the chronicles.
 
 [The digital temple - wortelus.eu](https://www.wortelus.eu) 
