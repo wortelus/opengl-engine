@@ -17,7 +17,9 @@
 class DrawableObject {
 private:
     glm::vec3 position;
+
     std::string shader_name;
+    SHADER_ALIAS_DATATYPE shader_alias;
 
     std::unique_ptr<Model> model;
 
@@ -34,6 +36,8 @@ public:
     [[nodiscard]] std::shared_ptr<glm::mat3> getNormalMatrix() const;
 
     [[nodiscard]] const std::string& getShaderName() const { return this->shader_name; }
+    void assignShaderAlias(const SHADER_ALIAS_DATATYPE& alias) { this->shader_alias = alias; }
+    [[nodiscard]] SHADER_ALIAS_DATATYPE getShaderAlias() const { return this->shader_alias; }
 
     void move(const glm::vec3& delta);
     void rotate(const glm::vec3& delta);

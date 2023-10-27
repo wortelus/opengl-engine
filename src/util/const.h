@@ -8,6 +8,8 @@
 #include "glm/vec3.hpp"
 #include "glm/trigonometric.hpp"
 
+#define SHADER_ALIAS_DATATYPE int
+#define SHADER_UNLOADED (-1)
 
 const char* const ASSETS_PATH = "assets";
 const char* const SHADERS_PATH = "shaders";
@@ -15,11 +17,11 @@ const char* const SHADERS_PATH = "shaders";
 const char DEFAULT_SCENE = 0;
 
 const glm::vec3 OBJECT_COLOR = glm::vec3(1.0f, 1.0f, 1.0f);
-const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.1f, 0.1f, 0.1f);
+const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
 // Mouse sensitivity for camera movement
 const double MOUSE_SENSITIVITY = 0.1;
-const bool DISABLE_CURSOR = true;
+const bool DISABLE_CURSOR = false;
 
 // Movement speed for camera movement
 const float CAMERA_SPEED = 0.1;

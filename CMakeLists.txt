@@ -16,6 +16,7 @@ link_libraries(${GLEW_LIBRARIES})
 add_executable(zpg src/main.cpp
         src/core/application.h src/core/application.cpp
         src/core/scene.h src/core/scene.cpp
+        src/core/scene_loader.h src/core/scene_loader.cpp
         src/util/const.h
         src/util/event_args.h
         src/util/observer.h
@@ -26,9 +27,10 @@ add_executable(zpg src/main.cpp
         src/rendering/shader.h src/rendering/shader.cpp
         src/rendering/camera.h src/rendering/camera.cpp
         src/rendering/light/light.h src/rendering/light/light.cpp
+        src/rendering/light_manager.h src/rendering/light_manager.cpp
         src/transform/transform.h src/transform/transform.cpp
         src/transform/transform_composite.h src/transform/transform_composite.cpp
-        src/rendering/light_manager.h src/rendering/light_manager.cpp
-        src/core/scene_loader.h src/core/scene_loader.cpp)
+        src/rendering/object_manager.h src/rendering/object_manager.cpp
+        )
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)

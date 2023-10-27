@@ -19,6 +19,7 @@
 #include <memory>
 
 #include "../util/observer.h"
+#include "../util/const.h"
 
 enum class ShaderType {
     VertexShader = GL_VERTEX_SHADER,
@@ -32,7 +33,8 @@ struct ShaderCode {
 
 class Shader : public IObserver {
 private:
-    std::shared_ptr<std::string> name;
+    SHADER_ALIAS_DATATYPE alias;
+    std::string name;
     GLuint shader_program = 0;
 
     GLuint vertex_shader = 0;
@@ -42,14 +44,16 @@ private:
 
     void attachShader(const ShaderCode& shader_code);
 public:
-    Shader(const std::string &name, const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code);
+    Shader(const SHADER_ALIAS_DATATYPE shader_alias, std::string  name,
+           const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code);
     ~Shader();
 
     void load();
     void unload();
 
+    [[nodiscard]] SHADER_ALIAS_DATATYPE getAlias() const { return alias; }
     [[nodiscard]] bool isLoaded() const { return active; }
-    [[nodiscard]] std::shared_ptr<std::string> getName() const { return name; }
+    [[nodiscard]] std::string getName() const { return name; }
 
     void update(const EventArgs& event_args) override;
 

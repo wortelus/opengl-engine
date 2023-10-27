@@ -48,56 +48,63 @@ void ShaderLoader::loadShaders() {
         std::string vertex_shader = loadShaderFromFile(path);
         std::string fragment_shader = loadShaderFromFile(fragment_path);
 
-        shaders[name] = std::make_unique<Shader>(name,
+        auto next_alias = static_cast<SHADER_ALIAS_DATATYPE>(shaders.size());
+
+        shaders.push_back(std::make_unique<Shader>(next_alias, name,
                                                  ShaderCode{ShaderType::VertexShader,
                                                             vertex_shader.c_str()},
                                                  ShaderCode{ShaderType::FragmentShader,
                                                             fragment_shader.c_str()
-                                                 });
+                                                 }));
 
-        printf("Successfully loaded shader %s\n", name.c_str());
+        printf("Successfully loaded shader %s(%d)\n", name.c_str(), next_alias);
     }
 }
 
-Shader* ShaderLoader::loadShader(const std::string &name) {
-    if (shaders.find(name) == shaders.end()) return nullptr; // <<< TODO: log, shouldn't happen
-
-    if (active_shader != nullptr) shaders[*active_shader]->unload();
-    shaders[name]->load();
-    active_shader = shaders[name].get()->getName();
-    return shaders[name].get();
+Shader* ShaderLoader::loadShader(const SHADER_ALIAS_DATATYPE& alias) {
+    if (this->active_shader != SHADER_UNLOADED) shaders[this->active_shader]->unload();
+    shaders[alias]->load();
+    active_shader = alias;
+    return shaders[alias].get();
 }
 
 void ShaderLoader::passModelMatrix(const glm::mat4& model) {
-    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
+    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
 
-    shaders[*active_shader]->passModelMatrix(model);
+    shaders[active_shader]->passModelMatrix(model);
 }
 
 bool ShaderLoader::unloadShader() {
-    if (active_shader == nullptr) return false; // <<< TODO: log, shouldn't happen
+    if (active_shader == SHADER_UNLOADED) return false; // <<< TODO: log, shouldn't happen
 
-    shaders[*active_shader]->unload();
-    active_shader = nullptr;
+    shaders[active_shader]->unload();
+    active_shader = SHADER_UNLOADED;
     return true;
 }
 
 void ShaderLoader::passViewMatrix(const glm::mat4 &view) {
-    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
-    shaders[*active_shader]->passViewMatrix(view);
+    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
+    shaders[active_shader]->passViewMatrix(view);
 }
 
 void ShaderLoader::passProjectionMatrix(const glm::mat4 &projection) {
-    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
-    shaders[*active_shader]->passProjectionMatrix(projection);
+    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
+    shaders[active_shader]->passProjectionMatrix(projection);
 }
 
 void ShaderLoader::passNormalMatrix(const glm::mat3 &normal) {
-    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
-    shaders[*active_shader]->passNormalMatrix(normal);
+    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
+    shaders[active_shader]->passNormalMatrix(normal);
 }
 
 void ShaderLoader::passCameraPosition(const glm::vec3 &camera_pos) {
-    if (active_shader == nullptr) return; // <<< TODO: log, shouldn't happen
-    shaders[*active_shader]->passCameraPosition(camera_pos);
+    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
+    shaders[active_shader]->passCameraPosition(camera_pos);
+}
+
+SHADER_ALIAS_DATATYPE ShaderLoader::getShaderAlias(const std::string &name) {
+    for (const auto & shader : shaders) {
+        if (shader->getName() == name) return shader->getAlias();
+    }
+    return SHADER_UNLOADED;
 }

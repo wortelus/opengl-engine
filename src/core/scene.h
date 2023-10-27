@@ -26,15 +26,16 @@
 #include "../rendering/camera.h"
 #include "../rendering/light/light.h"
 #include "../rendering/light_manager.h"
+#include "../rendering/object_manager.h"
 
 class Scene {
 private:
     char scene_id;
     GLFWwindow* window;
     std::shared_ptr<ShaderLoader> shaderLoader;
-
-    std::vector<std::unique_ptr<DrawableObject>> objects;
+    std::unique_ptr<ObjectManager> object_manager;
     LightManager light_manager;
+
     std::unique_ptr<Camera> camera;
 
     const glm::vec3 scene_up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -46,7 +47,9 @@ private:
 
     bool is_finished = false;
 public:
-    DrawableObject* newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
+    void AssignShaderAlias(DrawableObject& object);
+
+    DrawableObject& newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
     void appendLight(std::unique_ptr<Light>&& light);
 public:
     Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height);

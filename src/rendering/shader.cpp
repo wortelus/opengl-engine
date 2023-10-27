@@ -7,6 +7,8 @@
 //Include GLFW
 #include <GLFW/glfw3.h>
 
+#include <utility>
+
 //Include GLM
 #include "glm/vec3.hpp" // glm::vec3
 #include "glm/vec4.hpp" // glm::vec4
@@ -30,7 +32,12 @@ void Shader::unload() {
     active = false;
 }
 
-Shader::Shader(const std::string& name, const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code) : name(std::make_shared<std::string>(name)) {
+Shader::Shader(const SHADER_ALIAS_DATATYPE shader_alias,
+               std::string  name,
+               const ShaderCode& vertex_shader_code,
+               const ShaderCode& fragment_shader_code) :
+               alias(shader_alias),
+               name(std::move(name)) {
     attachShader(vertex_shader_code);
     attachShader(fragment_shader_code);
 

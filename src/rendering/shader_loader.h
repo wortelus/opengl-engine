@@ -20,18 +20,22 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <vector>
 #include "shader.h"
+#include "../util/const.h"
 
 
 class ShaderLoader {
 private:
-    std::shared_ptr<std::string> active_shader;
-    std::unordered_map<std::string, std::unique_ptr<Shader>> shaders;
+    SHADER_ALIAS_DATATYPE active_shader = SHADER_UNLOADED;
+    std::vector<std::unique_ptr<Shader>> shaders;
 
     static std::string loadShaderFromFile(const std::string& path);
 public:
     void loadShaders();
-    Shader* loadShader(const std::string &name);
+    Shader* loadShader(const SHADER_ALIAS_DATATYPE& alias);
+    SHADER_ALIAS_DATATYPE getShaderAlias(const std::string& name);
+
     bool unloadShader();
     void passModelMatrix(const glm::mat4 &model);
     void passViewMatrix(const glm::mat4 &view);
