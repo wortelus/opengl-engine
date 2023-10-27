@@ -43,10 +43,10 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 vie
 
     // TODO: optimize vector multiplication
     vec3 ambient  = material.ambient                                         * object_color;
-    vec3 diffuse  = material.diffuse  * diff * light.intensity * light.color * object_color;
-    vec3 specular = material.specular * spec * light.intensity * light.color;
+    vec3 diffuse  = material.diffuse  * diff * light.intensity * light.color * object_color * attenuation;
+    vec3 specular = material.specular * spec * light.intensity * light.color                * attenuation;
 
-    return (ambient + diffuse + specular) * attenuation;
+    return (ambient + diffuse + specular);
 }
 
 void main(void) {

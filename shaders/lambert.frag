@@ -36,9 +36,9 @@ vec3 calcLambertLight(PointLight light, vec3 normal, vec3 frag_pos_world) {
     float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
     vec3 ambient = material.ambient;
-    vec3 diffuse = dot_product * material.diffuse * light.intensity * light.color;
+    vec3 diffuse = dot_product * material.diffuse * light.intensity * light.color * attenuation;
 
-    return (ambient + diffuse) * attenuation * object_color;
+    return (ambient + diffuse) * object_color;
 }
 
 void main(void) {
