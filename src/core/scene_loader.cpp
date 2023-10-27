@@ -69,16 +69,15 @@ SceneLoader::loadSceneB(GLFWwindow &window_reference, const int &initial_width, 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
     auto& sphere_south_object = scene->newObject(sphere, sizeof(sphere),
                                                 glm::vec3(0.f, 0.f, -2.f), "phong");
-    sphere_south_object.setColor(glm::vec3(1.0, 1.0, 1.0));
-    sphere_south_object.setAmbient(glm::vec3(1.0, 1.0, 0.0));
+    sphere_south_object.setColor(glm::vec3(1.0, 1.0, 0.0));
     sphere_south_object.setProperties(glm::vec3(1.0, 1.0, 0.0),
                                        glm::vec3(1.0, 1.0, 1.0),
-                                       52.f);
+                                       1.f);
 
     std::unique_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 0.f, -4.f),
                                                              glm::vec3(1.f, 1.f, 1.f),
                                                              1.f,
-                                                             1.f, 1.f, 1.f);
+                                                             0.1f, 0.f, 0.f); // almost no drop-off
 
     scene->appendLight(std::move(light_a));
 
@@ -89,6 +88,7 @@ SceneLoader::loadSceneB(GLFWwindow &window_reference, const int &initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneC(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
+    scene->setAmbient(glm::vec3(0.01, 0.01, 0.01));
     auto& sphere_obj = scene->newObject(sphere, sizeof(sphere),
                                        glm::vec3(-1.f, 1.f, -1.f), "phong");
     sphere_obj.setColor(glm::vec3(1.0, 1.0, 0.0));
@@ -147,7 +147,7 @@ SceneLoader::loadSceneC(GLFWwindow &window_reference, const int &initial_width, 
 
         glm::vec3* sun_pos_new;
         sun_pos_new->x = sun_position.x + sun_radius * cos(angle);
-        sun_pos_new->y = sun_position.y;  // keep the same vertical level, adjust if needed
+        sun_pos_new->y = sun_position.y;
         sun_pos_new->z = sun_position.z + sun_radius * sin(angle);
 
         std::unique_ptr<Light> light_a = std::make_unique<Light>(*sun_pos_new - glm::vec3(0.f, 2.f, 0.f),

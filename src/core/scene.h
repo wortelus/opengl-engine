@@ -36,18 +36,20 @@ private:
     std::unique_ptr<ObjectManager> object_manager;
     LightManager light_manager;
 
-    std::unique_ptr<Camera> camera;
+    glm::vec3 scene_ambient = AMBIENT_LIGHT;
 
+    std::unique_ptr<Camera> camera;
     const glm::vec3 scene_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     double last_x = 0.0;
     double last_y = 0.0;
-
     float last_frame_time = 0.0f;
 
     bool is_finished = false;
 public:
-    void AssignShaderAlias(DrawableObject& object);
+    void setAmbient(const glm::vec3& ambient) { scene_ambient = ambient; }
+
+    void assignShaderAlias(DrawableObject& object);
 
     DrawableObject& newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
     void appendLight(std::unique_ptr<Light>&& light);

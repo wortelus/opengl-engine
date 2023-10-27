@@ -19,7 +19,7 @@ private:
     glm::vec3 position;
 
     std::string shader_name;
-    SHADER_ALIAS_DATATYPE shader_alias;
+    SHADER_ALIAS_DATATYPE shader_alias = 0;
 
     std::unique_ptr<Model> model;
 
@@ -30,6 +30,7 @@ private:
     std::unique_ptr<TransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name);
+    DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name, const glm::vec3& ambient);
     ~DrawableObject();
     
     [[nodiscard]] std::shared_ptr<glm::mat4> getModelMatrix() const;

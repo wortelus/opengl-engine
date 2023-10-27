@@ -33,7 +33,7 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
 
     // assign shader aliases
     for (const auto object: *object_manager) {
-        AssignShaderAlias(*object);
+        assignShaderAlias(*object);
     }
 }
 
@@ -44,7 +44,7 @@ DrawableObject &Scene::newObject(
         const std::string &shader_name) {
     std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
     std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
-                                                                              shader_name);
+                                                                              shader_name, scene_ambient);
     return object_manager->addObject(std::move(object));
 }
 
@@ -163,7 +163,7 @@ void Scene::update_aspect_ratio(const int &new_width, const int &new_height) {
     camera->update_aspect_ratio(new_width, new_height);
 }
 
-void Scene::AssignShaderAlias(DrawableObject &object) {
+void Scene::assignShaderAlias(DrawableObject &object) {
     if (int alias = shaderLoader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
         return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet loaded
     else
