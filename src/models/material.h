@@ -11,7 +11,7 @@
 enum ILLUMINATION {
     AMBIENT = (1u << 0),
     DIFFUSE = (1u << 1),
-    SPECULAR  = (1u << 2),
+    SPECULAR = (1u << 2),
     ALL = AMBIENT | DIFFUSE | SPECULAR
 };
 
@@ -26,22 +26,22 @@ struct Material {
 
     Material() = default;
 
-    explicit Material(const glm::vec3 &_ambient)
+    explicit Material(const glm::vec3& _ambient)
             : ambient(_ambient) {
         this->illuminated = ILLUMINATION::AMBIENT;
     }
 
-    Material(const glm::vec3 &_ambient, const glm::vec3 &_diffuse)
+    Material(const glm::vec3& _ambient, const glm::vec3& _diffuse)
             : ambient(_ambient), diffuse(_diffuse) {
         this->illuminated = static_cast<ILLUMINATION>(ILLUMINATION::AMBIENT | ILLUMINATION::DIFFUSE);
     }
 
-    Material(const glm::vec3 &_diffuse, const glm::vec3 &_specular, float _shininess)
+    Material(const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess)
             : diffuse(_diffuse), specular(_specular), shininess(_shininess) {
         this->illuminated = ILLUMINATION::ALL;
     }
 
-    Material(const glm::vec3 &_ambient, const glm::vec3 &_diffuse, const glm::vec3 &_specular, float _shininess)
+    Material(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess)
             : ambient(_ambient), diffuse(_diffuse), specular(_specular), shininess(_shininess) {
         this->illuminated = ILLUMINATION::ALL;
     }

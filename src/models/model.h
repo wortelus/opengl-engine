@@ -39,9 +39,10 @@ protected:
 
 public:
     Model() = default;
+    ~Model();
+
     explicit Model(const float* vertices, int total_count);
     explicit Model(const float* vertices, int total_count, int stride, bool strip);
-    ~Model();
 
     void draw() const;
 };

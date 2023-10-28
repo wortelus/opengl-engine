@@ -50,21 +50,21 @@ public:
         using iterator_category = std::forward_iterator_tag;
         using difference_type = typename std::vector<std::unique_ptr<Shader>>::iterator::difference_type;
         using value_type = Shader;
-        using pointer = Shader *;
+        using pointer = Shader*;
 
         explicit Iterator(typename std::vector<std::unique_ptr<Shader>>::iterator it)
                 : it(it) {}
 
-        Iterator &operator++() {
+        Iterator& operator++() {
             ++it;
             return *this;
         }
 
-        Shader *operator*() {
+        Shader* operator*() {
             return it->get();
         }
 
-        bool operator!=(const Iterator &other) const {
+        bool operator!=(const Iterator& other) const {
             return it != other.it;
         }
 
@@ -80,21 +80,21 @@ public:
         using iterator_category = std::forward_iterator_tag;
         using difference_type = typename std::vector<std::unique_ptr<Shader>>::const_iterator::difference_type;
         using value_type = const Shader;
-        using pointer = const Shader *;
+        using pointer = const Shader*;
 
         explicit ConstIterator(typename std::vector<std::unique_ptr<Shader>>::const_iterator it)
                 : it(it) {}
 
-        ConstIterator &operator++() {
+        ConstIterator& operator++() {
             ++it;
             return *this;
         }
 
-        const Shader *operator*() const {
+        const Shader* operator*() const {
             return it->get();
         }
 
-        bool operator!=(const ConstIterator &other) const {
+        bool operator!=(const ConstIterator& other) const {
             return it != other.it;
         }
 

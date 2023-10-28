@@ -20,7 +20,7 @@ public:
     void translate(const glm::vec3& translation);
 
     // global objects rotations
-    void rotate(const glm::vec3 &axis_degrees);
+    void rotate(const glm::vec3& axis_degrees);
 
     // global objects scaling
     void scale(const glm::vec3& scale);
@@ -37,21 +37,21 @@ public:
         using iterator_category = std::forward_iterator_tag;
         using difference_type = typename std::vector<std::unique_ptr<DrawableObject>>::iterator::difference_type;
         using value_type = DrawableObject;
-        using pointer = DrawableObject *;
+        using pointer = DrawableObject*;
 
         explicit Iterator(typename std::vector<std::unique_ptr<DrawableObject>>::iterator it)
                 : it(it) {}
 
-        Iterator &operator++() {
+        Iterator& operator++() {
             ++it;
             return *this;
         }
 
-        DrawableObject *operator*() {
+        DrawableObject* operator*() {
             return it->get();
         }
 
-        bool operator!=(const Iterator &other) const {
+        bool operator!=(const Iterator& other) const {
             return it != other.it;
         }
 
@@ -67,21 +67,21 @@ public:
         using iterator_category = std::forward_iterator_tag;
         using difference_type = typename std::vector<std::unique_ptr<DrawableObject>>::const_iterator::difference_type;
         using value_type = const DrawableObject;
-        using pointer = const DrawableObject *;
+        using pointer = const DrawableObject*;
 
         explicit ConstIterator(typename std::vector<std::unique_ptr<DrawableObject>>::const_iterator it)
                 : it(it) {}
 
-        ConstIterator &operator++() {
+        ConstIterator& operator++() {
             ++it;
             return *this;
         }
 
-        const DrawableObject *operator*() const {
+        const DrawableObject* operator*() const {
             return it->get();
         }
 
-        bool operator!=(const ConstIterator &other) const {
+        bool operator!=(const ConstIterator& other) const {
             return it != other.it;
         }
 

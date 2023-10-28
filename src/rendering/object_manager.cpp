@@ -11,25 +11,26 @@ DrawableObject& ObjectManager::addObject(std::unique_ptr<DrawableObject> obj) {
 }
 
 void ObjectManager::preprocess() {
-    std::sort(objects.begin(), objects.end(), [](const std::unique_ptr<DrawableObject>& a, const std::unique_ptr<DrawableObject>& b) {
-        return a->getShaderAlias() < b->getShaderAlias();
-    });
+    std::sort(objects.begin(), objects.end(),
+              [](const std::unique_ptr<DrawableObject>& a, const std::unique_ptr<DrawableObject>& b) {
+                  return a->getShaderAlias() < b->getShaderAlias();
+              });
 }
 
-void ObjectManager::translate(const glm::vec3 &translation) {
-    for (auto& obj : objects) {
+void ObjectManager::translate(const glm::vec3& translation) {
+    for (auto& obj: objects) {
         obj->move(translation);
     }
 }
 
-void ObjectManager::rotate(const glm::vec3 &axis_degrees) {
-    for (auto& obj : objects) {
+void ObjectManager::rotate(const glm::vec3& axis_degrees) {
+    for (auto& obj: objects) {
         obj->rotate(axis_degrees);
     }
 }
 
-void ObjectManager::scale(const glm::vec3 &scale) {
-    for (auto& obj : objects) {
+void ObjectManager::scale(const glm::vec3& scale) {
+    for (auto& obj: objects) {
         obj->scale(scale);
     }
 }

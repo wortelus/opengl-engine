@@ -52,6 +52,4 @@ const float PROJECTION_NEAR = 0.1f;
 const float PROJECTION_FAR = 100.0f;
 
 
-
-
 #endif //ZPG_CONST_H

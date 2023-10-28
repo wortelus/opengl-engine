@@ -41,22 +41,22 @@ enum class EventType {
 };
 
 struct EventArgs {
-    EventArgs(const char *name, EventType eventType)
+    EventArgs(const char* name, EventType eventType)
             : name(name), type(eventType) {}
 
     EventArgs(EventType eventType) : type(eventType) {}
 
     virtual ~EventArgs() = default;  // necessary for dynamic casting
-    const char *name = nullptr;
+    const char* name = nullptr;
     EventType type = EventType::UNKNOWN;
 };
 
 template<typename T>
 struct EventPayload : public EventArgs {
-    EventPayload(const T &payloadValue, EventType eventType)
+    EventPayload(const T& payloadValue, EventType eventType)
             : EventArgs(eventType), payload(payloadValue) {}
 
-    EventPayload(const char *name, const T &payloadValue, EventType eventType)
+    EventPayload(const char* name, const T& payloadValue, EventType eventType)
             : EventArgs(name, eventType), payload(payloadValue) {}
 
     T payload;

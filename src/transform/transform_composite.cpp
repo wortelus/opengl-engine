@@ -28,7 +28,7 @@ std::shared_ptr<glm::mat4> TransformComposite::getMatrix() {
     return matrix;
 }
 
-void TransformComposite::update(const EventArgs &event_args) {
+void TransformComposite::update(const EventArgs& event_args) {
     if (event_args.type == EventType::U_TRANSLATION || event_args.type == EventType::S_TRANSLATION) {
         translation->update(event_args);
     } else if (event_args.type == EventType::U_ROTATION || event_args.type == EventType::S_ROTATION) {

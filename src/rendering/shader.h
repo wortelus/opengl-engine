@@ -59,7 +59,7 @@ private:
     void updateMaterial(const EventArgs& event_args);
     void passMaterialUniforms();
 public:
-    Shader(const SHADER_ALIAS_DATATYPE shader_alias, std::string  name,
+    Shader(const SHADER_ALIAS_DATATYPE shader_alias, std::string name,
            const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code);
     ~Shader() override;
 
@@ -70,17 +70,19 @@ public:
     void unload();
 
     [[nodiscard]] SHADER_ALIAS_DATATYPE getAlias() const { return alias; }
+
     [[nodiscard]] bool isLoaded() const { return active; }
+
     [[nodiscard]] std::string getName() const { return name; }
 
     void update(const EventArgs& event_args) override;
 
-    void passUniform1i(const std::string &uniform_name, int value) const;
-    void passUniform1f(const std::string &uniform_name, float value) const;
-    void passUniform3fv(const std::string &uniform_name, const glm::vec3 &value) const;
-    void passUniform4fv(const std::string &uniform_name, const glm::vec4 &value) const;
-    void passUniformMatrix3fv(const std::string &uniform_name, const glm::mat3 &value) const;
-    void passUniformMatrix4fv(const std::string &uniform_name, const glm::mat4 &value) const;
+    void passUniform1i(const std::string& uniform_name, int value) const;
+    void passUniform1f(const std::string& uniform_name, float value) const;
+    void passUniform3fv(const std::string& uniform_name, const glm::vec3& value) const;
+    void passUniform4fv(const std::string& uniform_name, const glm::vec4& value) const;
+    void passUniformMatrix3fv(const std::string& uniform_name, const glm::mat3& value) const;
+    void passUniformMatrix4fv(const std::string& uniform_name, const glm::mat4& value) const;
 };
 
 

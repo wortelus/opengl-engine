@@ -34,8 +34,8 @@ void Shader::unload() {
 
 Shader::Shader(const SHADER_ALIAS_DATATYPE shader_alias,
                std::string name,
-               const ShaderCode &vertex_shader_code,
-               const ShaderCode &fragment_shader_code) :
+               const ShaderCode& vertex_shader_code,
+               const ShaderCode& fragment_shader_code) :
         alias(shader_alias),
         name(std::move(name)) {
     attachShader(vertex_shader_code);
@@ -52,7 +52,7 @@ Shader::~Shader() {
     glDeleteProgram(shader_program);
 }
 
-void Shader::attachShader(const ShaderCode &shader_code) {
+void Shader::attachShader(const ShaderCode& shader_code) {
     if (shader_code.type == ShaderType::VertexShader) {
         if (vertex_shader != 0) {
             // TODO: notify about overwriting shader
@@ -72,7 +72,7 @@ void Shader::attachShader(const ShaderCode &shader_code) {
     }
 }
 
-void Shader::update(const EventArgs &event_args) {
+void Shader::update(const EventArgs& event_args) {
     if (event_args.type == EventType::U_LIGHTS) {
         updateLights(event_args);
         return;
@@ -89,32 +89,32 @@ void Shader::update(const EventArgs &event_args) {
 
     switch (event_args.type) {
         case EventType::U_1I: {
-            const auto *uniform = static_cast<const EventPayload<int> *>(&event_args);
+            const auto* uniform = static_cast<const EventPayload<int>*>(&event_args);
             passUniform1i(uniform->name, uniform->getPayload());
             break;
         }
         case EventType::U_1F: {
-            const auto *uniform = static_cast<const EventPayload<float> *>(&event_args);
+            const auto* uniform = static_cast<const EventPayload<float>*>(&event_args);
             passUniform1f(uniform->name, uniform->getPayload());
             break;
         }
         case EventType::U_3FV: {
-            const auto *uniform = static_cast<const EventPayload<glm::vec3> *>(&event_args);
+            const auto* uniform = static_cast<const EventPayload<glm::vec3>*>(&event_args);
             passUniform3fv(uniform->name, uniform->getPayload());
             break;
         }
         case EventType::U_4FV: {
-            const auto *uniform = static_cast<const EventPayload<glm::vec4> *>(&event_args);
+            const auto* uniform = static_cast<const EventPayload<glm::vec4>*>(&event_args);
             passUniform4fv(uniform->name, uniform->getPayload());
             break;
         }
         case EventType::U_MAT_3FV: {
-            const auto *uniform = static_cast<const EventPayload<glm::mat3> *>(&event_args);
+            const auto* uniform = static_cast<const EventPayload<glm::mat3>*>(&event_args);
             passUniformMatrix3fv(uniform->name, uniform->getPayload());
             break;
         }
         case EventType::U_MAT_4FV: {
-            const auto *uniform = static_cast<const EventPayload<glm::mat4> *>(&event_args);
+            const auto* uniform = static_cast<const EventPayload<glm::mat4>*>(&event_args);
             passUniformMatrix4fv(uniform->name, uniform->getPayload());
             break;
         }
@@ -123,30 +123,30 @@ void Shader::update(const EventArgs &event_args) {
     }
 }
 
-void Shader::passUniform1i(const std::string &uniform_name, int value) const {
+void Shader::passUniform1i(const std::string& uniform_name, int value) const {
     glUniform1i(glGetUniformLocation(shader_program, uniform_name.c_str()), value);
 }
 
-void Shader::passUniform1f(const std::string &uniform_name, float value) const {
+void Shader::passUniform1f(const std::string& uniform_name, float value) const {
     glUniform1f(glGetUniformLocation(shader_program, uniform_name.c_str()), value);
 }
 
-void Shader::passUniform3fv(const std::string &uniform_name, const glm::vec3 &value) const {
+void Shader::passUniform3fv(const std::string& uniform_name, const glm::vec3& value) const {
     glUniform3fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
                  1, glm::value_ptr(value));
 }
 
-void Shader::passUniform4fv(const std::string &uniform_name, const glm::vec4 &value) const {
+void Shader::passUniform4fv(const std::string& uniform_name, const glm::vec4& value) const {
     glUniform4fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
                  1, glm::value_ptr(value));
 }
 
-void Shader::passUniformMatrix3fv(const std::string &uniform_name, const glm::mat3 &value) const {
+void Shader::passUniformMatrix3fv(const std::string& uniform_name, const glm::mat3& value) const {
     glUniformMatrix3fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
                        1, GL_FALSE, glm::value_ptr(value));
 }
 
-void Shader::passUniformMatrix4fv(const std::string &uniform_name, const glm::mat4 &value) const {
+void Shader::passUniformMatrix4fv(const std::string& uniform_name, const glm::mat4& value) const {
     glUniformMatrix4fv(glGetUniformLocation(shader_program, uniform_name.c_str()),
                        1, GL_FALSE, glm::value_ptr(value));
 }
@@ -171,8 +171,8 @@ void Shader::initUniforms() {
     uniforms.camera_position.location = glGetUniformLocation(shader_program, "camera_position");
 }
 
-void Shader::updateLights(const EventArgs &event_args) {
-    const auto *lights = static_cast<const EventPayload<std::shared_ptr<std::vector<std::shared_ptr<Light>>>>*>(&event_args);
+void Shader::updateLights(const EventArgs& event_args) {
+    const auto* lights = static_cast<const EventPayload<std::shared_ptr<std::vector<std::shared_ptr<Light>>>>*>(&event_args);
     this->lights_collection.value = std::move(lights->getPayload());
     this->lights_collection.is_dirty = true;
 }
@@ -187,7 +187,7 @@ void Shader::passLightsUniforms() {
     }
 }
 
-void Shader::passLight(const std::shared_ptr<Light> &light, const std::string &prefix) const {
+void Shader::passLight(const std::shared_ptr<Light>& light, const std::string& prefix) const {
     auto pos = light->getPosition();
     auto color = light->getColor();
     auto intensity = light->getIntensity();
@@ -200,7 +200,7 @@ void Shader::passLight(const std::shared_ptr<Light> &light, const std::string &p
     passUniform1f(prefix + ".quadratic", attenuation.quadratic);
 }
 
-void Shader::updateMaterial(const EventArgs &event_args) {
+void Shader::updateMaterial(const EventArgs& event_args) {
     auto* material_payload = static_cast<const EventPayload<Material>*>(&event_args);
     this->material.value = material_payload->getPayload();
     this->material.is_dirty = true;

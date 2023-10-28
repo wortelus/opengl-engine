@@ -21,7 +21,7 @@
 #include "../util/const.h"
 
 
-std::string ShaderLoader::loadShaderFromFile(const std::string &path) {
+std::string ShaderLoader::loadShaderFromFile(const std::string& path) {
     std::ifstream file(path);
     std::stringstream buffer;
     buffer << file.rdbuf();
@@ -29,7 +29,7 @@ std::string ShaderLoader::loadShaderFromFile(const std::string &path) {
 }
 
 void ShaderLoader::loadShaders() {
-    for (const auto & entry : std::filesystem::directory_iterator(SHADERS_PATH)) {
+    for (const auto& entry: std::filesystem::directory_iterator(SHADERS_PATH)) {
         if (entry.is_directory()) continue;
         std::string path = entry.path().string();
         std::string name = entry.path().stem().string();
@@ -51,11 +51,11 @@ void ShaderLoader::loadShaders() {
         auto next_alias = static_cast<SHADER_ALIAS_DATATYPE>(shaders.size());
 
         shaders.push_back(std::make_unique<Shader>(next_alias, name,
-                                                 ShaderCode{ShaderType::VertexShader,
-                                                            vertex_shader.c_str()},
-                                                 ShaderCode{ShaderType::FragmentShader,
-                                                            fragment_shader.c_str()
-                                                 }));
+                                                   ShaderCode{ShaderType::VertexShader,
+                                                              vertex_shader.c_str()},
+                                                   ShaderCode{ShaderType::FragmentShader,
+                                                              fragment_shader.c_str()
+                                                   }));
 
         printf("Successfully is_dirty shader %s(%d)\n", name.c_str(), next_alias);
     }
@@ -76,8 +76,8 @@ bool ShaderLoader::unloadShader() {
     return true;
 }
 
-SHADER_ALIAS_DATATYPE ShaderLoader::getShaderAlias(const std::string &name) {
-    for (const auto & shader : shaders) {
+SHADER_ALIAS_DATATYPE ShaderLoader::getShaderAlias(const std::string& name) {
+    for (const auto& shader: shaders) {
         if (shader->getName() == name) return shader->getAlias();
     }
     return SHADER_UNLOADED;

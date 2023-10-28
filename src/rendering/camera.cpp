@@ -7,7 +7,7 @@
 #include "camera.h"
 
 Camera::Camera(float aspect) : aspect_ratio(aspect), position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
-                                                          pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
+                               pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
     view = glm::lookAt(CAMERA_POS, CAMERA_TARGET, CAMERA_UP);
     projection = glm::perspective(PROJECTION_FOV, aspect, PROJECTION_NEAR, PROJECTION_FAR);
 }
@@ -55,12 +55,12 @@ void Camera::moveCharacterFront(const float& offset) {
 }
 
 void Camera::jumpProgress(const float& delta_time) {
-    if(is_jumping) {
+    if (is_jumping) {
         current_jump_speed -= GRAVITY * delta_time;
         position.y += current_jump_speed * delta_time;
 
         // Check for landing
-        if(position.y <= GROUND_LEVEL) {
+        if (position.y <= GROUND_LEVEL) {
             position.y = GROUND_LEVEL;
             current_jump_speed = 0;
             is_jumping = false;

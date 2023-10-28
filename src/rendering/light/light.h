@@ -31,19 +31,19 @@ private:
     float intensity;
     Attenuation attenuation;
 public:
-    Light(const glm::vec3 &position,
-          const glm::vec3 &color,
-          const float &intensity,
-          const float &constant, const float &linear, const float &quadratic)
+    Light(const glm::vec3& position,
+          const glm::vec3& color,
+          const float& intensity,
+          const float& constant, const float& linear, const float& quadratic)
             : position(position),
               color(color),
               intensity(intensity),
-              attenuation({constant, linear, quadratic}) { };
+              attenuation({constant, linear, quadratic}) {};
 
-    [[nodiscard]] const glm::vec3 &getPosition() const { return position; }
-    [[nodiscard]] const glm::vec3 &getColor() const { return color; }
+    [[nodiscard]] const glm::vec3& getPosition() const { return position; }
+    [[nodiscard]] const glm::vec3& getColor() const { return color; }
     [[nodiscard]] float getIntensity() const { return intensity; }
-    [[nodiscard]] const Attenuation &getAttenuation() const { return attenuation; }
+    [[nodiscard]] const Attenuation& getAttenuation() const { return attenuation; }
 };
 
 #endif //ZPG_LIGHT_H

@@ -11,7 +11,8 @@
 #include <cstdlib>
 #include "application.h"
 
-Application::Application(const int width, const int height, const char *title) : width(width), height(height), title(title) { }
+Application::Application(const int width, const int height, const char* title) : width(width), height(height),
+                                                                                 title(title) {}
 
 Application::~Application() {
     glfwDestroyWindow(window);
@@ -37,7 +38,7 @@ void Application::init() {
     }
 
     window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-    if (!window){
+    if (!window) {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -92,13 +93,11 @@ void Application::run() {
     } while (!glfwWindowShouldClose(window));
 }
 
-void Application::errorCallback(int error, const char* description)
-{
+void Application::errorCallback(int error, const char* description) {
     fputs(description, stderr);
 }
 
-void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
+void Application::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
 
     // Call a member function to handle the key event
@@ -121,18 +120,15 @@ void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
 }
 
 
-void Application::windowFocusCallback(GLFWwindow* window, int focused)
-{
+void Application::windowFocusCallback(GLFWwindow* window, int focused) {
     printf("windowFocusCallback \n");
 }
 
-void Application::windowIconifyCallback(GLFWwindow* window, int iconified)
-{
+void Application::windowIconifyCallback(GLFWwindow* window, int iconified) {
     printf("windowIconifyCallback \n");
 }
 
-void Application::windowSizeCallback(GLFWwindow* window, int width, int height)
-{
+void Application::windowSizeCallback(GLFWwindow* window, int width, int height) {
     printf("resize %d, %d \n", width, height);
     glViewport(0, 0, width, height);
 
@@ -146,8 +142,7 @@ void Application::update_scene_aspect(const int& new_width, const int& new_heigh
     scene->update_aspect_ratio(new_width, new_height);
 }
 
-void Application::cursorCallback(GLFWwindow* window, double x, double y)
-{
+void Application::cursorCallback(GLFWwindow* window, double x, double y) {
     auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
     app->handleCursorEvent(x, y);
 }
@@ -156,7 +151,6 @@ void Application::handleCursorEvent(double x_pos, double y_pos) {
     scene->handleMouseMovementEvent(x_pos, y_pos);
 }
 
-void Application::buttonCallback(GLFWwindow* window, int button, int action, int mode)
-{
+void Application::buttonCallback(GLFWwindow* window, int button, int action, int mode) {
     if (action == GLFW_PRESS) printf("buttonCallback [%d,%d,%d]\n", button, action, mode);
 }

@@ -32,6 +32,4 @@ public:
 };
 
 
-
-
 #endif //ZPG_OBSERVER_H

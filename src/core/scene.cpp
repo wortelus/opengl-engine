@@ -20,7 +20,7 @@
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
-Scene::Scene(const char &id, GLFWwindow &window_reference, const int &initial_width, const int &initial_height) :
+Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height) :
         scene_id(id), window(&window_reference),
         last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
     float ratio = (float) initial_width / (float) initial_height;
@@ -53,7 +53,7 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
 
     // subscribe single shader to drawable objects
     for (const auto object: *object_manager) {
-        Shader *sh = shaderLoader->loadShader(object->getShaderAlias());
+        Shader* sh = shaderLoader->loadShader(object->getShaderAlias());
         object->attach(sh);
 
         // make use of the loaded shader, and pre-pass uniforms just enought before the rendering loop
@@ -66,11 +66,11 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
     light_manager.notifyShaders();
 }
 
-DrawableObject &Scene::newObject(
-        const float *vertices,
-        const unsigned int &vertices_size,
-        const glm::vec3 &position,
-        const std::string &shader_name) {
+DrawableObject& Scene::newObject(
+        const float* vertices,
+        const unsigned int& vertices_size,
+        const glm::vec3& position,
+        const std::string& shader_name) {
     std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
     std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
                                                                               shader_name, scene_ambient);
@@ -83,7 +83,7 @@ void Scene::appendLight(const Light& light) {
     light_manager.addLight(light);
 }
 
-void Scene::appendLight(const std::shared_ptr<Light> &light) {
+void Scene::appendLight(const std::shared_ptr<Light>& light) {
     light_manager.addLight(light);
 }
 
@@ -101,7 +101,7 @@ void Scene::run() {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (const auto object: *object_manager) {
-            Shader *sh = shaderLoader->loadShader(object->getShaderAlias());
+            Shader* sh = shaderLoader->loadShader(object->getShaderAlias());
             object->attach(sh);
             object->notifyModelParameters();
             sh->lazyPassUniforms();
@@ -180,7 +180,7 @@ void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
     camera->move(x_offset, y_offset);
 }
 
-inline void Scene::continuousMovement(const float &delta_time) {
+inline void Scene::continuousMovement(const float& delta_time) {
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera->moveCharacterFront(CAMERA_SPEED * delta_time);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -191,11 +191,11 @@ inline void Scene::continuousMovement(const float &delta_time) {
         camera->moveCharacterSide(CAMERA_SPEED * delta_time);
 }
 
-void Scene::update_aspect_ratio(const int &new_width, const int &new_height) {
+void Scene::update_aspect_ratio(const int& new_width, const int& new_height) {
     camera->update_aspect_ratio(new_width, new_height);
 }
 
-void Scene::assignShaderAlias(DrawableObject &object) {
+void Scene::assignShaderAlias(DrawableObject& object) {
     if (int alias = shaderLoader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
         return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet is_dirty
     else

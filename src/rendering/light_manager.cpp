@@ -17,6 +17,6 @@ void LightManager::addLight(const std::shared_ptr<Light>& light) {
 }
 
 void LightManager::notifyShaders() {
-    EventPayload<std::shared_ptr<std::vector<std::shared_ptr<Light>>>> payload {this->lights, EventType::U_LIGHTS};
+    EventPayload<std::shared_ptr<std::vector<std::shared_ptr<Light>>>> payload{this->lights, EventType::U_LIGHTS};
     notify(payload);
 }
