@@ -52,7 +52,8 @@ public:
     void assignShaderAlias(DrawableObject& object);
 
     DrawableObject& newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
-    void appendLight(std::unique_ptr<Light>&& light);
+    void appendLight(const Light& light);
+    void appendLight(const std::shared_ptr<Light>& light);
 public:
     Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();

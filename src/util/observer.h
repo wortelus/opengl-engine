@@ -6,6 +6,7 @@
 #define ZPG_OBSERVER_H
 
 #include <string>
+#include <vector>
 #include "event_args.h"
 
 class IObserver {
@@ -15,11 +16,19 @@ public:
 };
 
 class ISubject {
+    std::vector<IObserver*> observers = {};
 public:
-    virtual ~ISubject() = default;
-    virtual void attach(IObserver* observer) = 0;
-    virtual void detach(IObserver* observer) = 0;
-    virtual void notify(const EventArgs& event_args) = 0;
+    void attach(IObserver* observer);
+    void detach(IObserver* observer);
+    void notify(const EventArgs& event_args);
+};
+
+class ISubjectSingle {
+    IObserver* observer = nullptr;
+public:
+    void attach(IObserver* new_observer);
+    void detach();
+    void notify(const EventArgs& event_args);
 };
 
 

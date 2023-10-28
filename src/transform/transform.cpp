@@ -28,10 +28,12 @@ void Translation::setTranslation(const glm::vec3 &new_translation) {
 }
 
 void Translation::update(const EventArgs &event_args) {
+    const auto *uniform = static_cast<const EventPayload<glm::vec3> *>(&event_args);
+
     if (event_args.type == EventType::U_TRANSLATION) {
-        this->moveBy(event_args.payload);
+        this->moveBy(uniform->getPayload());
     } else if (event_args.type == EventType::S_TRANSLATION) {
-        this->setTranslation(event_args.payload);
+        this->setTranslation(uniform->getPayload());
     }
     // TODO: log invalid operation
 }
@@ -68,10 +70,11 @@ std::shared_ptr<glm::mat4> Rotation::getMatrix() {
 }
 
 void Rotation::update(const EventArgs &event_args) {
+    const auto *uniform = static_cast<const EventPayload<glm::vec3> *>(&event_args);
     if (event_args.type == EventType::U_ROTATION) {
-        this->rotateBy(event_args.payload);
+        this->rotateBy(uniform->getPayload());
     } else if (event_args.type == EventType::S_ROTATION) {
-        this->setRotation(event_args.payload);
+        this->setRotation(uniform->getPayload());
     }
 }
 
@@ -98,9 +101,10 @@ std::shared_ptr<glm::mat4> Scale::getMatrix() {
 }
 
 void Scale::update(const EventArgs &event_args) {
+    const auto *uniform = static_cast<const EventPayload<glm::vec3> *>(&event_args);
     if (event_args.type == EventType::U_SCALE) {
-        this->scaleBy(event_args.payload);
+        this->scaleBy(uniform->getPayload());
     } else if (event_args.type == EventType::S_SCALE) {
-        this->setScale(event_args.payload);
+        this->setScale(uniform->getPayload());
     }
 }

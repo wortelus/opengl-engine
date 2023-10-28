@@ -39,8 +39,16 @@ private:
     float aspect_ratio ;
 
     std::vector<IObserver*> observers;
+private:
+    void notifyAll();
+
+    void notifyView();
+    void notifyProjection();
+    void notifyPosition();
 public:
     explicit Camera(float aspect);
+
+    void start();
 
     void move(const double& x_offset, const double& y_offset);
 
@@ -51,10 +59,6 @@ public:
 
     void jump();
     void jumpProgress(const float& delta_time);
-
-    void attach(IObserver* observer) override;
-    void detach(IObserver* observer) override;
-    void notify(const EventArgs& event_args) override;
 
     [[nodiscard]] bool isJumping() const { return is_jumping; }
     [[nodiscard]] const glm::mat4& getView() const { return view; }

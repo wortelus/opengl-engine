@@ -35,6 +35,35 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
     for (const auto object: *object_manager) {
         assignShaderAlias(*object);
     }
+
+    // init shader uniforms
+    for (auto shader: *this->shaderLoader) {
+        shader->initUniforms();
+    }
+
+    // subscribe shaders to camera
+    for (auto shader: *this->shaderLoader) {
+        camera->attach(shader);
+    }
+
+    // subscribe shaders to light manager
+    for (auto shader: *this->shaderLoader) {
+        light_manager.attach(shader);
+    }
+
+    // subscribe single shader to drawable objects
+    for (const auto object: *object_manager) {
+        Shader *sh = shaderLoader->loadShader(object->getShaderAlias());
+        object->attach(sh);
+
+        // make use of the loaded shader, and pre-pass uniforms just enought before the rendering loop
+        object->notifyModel();
+        object->notifyMaterial();
+    }
+
+    // pass camera and light uniforms to shaders
+    camera->start();
+    light_manager.notifyShaders();
 }
 
 DrawableObject &Scene::newObject(
@@ -48,8 +77,12 @@ DrawableObject &Scene::newObject(
     return object_manager->addObject(std::move(object));
 }
 
-void Scene::appendLight(std::unique_ptr<Light> &&light) {
-    light_manager.addLight(std::move(light));
+void Scene::appendLight(const Light& light) {
+    light_manager.addLight(light);
+}
+
+void Scene::appendLight(const std::shared_ptr<Light> &light) {
+    light_manager.addLight(light);
 }
 
 
@@ -67,12 +100,9 @@ void Scene::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (const auto object: *object_manager) {
             Shader *sh = shaderLoader->loadShader(object->getShaderAlias());
-
-            object->passUniforms(sh);
-            camera->passUniforms(sh);
-            if (object->isIlluminated())
-                light_manager.passUniforms(sh);
-
+            object->attach(sh);
+            object->notifyModelParameters();
+            sh->lazyPassUniforms();
             object->draw();
         }
 
@@ -165,7 +195,7 @@ void Scene::update_aspect_ratio(const int &new_width, const int &new_height) {
 
 void Scene::assignShaderAlias(DrawableObject &object) {
     if (int alias = shaderLoader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
-        return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet loaded
+        return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet is_dirty
     else
         object.assignShaderAlias(alias);
 }

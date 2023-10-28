@@ -28,6 +28,8 @@ void Camera::move(const double& x_offset, const double& y_offset) {
     auto up = glm::normalize(glm::cross(right, front));
 
     view = glm::lookAt(position, position + front, up);
+
+    notifyView();
 }
 
 void Camera::moveCharacterSide(const float& offset) {
@@ -37,6 +39,9 @@ void Camera::moveCharacterSide(const float& offset) {
     position += right * offset;
     position.y = y;
     view = glm::lookAt(position, position + front, CAMERA_UP);
+
+    notifyView();
+    notifyPosition();
 }
 
 void Camera::moveCharacterFront(const float& offset) {
@@ -44,6 +49,9 @@ void Camera::moveCharacterFront(const float& offset) {
     position += front * offset;
     position.y = y;
     view = glm::lookAt(position, position + front, CAMERA_UP);
+
+    notifyView();
+    notifyPosition();
 }
 
 void Camera::jumpProgress(const float& delta_time) {
@@ -59,6 +67,9 @@ void Camera::jumpProgress(const float& delta_time) {
         }
     }
     view = glm::lookAt(position, position + front, CAMERA_UP);
+
+    notifyView();
+    notifyPosition();
 }
 
 void Camera::jump() {
@@ -68,27 +79,34 @@ void Camera::jump() {
     }
 }
 
-void Camera::attach(IObserver *observer) {
-    observers.push_back(observer);
-}
-
-void Camera::detach(IObserver *observer) {
-    observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
-}
-
-void Camera::notify(const EventArgs& event_args) {
-    for (auto observer : observers) {
-        observer->update(event_args);
-    }
-}
-
 void Camera::update_aspect_ratio(const int& width, const int& height) {
     aspect_ratio = (float) width / (float) height;
     projection = glm::perspective(PROJECTION_FOV, aspect_ratio, PROJECTION_NEAR, PROJECTION_FAR);
+
+    notifyProjection();
 }
 
-void Camera::passUniforms(Shader *shader) {
-    shader->passViewMatrix(view);
-    shader->passProjectionMatrix(projection);
-    shader->passCameraPosition(position);
+void Camera::notifyView() {
+    EventPayload<glm::mat4> payload{view, EventType::U_VIEW_MATRIX};
+    notify(payload);
+}
+
+void Camera::notifyProjection() {
+    EventPayload<glm::mat4> payload{projection, EventType::U_PROJECTION_MATRIX};
+    notify(payload);
+}
+
+void Camera::notifyPosition() {
+    EventPayload<glm::vec3> payload{position, EventType::U_CAMERA_POSITION};
+    notify(payload);
+}
+
+void Camera::notifyAll() {
+    notifyView();
+    notifyProjection();
+    notifyPosition();
+}
+
+void Camera::start() {
+    notifyAll();
 }

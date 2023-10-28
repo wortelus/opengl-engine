@@ -14,7 +14,7 @@
 #include "material.h"
 #include "../util/const.h"
 
-class DrawableObject {
+class DrawableObject : public ISubjectSingle {
 private:
     glm::vec3 position;
 
@@ -23,16 +23,14 @@ private:
 
     std::unique_ptr<Model> model;
 
-    glm::vec3 object_color = OBJECT_COLOR;
-    glm::vec3 ambient = AMBIENT_LIGHT;
-    std::unique_ptr<Material> material;
+    Material material;
 
     std::unique_ptr<TransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name);
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name, const glm::vec3& ambient);
     ~DrawableObject();
-    
+
     [[nodiscard]] std::shared_ptr<glm::mat4> getModelMatrix() const;
     [[nodiscard]] std::shared_ptr<glm::mat3> getNormalMatrix() const;
 
@@ -48,9 +46,14 @@ public:
     void setAmbient(const glm::vec3& _ambient);
     void setProperties(const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
     void setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
-    [[nodiscard]] bool isIlluminated() const { return this->material != nullptr; }
-    
-    void passUniforms(Shader* shader) const;
+
+    [[nodiscard]] const glm::vec3& getPosition() const { return this->position; }
+    [[nodiscard]] const Material& getMaterial() const { return this->material; }
+
+    void notifyModel();
+    void notifyMaterial();
+
+    void notifyModelParameters();
 
     void draw();
 };

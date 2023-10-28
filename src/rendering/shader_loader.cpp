@@ -57,7 +57,7 @@ void ShaderLoader::loadShaders() {
                                                             fragment_shader.c_str()
                                                  }));
 
-        printf("Successfully loaded shader %s(%d)\n", name.c_str(), next_alias);
+        printf("Successfully is_dirty shader %s(%d)\n", name.c_str(), next_alias);
     }
 }
 
@@ -68,38 +68,12 @@ Shader* ShaderLoader::loadShader(const SHADER_ALIAS_DATATYPE& alias) {
     return shaders[alias].get();
 }
 
-void ShaderLoader::passModelMatrix(const glm::mat4& model) {
-    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
-
-    shaders[active_shader]->passModelMatrix(model);
-}
-
 bool ShaderLoader::unloadShader() {
     if (active_shader == SHADER_UNLOADED) return false; // <<< TODO: log, shouldn't happen
 
     shaders[active_shader]->unload();
     active_shader = SHADER_UNLOADED;
     return true;
-}
-
-void ShaderLoader::passViewMatrix(const glm::mat4 &view) {
-    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
-    shaders[active_shader]->passViewMatrix(view);
-}
-
-void ShaderLoader::passProjectionMatrix(const glm::mat4 &projection) {
-    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
-    shaders[active_shader]->passProjectionMatrix(projection);
-}
-
-void ShaderLoader::passNormalMatrix(const glm::mat3 &normal) {
-    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
-    shaders[active_shader]->passNormalMatrix(normal);
-}
-
-void ShaderLoader::passCameraPosition(const glm::vec3 &camera_pos) {
-    if (active_shader == SHADER_UNLOADED) return; // <<< TODO: log, shouldn't happen
-    shaders[active_shader]->passCameraPosition(camera_pos);
 }
 
 SHADER_ALIAS_DATATYPE ShaderLoader::getShaderAlias(const std::string &name) {

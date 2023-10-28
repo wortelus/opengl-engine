@@ -17,7 +17,6 @@
 #include "glm/mat4x4.hpp" // glm::mat4
 #include "glm/gtc/matrix_transform.hpp" // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
-#include "../shader.h"
 
 struct Attenuation {
     float constant;
@@ -41,7 +40,10 @@ public:
               intensity(intensity),
               attenuation({constant, linear, quadratic}) { };
 
-    virtual void setUniforms(Shader *shader, const std::string &prefix) const;
+    [[nodiscard]] const glm::vec3 &getPosition() const { return position; }
+    [[nodiscard]] const glm::vec3 &getColor() const { return color; }
+    [[nodiscard]] float getIntensity() const { return intensity; }
+    [[nodiscard]] const Attenuation &getAttenuation() const { return attenuation; }
 };
 
 #endif //ZPG_LIGHT_H

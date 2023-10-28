@@ -9,16 +9,20 @@
 #include <vector>
 #include <memory>
 #include "light/light.h"
+#include "../util/observer.h"
+#include "../util/event_args.h"
 
-class LightManager {
+class LightManager : public ISubject {
 private:
-    std::vector<std::unique_ptr<Light>> lights;
+    std::shared_ptr<std::vector<std::shared_ptr<Light>>> lights;
 public:
-    LightManager() = default;
+    LightManager();
     ~LightManager() = default;
 
-    void addLight(std::unique_ptr<Light>&& light);
-    void passUniforms(Shader* shader) const;
+    void addLight(const Light& light);
+    void addLight(const std::shared_ptr<Light>& light);
+
+    void notifyShaders();
 };
 
 

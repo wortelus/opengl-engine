@@ -21,6 +21,9 @@
 #include "../util/observer.h"
 #include "../util/const.h"
 
+#include "shader_uniforms.h"
+#include "light/light.h"
+
 enum class ShaderType {
     VertexShader = GL_VERTEX_SHADER,
     FragmentShader = GL_FRAGMENT_SHADER,
@@ -35,18 +38,33 @@ class Shader : public IObserver {
 private:
     SHADER_ALIAS_DATATYPE alias;
     std::string name;
-    GLuint shader_program = 0;
-
-    GLuint vertex_shader = 0;
-    GLuint fragment_shader = 0;
 
     bool active = false;
 
+    GLuint shader_program = 0;
+    GLuint vertex_shader = 0;
+    GLuint fragment_shader = 0;
+
+    ShaderUniforms uniforms;
+
+    ShaderUniform<std::shared_ptr<std::vector<std::shared_ptr<Light>>>> lights_collection;
+    ShaderUniform<Material> material;
+private:
     void attachShader(const ShaderCode& shader_code);
+
+    void updateLights(const EventArgs& event_args);
+    void passLight(const std::shared_ptr<Light>& light, const std::string& prefix) const;
+    void passLightsUniforms();
+
+    void updateMaterial(const EventArgs& event_args);
+    void passMaterialUniforms();
 public:
     Shader(const SHADER_ALIAS_DATATYPE shader_alias, std::string  name,
            const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code);
-    ~Shader();
+    ~Shader() override;
+
+    void initUniforms();
+    void lazyPassUniforms();
 
     void load();
     void unload();
@@ -56,12 +74,6 @@ public:
     [[nodiscard]] std::string getName() const { return name; }
 
     void update(const EventArgs& event_args) override;
-
-    void passModelMatrix(const glm::mat4 &model) const;
-    void passViewMatrix(const glm::mat4 &view) const;
-    void passProjectionMatrix(const glm::mat4 &projection) const;
-    void passNormalMatrix(const glm::mat3 &normal) const;
-    void passCameraPosition(const glm::vec3 &camera_pos) const;
 
     void passUniform1i(const std::string &uniform_name, int value) const;
     void passUniform1f(const std::string &uniform_name, float value) const;

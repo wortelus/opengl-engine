@@ -31,6 +31,6 @@ add_executable(zpg src/main.cpp
         src/transform/transform.h src/transform/transform.cpp
         src/transform/transform_composite.h src/transform/transform_composite.cpp
         src/rendering/object_manager.h src/rendering/object_manager.cpp
-        )
+        src/util/observer.cpp src/rendering/shader_uniforms.cpp src/rendering/shader_uniforms.h)
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)
