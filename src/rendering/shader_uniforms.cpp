@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 28.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  28/10/2023
 
 #include "shader_uniforms.h"
 
