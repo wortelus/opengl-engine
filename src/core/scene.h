@@ -32,7 +32,7 @@ class Scene {
 private:
     char scene_id;
     GLFWwindow* window;
-    std::shared_ptr<ShaderLoader> shaderLoader;
+    std::shared_ptr<ShaderLoader> shader_loader;
     std::unique_ptr<ObjectManager> object_manager;
     LightManager light_manager;
 

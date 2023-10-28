@@ -29,7 +29,7 @@ Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_wi
 }
 
 void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
-    this->shaderLoader = std::move(shader_loader);
+    this->shader_loader = std::move(shader_loader);
 
     // assign shader aliases
     for (const auto object: *object_manager) {
@@ -37,23 +37,23 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
     }
 
     // init shader uniforms
-    for (auto shader: *this->shaderLoader) {
+    for (auto shader: *this->shader_loader) {
         shader->initUniforms();
     }
 
     // subscribe shaders to camera
-    for (auto shader: *this->shaderLoader) {
+    for (auto shader: *this->shader_loader) {
         camera->attach(shader);
     }
 
     // subscribe shaders to light manager
-    for (auto shader: *this->shaderLoader) {
+    for (auto shader: *this->shader_loader) {
         light_manager.attach(shader);
     }
 
     // subscribe single shader to drawable objects
     for (const auto object: *object_manager) {
-        Shader* sh = shaderLoader->loadShader(object->getShaderAlias());
+        Shader* sh = shader_loader->loadShader(object->getShaderAlias());
         object->attach(sh);
 
         // make use of the loaded shader, and pre-pass uniforms just enought before the rendering loop
@@ -107,7 +107,7 @@ void Scene::run() {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (const auto object: *object_manager) {
-            Shader* sh = shaderLoader->loadShader(object->getShaderAlias());
+            Shader* sh = shader_loader->loadShader(object->getShaderAlias());
             object->attach(sh);
             object->notifyModelParameters();
             sh->lazyPassUniforms();
@@ -202,7 +202,7 @@ void Scene::update_aspect_ratio(const int& new_width, const int& new_height) {
 }
 
 void Scene::assignShaderAlias(DrawableObject& object) {
-    if (int alias = shaderLoader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
+    if (int alias = shader_loader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
         return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet is_dirty
     else
         object.assignShaderAlias(alias);

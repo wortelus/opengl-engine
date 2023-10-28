@@ -20,7 +20,6 @@ struct ShaderUniform {
     GLint location = -1;
 
     ShaderUniform() = default;
-    explicit ShaderUniform(GLint loc) : location(loc) {}
 };
 
 struct ShaderUniforms {
