@@ -62,6 +62,7 @@ public:
     ~Scene();
 
     void init(std::shared_ptr<ShaderLoader> shader_loader);
+    void optimizeObjects();
     void run();
 
     char getSceneId() const { return scene_id; }

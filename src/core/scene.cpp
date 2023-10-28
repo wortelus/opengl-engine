@@ -66,6 +66,10 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
     light_manager.notifyShaders();
 }
 
+void Scene::optimizeObjects() {
+    object_manager->preprocess();
+}
+
 DrawableObject& Scene::newObject(
         const float* vertices,
         const unsigned int& vertices_size,
@@ -89,6 +93,8 @@ void Scene::appendLight(const std::shared_ptr<Light>& light) {
 
 
 void Scene::run() {
+    this->optimizeObjects();
+
     while (!is_finished) {
 
 //        auto current_frame_time = (float)glfwGetTime() * 300.0f;

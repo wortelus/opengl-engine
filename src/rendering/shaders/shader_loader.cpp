@@ -62,6 +62,9 @@ void ShaderLoader::loadShaders() {
 }
 
 Shader* ShaderLoader::loadShader(const SHADER_ALIAS_DATATYPE& alias) {
+    // no loading needed, save gl instruction by omitting glUseProgram
+    if (this->active_shader == alias) return shaders[alias].get();
+
     if (this->active_shader != SHADER_UNLOADED) shaders[this->active_shader]->unload();
     shaders[alias]->load();
     active_shader = alias;
