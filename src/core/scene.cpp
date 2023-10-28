@@ -74,7 +74,9 @@ DrawableObject &Scene::newObject(
     std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
     std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
                                                                               shader_name, scene_ambient);
-    return object_manager->addObject(std::move(object));
+    auto& obj = object_manager->addObject(std::move(object));
+    obj.setAmbient(scene_ambient);
+    return obj;
 }
 
 void Scene::appendLight(const Light& light) {

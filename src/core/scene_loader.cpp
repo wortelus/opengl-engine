@@ -88,7 +88,7 @@ SceneLoader::loadSceneB(GLFWwindow &window_reference, const int &initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneC(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
-//    scene->setAmbient(glm::vec3(0.01, 0.01, 0.01));
+    scene->setAmbient(glm::vec3(0.01, 0.01, 0.01));
     auto& sphere_obj = scene->newObject(sphere, sizeof(sphere),
                                        glm::vec3(-1.f, 1.f, -1.f), "phong");
     sphere_obj.setColor(glm::vec3(1.0, 1.0, 0.0));

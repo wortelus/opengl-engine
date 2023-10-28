@@ -62,12 +62,19 @@ void DrawableObject::setAmbient(const glm::vec3 &_ambient) {
 }
 
 void DrawableObject::setProperties(const glm::vec3 &_diffuse, const glm::vec3 &_specular, float _shininess) {
-    material = Material(_diffuse, _specular, _shininess);
+    material.diffuse = _diffuse;
+    material.specular = _specular;
+    material.shininess = _shininess;
+    material.illuminated = ILLUMINATION::ALL;
 }
 
 void DrawableObject::setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular,
                                    float _shininess) {
-    material = Material(_ambient, _diffuse, _specular, _shininess);
+    material.ambient = _ambient;
+    material.diffuse = _diffuse;
+    material.specular = _specular;
+    material.shininess = _shininess;
+    material.illuminated = ILLUMINATION::ALL;
 }
 
 void DrawableObject::setColor(const glm::vec3 &color) {
