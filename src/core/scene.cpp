@@ -97,12 +97,12 @@ void Scene::run() {
 
     while (!is_finished) {
 
-//        auto current_frame_time = (float)glfwGetTime() * 300.0f;
-//        float delta_time = current_frame_time - last_frame_time;
-//        last_frame_time = current_frame_time;
+        auto current_frame_time = (float)glfwGetTime() * 300.0f;
+        float delta_time = current_frame_time - last_frame_time;
+        last_frame_time = current_frame_time;
 
-        continuousMovement(1);
-        camera->jumpProgress(1);
+        continuousMovement(delta_time);
+        camera->jumpProgress(delta_time);
 
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

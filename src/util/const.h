@@ -8,6 +8,8 @@
 #include "glm/vec3.hpp"
 #include "glm/trigonometric.hpp"
 
+const bool DISABLE_VSYNC = true;
+
 #define SHADER_ALIAS_DATATYPE int
 #define SHADER_UNLOADED (-1)
 
@@ -20,6 +22,7 @@ const glm::vec3 OBJECT_COLOR = glm::vec3(1.0f, 1.0f, 1.0f);
 const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
 // Mouse sensitivity for camera movement
+const float MOVEMENT_SENSITIVITY = 0.25;
 const double MOUSE_SENSITIVITY = 0.1;
 const bool DISABLE_CURSOR = false;
 

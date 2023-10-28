@@ -33,10 +33,12 @@ void Camera::move(const double& x_offset, const double& y_offset) {
 }
 
 void Camera::moveCharacterSide(const float& offset) {
+    glm::vec3 planar_front = glm::normalize(glm::vec3(front.x, 0.0f, front.z));
+
     // cross product creates perpendicular vector, then we normalize it to length of 1
-    glm::vec3 right = glm::normalize(glm::cross(front, CAMERA_UP));
+    glm::vec3 right = glm::normalize(glm::cross(planar_front, CAMERA_UP));
     float y = position.y;
-    position += right * offset;
+    position += right * offset * MOVEMENT_SENSITIVITY;
     position.y = y;
     view = glm::lookAt(position, position + front, CAMERA_UP);
 
@@ -45,8 +47,10 @@ void Camera::moveCharacterSide(const float& offset) {
 }
 
 void Camera::moveCharacterFront(const float& offset) {
+    glm::vec3 planar_front = glm::normalize(glm::vec3(front.x, 0.0f, front.z));
+
     float y = position.y;
-    position += front * offset;
+    position += planar_front * offset * MOVEMENT_SENSITIVITY;
     position.y = y;
     view = glm::lookAt(position, position + front, CAMERA_UP);
 

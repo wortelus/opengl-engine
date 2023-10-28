@@ -69,6 +69,8 @@ void Application::init() {
 
     if (DISABLE_CURSOR)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (DISABLE_VSYNC)
+        glfwSwapInterval(0);
 
     shaderLoader = std::make_shared<ShaderLoader>();
     shaderLoader->loadShaders();
