@@ -18,7 +18,7 @@
 #include <fstream>
 
 #include "shader_loader.h"
-#include "../util/const.h"
+#include "../../util/const.h"
 
 
 std::string ShaderLoader::loadShaderFromFile(const std::string& path) {

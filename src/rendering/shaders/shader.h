@@ -18,11 +18,11 @@
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 #include <memory>
 
-#include "../util/observer.h"
-#include "../util/const.h"
+#include "../../util/observer.h"
+#include "../../util/const.h"
 
 #include "shader_uniforms.h"
-#include "light/light.h"
+#include "../light/light.h"
 
 enum class ShaderType {
     VertexShader = GL_VERTEX_SHADER,

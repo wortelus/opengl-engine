@@ -20,7 +20,6 @@
 
 #include "../util/const.h"
 #include "../util/observer.h"
-#include "shader.h"
 
 class Camera : public ISubject {
 private:
@@ -64,8 +63,6 @@ public:
     [[nodiscard]] const glm::mat4& getView() const { return view; }
     [[nodiscard]] const glm::mat4& getProjection() const { return projection; }
     [[nodiscard]] const glm::vec3& getPosition() const { return position; }
-
-    void passUniforms(Shader* shader);
 };
 
 

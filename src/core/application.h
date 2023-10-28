@@ -17,8 +17,7 @@
 
 #include "scene.h"
 #include "scene_loader.h"
-#include "../rendering/shader.h"
-#include "../rendering/shader_loader.h"
+#include "../rendering/shaders/shader_loader.h"
 #include "../models/drawable.h"
 
 class Application {

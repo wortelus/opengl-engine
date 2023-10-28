@@ -22,7 +22,7 @@
 #include <memory>
 #include <vector>
 #include "shader.h"
-#include "../util/const.h"
+#include "../../util/const.h"
 
 
 class ShaderLoader {

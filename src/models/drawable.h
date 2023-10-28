@@ -10,7 +10,6 @@
 #include "../transform/transform_composite.h"
 #include "../util/observer.h"
 #include "model.h"
-#include "../rendering/shader.h"
 #include "material.h"
 #include "../util/const.h"
 

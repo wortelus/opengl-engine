@@ -19,18 +19,19 @@ add_executable(zpg src/main.cpp
         src/core/scene_loader.h src/core/scene_loader.cpp
         src/util/const.h
         src/util/event_args.h
-        src/util/observer.h
+        src/util/observer.h src/util/observer.cpp
         src/models/material.h
         src/models/drawable.h src/models/drawable.cpp
         src/models/model.h src/models/model.cpp
-        src/rendering/shader_loader.h src/rendering/shader_loader.cpp
-        src/rendering/shader.h src/rendering/shader.cpp
+        src/rendering/shaders/shader_loader.h src/rendering/shaders/shader_loader.cpp
+        src/rendering/shaders/shader_uniforms.h src/rendering/shaders/shader_uniforms.cpp
+        src/rendering/shaders/shader.h src/rendering/shaders/shader.cpp
         src/rendering/camera.h src/rendering/camera.cpp
         src/rendering/light/light.h src/rendering/light/light.cpp
         src/rendering/light_manager.h src/rendering/light_manager.cpp
+        src/rendering/object_manager.h src/rendering/object_manager.cpp
         src/transform/transform.h src/transform/transform.cpp
         src/transform/transform_composite.h src/transform/transform_composite.cpp
-        src/rendering/object_manager.h src/rendering/object_manager.cpp
-        src/util/observer.cpp src/rendering/shader_uniforms.cpp src/rendering/shader_uniforms.h)
+        )
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)
