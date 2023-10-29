@@ -28,8 +28,8 @@ Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_wi
     this->object_manager = std::make_unique<ObjectManager>();
 }
 
-void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
-    this->shader_loader = std::move(shader_loader);
+void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
+    this->shader_loader = std::move(preloaded_shader_loader);
 
     // assign shader aliases
     for (const auto object: *object_manager) {
@@ -53,7 +53,7 @@ void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
 
     // subscribe single shader to drawable objects
     for (const auto object: *object_manager) {
-        Shader* sh = shader_loader->loadShader(object->getShaderAlias());
+        Shader* sh = this->shader_loader->loadShader(object->getShaderAlias());
         object->attach(sh);
 
         // make use of the loaded shader, and pre-pass uniforms just enought before the rendering loop

@@ -22,7 +22,7 @@ const glm::vec3 OBJECT_COLOR = glm::vec3(1.0f, 1.0f, 1.0f);
 const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
 // Mouse sensitivity for camera movement
-const float MOVEMENT_SENSITIVITY = 0.25;
+const float MOVEMENT_SENSITIVITY = 0.5;
 const double MOUSE_SENSITIVITY = 0.1;
 const bool DISABLE_CURSOR = false;
 
@@ -31,7 +31,7 @@ const float CAMERA_SPEED = 0.1;
 
 // Jumping
 const float INITIAL_JUMP_VELOCITY = 0.25;
-const float GRAVITY = 0.025;
+const float GRAVITY = 0.0025;
 const float GROUND_LEVEL = 2.0;
 
 // Initial camera position

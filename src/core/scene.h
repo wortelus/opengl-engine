@@ -61,7 +61,7 @@ public:
     Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
 
-    void init(std::shared_ptr<ShaderLoader> shader_loader);
+    void init(std::shared_ptr<ShaderLoader> preloaded_shader_loader);
     void optimizeObjects();
     void run();
 
