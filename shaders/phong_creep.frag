@@ -31,7 +31,7 @@ out vec4 out_color;
 
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 view_direction_norm) {
     vec3 light_direction_n = normalize(light.position - frag_pos_world);
-    float reflection_n = dot(normal, light_direction_n);
+    float reflection_n = dot(light_direction_n, normal);
     float diff = max(reflection_n, 0.0);
 
     float dist = length(light.position - frag_pos_world);
@@ -41,17 +41,11 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 vie
     vec3 ambient  =     material.ambient                                         * object_color;
     vec3 diffuse  =     material.diffuse  * diff * light.intensity * light.color * object_color * attenuation;
 
-    // don't calculate specular if the light is behind the surface
-    if (reflection_n > 0.0) {
-        // blinn-phong modification
-        vec3 halfway_dir = normalize(light_direction_n + view_direction_norm);
-        float spec = pow(max(dot(normal, halfway_dir), 0.0), material.shininess);
-        // end of blinn-phong modification
-        vec3 specular = material.specular * spec * light.intensity * light.color                * attenuation;
-        return (ambient + diffuse + specular);
-    } else {
-        return (ambient + diffuse);
-    }
+    // calculate specular even if the light is behind the surface
+    vec3 reflect_direction = reflect(-light_direction_n, normal);
+    float spec = pow(max(dot(view_direction_norm, reflect_direction), 0.0), material.shininess);
+    vec3 specular =     material.specular * spec * light.intensity * light.color                * attenuation;
+    return (ambient + diffuse + specular);
 }
 
 void main(void) {

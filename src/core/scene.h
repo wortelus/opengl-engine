@@ -21,38 +21,62 @@
 
 #include <memory>
 #include <vector>
-#include "../rendering/shader_loader.h"
+#include "../rendering/shaders/shader_loader.h"
 #include "../models/drawable.h"
 #include "../rendering/camera.h"
 #include "../rendering/light/light.h"
 #include "../rendering/light_manager.h"
+#include "../rendering/object_manager.h"
+#include "../rendering/animation_manager.h"
 
 class Scene {
 private:
     char scene_id;
     GLFWwindow* window;
-    std::shared_ptr<ShaderLoader> shaderLoader;
-
-    std::vector<std::unique_ptr<DrawableObject>> objects;
+    std::shared_ptr<ShaderLoader> shader_loader;
+    std::unique_ptr<ObjectManager> object_manager;
+    std::unique_ptr<AnimationManager> animation_manager;
     LightManager light_manager;
-    std::unique_ptr<Camera> camera;
 
+    glm::vec3 scene_ambient = AMBIENT_LIGHT;
+
+    std::unique_ptr<Camera> camera;
     const glm::vec3 scene_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
+    bool right_mouse_button_pressed = false;
     double last_x = 0.0;
     double last_y = 0.0;
-
     float last_frame_time = 0.0f;
 
     bool is_finished = false;
 public:
-    DrawableObject* newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position, const std::string& shader_name);
-    void appendLight(std::unique_ptr<Light>&& light);
+    void setAmbient(const glm::vec3& ambient) { scene_ambient = ambient; }
+
+    void assignShaderAlias(DrawableObject& object);
+
+    std::shared_ptr<DrawableObject> newObject(const float* vertices, const unsigned int& vertices_size,
+                                              const glm::vec3& position,
+                                              const std::string& shader_name);
+
+    std::shared_ptr<DrawableObject> newObject(const float* vertices, const unsigned int& vertices_size,
+                                              const glm::vec3& position,
+                                              const std::string& shader_name,
+                                              const glm::vec3& axis);
+
+    DrawableObject& appendObject(const float* vertices, const unsigned int& vertices_size,
+                                 const glm::vec3& position,
+                                 const std::string& shader_name);
+
+    void appendAnimation(const std::shared_ptr<Animation>& animation);
+
+    void appendLight(const Light& light);
+    void appendLight(const std::shared_ptr<Light>& light);
 public:
     Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
 
-    void init(std::shared_ptr<ShaderLoader> shader_loader);
+    void init(std::shared_ptr<ShaderLoader> preloaded_shader_loader);
+    void optimizeObjects();
     void run();
 
     char getSceneId() const { return scene_id; }
@@ -64,6 +88,9 @@ public:
     void update_aspect_ratio(const int& new_width, const int& new_height);
 
     void handleKeyEventPress(int key, int scancode, int action, int mods);
+    void handleKeyEventRelease(int key, int scancode, int action, int mods);
+    void handleMouseButtonEventPress(int button, int action, int mods);
+    void handleMouseButtonEventRelease(int button, int action, int mods);
     void handleMouseMovementEvent(double x_pos, double y_pos);
 };
 

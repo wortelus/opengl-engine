@@ -36,21 +36,11 @@ Model::Model(const float* vertices, int total_count) : vao(0), vbo(0) {
     // vertex positions ->
     glEnableVertexAttribArray(0); //enable vertex attributes
     glVertexAttribPointer(0, 4,
-                          GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+                          GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
     // vertex colors ->
     glEnableVertexAttribArray(1); //enable vertex attributes
     glVertexAttribPointer(1, 4,
-                          GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(4 * sizeof(float)));
-}
-
-void Model::draw() const {
-    glBindVertexArray(this->vao);
-    glDrawArrays(this->draw_type, 0, this->vertices_count);
-}
-
-Model::~Model() {
-    glDeleteBuffers(1, &this->vbo);
-    glDeleteVertexArrays(1, &this->vao);
+                          GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (4 * sizeof(float)));
 }
 
 Model::Model(const float* vertices, int total_count, int stride, bool strip) {
@@ -75,9 +65,19 @@ Model::Model(const float* vertices, int total_count, int stride, bool strip) {
     // vertex positions ->
     glEnableVertexAttribArray(0); //enable vertex attributes
     glVertexAttribPointer(0, stride,
-                          GL_FLOAT, GL_FALSE, stride * 2 * sizeof(float), (void*)0);
+                          GL_FLOAT, GL_FALSE, stride * 2 * sizeof(float), (void*) 0);
     // vertex colors ->
     glEnableVertexAttribArray(1); //enable vertex attributes
     glVertexAttribPointer(1, stride,
-                          GL_FLOAT, GL_FALSE, stride * 2 * sizeof(float), (void*)(stride * sizeof(float)));
+                          GL_FLOAT, GL_FALSE, stride * 2 * sizeof(float), (void*) (stride * sizeof(float)));
+}
+
+Model::~Model() {
+    glDeleteBuffers(1, &this->vbo);
+    glDeleteVertexArrays(1, &this->vao);
+}
+
+void Model::draw() const {
+    glBindVertexArray(this->vao);
+    glDrawArrays(this->draw_type, 0, this->vertices_count);
 }

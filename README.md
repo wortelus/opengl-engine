@@ -74,12 +74,8 @@ turning lines of text into a mosaic of pixels and logic, painting stories in rea
 - **F2** for the next scene
 
 ## Tablets of Future Endeavors
-- Observer on transformations is currently not used. 
+- Observer on transformations is currently not used.
 We call globally directly in scene all transformation operations (*no notify*).
-- Observer on camera is not used, but implemented.
-- We have kinda optimized the MVP matrix calculation, 
-but it could be maybe better to pass it as a whole to the shader.
-- Reduce implementation dependencies by applying the observer pattern.
 - Models could be shared between DrawableObjects, for it is a waste of memory to have multiple copies of the same model.
 - and more _in-code TODO's_
 

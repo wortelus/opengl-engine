@@ -20,7 +20,6 @@
 
 #include "../util/const.h"
 #include "../util/observer.h"
-#include "shader.h"
 
 class Camera : public ISubject {
 private:
@@ -36,11 +35,17 @@ private:
     bool is_jumping = false;
     float current_jump_speed = 0;
 
-    float aspect_ratio ;
+    float aspect_ratio;
+private:
+    void notifyAll();
 
-    std::vector<IObserver*> observers;
+    void notifyView();
+    void notifyProjection();
+    void notifyPosition();
 public:
     explicit Camera(float aspect);
+
+    void start();
 
     void move(const double& x_offset, const double& y_offset);
 
@@ -52,16 +57,10 @@ public:
     void jump();
     void jumpProgress(const float& delta_time);
 
-    void attach(IObserver* observer) override;
-    void detach(IObserver* observer) override;
-    void notify(const EventArgs& event_args) override;
-
     [[nodiscard]] bool isJumping() const { return is_jumping; }
     [[nodiscard]] const glm::mat4& getView() const { return view; }
     [[nodiscard]] const glm::mat4& getProjection() const { return projection; }
     [[nodiscard]] const glm::vec3& getPosition() const { return position; }
-
-    void passUniforms(Shader* shader);
 };
 
 

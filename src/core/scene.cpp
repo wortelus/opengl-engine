@@ -20,55 +20,150 @@
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
-Scene::Scene(const char &id, GLFWwindow &window_reference, const int &initial_width, const int &initial_height) :
+Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height) :
         scene_id(id), window(&window_reference),
         last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
     float ratio = (float) initial_width / (float) initial_height;
     this->camera = std::make_unique<Camera>(ratio);
-    this->objects = std::vector<std::unique_ptr<DrawableObject>>();
+    this->object_manager = std::make_unique<ObjectManager>();
+    this->animation_manager = std::make_unique<AnimationManager>();
 }
 
-void Scene::init(std::shared_ptr<ShaderLoader> shader_loader) {
-    this->shaderLoader = std::move(shader_loader);
+void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
+    this->shader_loader = std::move(preloaded_shader_loader);
+
+    // assign shader aliases
+    for (const auto object: *object_manager) {
+        assignShaderAlias(*object);
+    }
+
+    // assign shader aliases for animations
+    for (const auto object: *animation_manager) {
+        animation_manager->applyAnimations([this](Animation* object) {
+            assignShaderAlias(object->getDrawableObject());
+        });
+    }
+
+    // init shader uniforms
+    for (auto shader: *this->shader_loader) {
+        shader->initUniforms();
+    }
+
+    // subscribe shaders to camera
+    for (auto shader: *this->shader_loader) {
+        camera->attach(shader);
+    }
+
+    // subscribe shaders to light manager
+    for (auto shader: *this->shader_loader) {
+        light_manager.attach(shader);
+    }
+
+    // subscribe single shader to drawable objects
+    for (const auto object: *object_manager) {
+        Shader* sh = this->shader_loader->loadShader(object->getShaderAlias());
+        object->attach(sh);
+
+        // make use of the loaded shader, and pre-pass uniforms just enought before the rendering loop
+        object->notifyModel();
+        object->notifyMaterial();
+    }
+
+    // subscribe single shader to drawable objects inside animations
+    for (const auto animation: *animation_manager) {
+        animation_manager->applyAnimations([this](Animation* animation) {
+            Shader* sh = this->shader_loader->loadShader(animation->getShaderAlias());
+            animation->attachShader(sh);
+            animation->notifyShader();
+        });
+    }
+
+    // pass camera and light uniforms to shaders
+    camera->start();
+    light_manager.notifyShaders();
 }
 
-DrawableObject *
-Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
+void Scene::optimizeObjects() {
+    object_manager->preprocess();
+}
+
+std::shared_ptr<DrawableObject> Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
                  const std::string &shader_name) {
     std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
-    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
-                                                                              shader_name);
-    objects.push_back(std::move(object));
-    return objects.back().get();
+    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, std::move(model),
+                                                                              shader_name, scene_ambient);
+    return object;
 }
 
-void Scene::appendLight(std::unique_ptr<Light> &&light) {
-    light_manager.addLight(std::move(light));
+std::shared_ptr<DrawableObject>
+Scene::newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position,
+                 const std::string& shader_name, const glm::vec3& axis) {
+    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
+    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, std::move(model),
+                                                                              shader_name, scene_ambient, axis);
+    return object;
+}
+
+DrawableObject& Scene::appendObject(
+        const float* vertices,
+        const unsigned int& vertices_size,
+        const glm::vec3& position,
+        const std::string& shader_name) {
+    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
+                                                                              shader_name, scene_ambient);
+    auto& obj = object_manager->addObject(std::move(object));
+    obj.setAmbient(scene_ambient);
+    return obj;
+}
+
+
+void Scene::appendAnimation(const std::shared_ptr<Animation>& animation) {
+    animation_manager->addAnimation(animation);
+}
+
+void Scene::appendLight(const Light& light) {
+    light_manager.addLight(light);
+}
+
+void Scene::appendLight(const std::shared_ptr<Light>& light) {
+    light_manager.addLight(light);
 }
 
 
 void Scene::run() {
+    this->optimizeObjects();
+
     while (!is_finished) {
 
-//        auto current_frame_time = (float)glfwGetTime() * 300.0f;
-//        float delta_time = current_frame_time - last_frame_time;
-//        last_frame_time = current_frame_time;
+        auto current_frame_time = (float)glfwGetTime() * 300.0f;
+        float delta_time = current_frame_time - last_frame_time;
+        last_frame_time = current_frame_time;
 
-        continuousMovement(1);
-        camera->jumpProgress(1);
+        continuousMovement(delta_time);
+        camera->jumpProgress(delta_time);
 
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (const auto &object: objects) {
-            DrawableObject *d_obj = object.get();
-            Shader *sh = shaderLoader->loadShader(d_obj->getShaderName());
+        for (const auto object: *object_manager) {
+            Shader* sh = shader_loader->loadShader(object->getShaderAlias());
+            object->attach(sh);
+            object->notifyModelParameters();
+            sh->lazyPassUniforms();
+            object->draw();
+        }
 
-            d_obj->passUniforms(sh);
-            camera->passUniforms(sh);
-            if (d_obj->isIlluminated())
-                light_manager.passUniforms(sh);
-
-            d_obj->draw();
+        // animations
+        for (const auto animation: *animation_manager) {
+            animation_manager->applyAnimations([this, &delta_time](Animation* animation) {
+                const SHADER_ALIAS_DATATYPE current_alias = animation->getShaderAlias();
+                Shader* sh = shader_loader->loadShader(current_alias);
+                animation->attachShader(sh);
+                animation->step(delta_time);
+                animation->notifyShader();
+                sh->lazyPassUniforms();
+                animation->draw();
+            });
         }
 
         // update other events like input handling
@@ -79,85 +174,68 @@ void Scene::run() {
 }
 
 void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
-    //
-    // translations
-    //
-    if (key == GLFW_KEY_SPACE) {
-        camera->jump();
-    } else if (key == GLFW_KEY_LEFT) {
-        for (const auto &object: objects) {
-            object->move(glm::vec3(-0.1f, 0, 0));
-        }
-    } else if (key == GLFW_KEY_RIGHT) {
-        for (const auto &object: objects) {
-            object->move(glm::vec3(0.1f, 0, 0));
-        }
-    } else if (key == GLFW_KEY_UP) {
-        for (const auto &object: objects) {
-            object->move(glm::vec3(0, 0.1f, 0));
-        }
-    } else if (key == GLFW_KEY_DOWN) {
-        for (const auto &object: objects) {
-            object->move(glm::vec3(0, -0.1f, 0));
-        }
-    }
-        //
-        // rotation along x-axis
-        //
-    else if (key == GLFW_KEY_E) {
-        for (const auto &object: objects) {
-            object->rotate(glm::vec3(10.f, 0, 0));
-        }
-    } else if (key == GLFW_KEY_F) {
-        for (const auto &object: objects) {
-            object->rotate(glm::vec3(-10.f, 0, 0));
-        }
-    }
-        //
-        // rotation along y-axis
-        //
-    else if (key == GLFW_KEY_R) {
-        for (const auto &object: objects) {
-            object->rotate(glm::vec3(0, 10.f, 0));
-        }
-    } else if (key == GLFW_KEY_G) {
-        for (const auto &object: objects) {
-            object->rotate(glm::vec3(0, -10.f, 0));
-        }
-    }
-        //
-        // rotation along z-axis
-        //
-    else if (key == GLFW_KEY_T) {
-        for (const auto &object: objects) {
-            object->rotate(glm::vec3(0, 0, 10.f));
-        }
-    } else if (key == GLFW_KEY_H) {
-        for (const auto &object: objects) {
-            object->rotate(glm::vec3(0, 0, -10.f));
-        }
-    }
-        //
-        // scaling
-        //
-    else if (key == GLFW_KEY_Z) {
-        for (const auto &object: objects) {
-            object->scale(glm::vec3(0.1f, 0.1f, 0.1f));
-        }
-    } else if (key == GLFW_KEY_X) {
-        for (const auto &object: objects) {
-            object->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
-        }
+    switch (key) {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            right_mouse_button_pressed = true;
+        case GLFW_KEY_SPACE:
+            camera->jump();
+            break;
+            // components
+        case GLFW_KEY_LEFT:
+            object_manager->translate(glm::vec3(-0.1f, 0, 0));
+            break;
+        case GLFW_KEY_RIGHT:
+            object_manager->translate(glm::vec3(0.1f, 0, 0));
+            break;
+        case GLFW_KEY_UP:
+            object_manager->translate(glm::vec3(0, 0.1f, 0));
+            break;
+        case GLFW_KEY_DOWN:
+            object_manager->translate(glm::vec3(0, -0.1f, 0));
+            break;
+            // rotation along x-axis
+        case GLFW_KEY_E:
+            object_manager->rotate(glm::vec3(10.f, 0, 0));
+            break;
+        case GLFW_KEY_F:
+            object_manager->rotate(glm::vec3(-10.f, 0, 0));
+            break;
+            // rotation along y-axis
+        case GLFW_KEY_R:
+            object_manager->rotate(glm::vec3(0, 10.f, 0));
+            break;
+        case GLFW_KEY_G:
+            object_manager->rotate(glm::vec3(0, -10.f, 0));
+            break;
+            // rotation along z-axis
+        case GLFW_KEY_T:
+            object_manager->rotate(glm::vec3(0, 0, 10.f));
+            break;
+        case GLFW_KEY_H:
+            object_manager->rotate(glm::vec3(0, 0, -10.f));
+            break;
+            // scaling
+        case GLFW_KEY_Z:
+            object_manager->scale(glm::vec3(0.1f, 0.1f, 0.1f));
+            break;
+        case GLFW_KEY_X:
+            object_manager->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
+            break;
+        default:
+            break;
     }
 }
 
-Scene::~Scene() {
-    for (auto &object: objects) {
-        object.reset();
-    }
-}
+void Scene::handleKeyEventRelease(int key, int scancode, int action, int mods) { }
+
+Scene::~Scene() {}
 
 void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
+    if (!right_mouse_button_pressed)
+        return;
+    else
+        printf("x: %f, y: %f\n", x_pos, y_pos);
+
     double x_offset = x_pos - last_x;
     double y_offset = last_y - y_pos;
     last_x = x_pos;
@@ -169,7 +247,7 @@ void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
     camera->move(x_offset, y_offset);
 }
 
-inline void Scene::continuousMovement(const float &delta_time) {
+inline void Scene::continuousMovement(const float& delta_time) {
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera->moveCharacterFront(CAMERA_SPEED * delta_time);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -180,6 +258,33 @@ inline void Scene::continuousMovement(const float &delta_time) {
         camera->moveCharacterSide(CAMERA_SPEED * delta_time);
 }
 
-void Scene::update_aspect_ratio(const int &new_width, const int &new_height) {
+void Scene::update_aspect_ratio(const int& new_width, const int& new_height) {
     camera->update_aspect_ratio(new_width, new_height);
+}
+
+void Scene::assignShaderAlias(DrawableObject& object) {
+    if (int alias = shader_loader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
+        return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet is_dirty
+    else
+        object.assignShaderAlias(alias);
+}
+
+void Scene::handleMouseButtonEventPress(int button, int action, int mods) {
+    switch (button) {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            right_mouse_button_pressed = true;
+            break;
+        default:
+            break;
+    }
+}
+
+void Scene::handleMouseButtonEventRelease(int button, int action, int mods) {
+    switch (button) {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            right_mouse_button_pressed = false;
+            break;
+        default:
+            break;
+    }
 }

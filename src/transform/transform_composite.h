@@ -9,20 +9,44 @@
 #include <memory>
 #include "transform.h"
 
-class TransformComposite : public TransformationAbstract {
+class INormal {
+protected:
+    std::shared_ptr<glm::mat3> normal_matrix;
+public:
+    virtual std::shared_ptr<glm::mat3> getNormalMatrix() = 0;
+};
+
+class TransformComposite : public TransformationAbstract, INormal {
 private:
     // composite components for the transformation
     std::unique_ptr<Translation> translation;
     std::unique_ptr<Rotation> rotation;
     std::unique_ptr<Scale> scale;
-
-    // normal matrix
-    // TODO: think about this
-    std::shared_ptr<glm::mat3> normal_matrix;
 public:
     TransformComposite();
+
     std::shared_ptr<glm::mat4> getMatrix() override;
-    std::shared_ptr<glm::mat3> getNormalMatrix();
+    std::shared_ptr<glm::mat3> getNormalMatrix() override;
+
+    void update(const EventArgs& event_args) override;
+};
+
+class DynamicTransformComposite : public TransformationAbstract, INormal {
+private:
+    std::vector<std::unique_ptr<TransformationAbstract>> components;
+public:
+    // default dynamic transform composite, no orbit rotation component
+    DynamicTransformComposite();
+
+    // default dynamic transform composite using origin
+    // M=T×Rorbit×Rself×S
+    explicit DynamicTransformComposite(const glm::vec3& axis);
+
+    // explicit dynamic transform composite -> appends rotation along origin
+    explicit DynamicTransformComposite(std::vector<std::unique_ptr<TransformationAbstract>> components);
+
+    std::shared_ptr<glm::mat4> getMatrix() override;
+    std::shared_ptr<glm::mat3> getNormalMatrix() override;
     void update(const EventArgs& event_args) override;
 };
 

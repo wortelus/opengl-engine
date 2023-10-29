@@ -8,6 +8,10 @@
 #include "glm/vec3.hpp"
 #include "glm/trigonometric.hpp"
 
+const bool DISABLE_VSYNC = true;
+
+#define SHADER_ALIAS_DATATYPE int
+#define SHADER_UNLOADED (-1)
 
 const char* const ASSETS_PATH = "assets";
 const char* const SHADERS_PATH = "shaders";
@@ -15,18 +19,19 @@ const char* const SHADERS_PATH = "shaders";
 const char DEFAULT_SCENE = 0;
 
 const glm::vec3 OBJECT_COLOR = glm::vec3(1.0f, 1.0f, 1.0f);
-const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.1f, 0.1f, 0.1f);
+const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
 // Mouse sensitivity for camera movement
-const double MOUSE_SENSITIVITY = 0.1;
-const bool DISABLE_CURSOR = true;
+const float MOVEMENT_SENSITIVITY = 0.5;
+const double MOUSE_SENSITIVITY = 0.5;
+const bool DISABLE_CURSOR = false;
 
 // Movement speed for camera movement
 const float CAMERA_SPEED = 0.1;
 
 // Jumping
 const float INITIAL_JUMP_VELOCITY = 0.25;
-const float GRAVITY = 0.025;
+const float GRAVITY = 0.0025;
 const float GROUND_LEVEL = 2.0;
 
 // Initial camera position
@@ -48,8 +53,6 @@ const float PROJECTION_FOV = glm::radians(45.0f);
 const float PROJECTION_NEAR = 0.1f;
 // Projection max far clipping distance
 const float PROJECTION_FAR = 100.0f;
-
-
 
 
 #endif //ZPG_CONST_H
