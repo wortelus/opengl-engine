@@ -16,7 +16,7 @@ public:
     DrawableObject& addObject(std::unique_ptr<DrawableObject> obj);
     void preprocess();
 
-    // global objects translations
+    // global objects components
     void translate(const glm::vec3& translation);
 
     // global objects rotations

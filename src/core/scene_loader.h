@@ -25,6 +25,14 @@ private:
     loadSceneB(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     static std::unique_ptr<Scene>
     loadSceneC(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+    static std::unique_ptr<Scene>
+    loadSceneD(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+    static std::unique_ptr<Scene>
+    loadSceneE(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+    static std::unique_ptr<Scene>
+    loadSceneF(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+    static std::unique_ptr<Scene>
+    loadSceneG(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
 };
 
 #endif //ZPG_SCENE_LOADER_H

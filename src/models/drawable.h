@@ -6,6 +6,7 @@
 #define ZPG_DRAWABLE_H
 
 
+#include <variant>
 #include "glm/vec3.hpp"
 #include "../transform/transform_composite.h"
 #include "../util/observer.h"
@@ -24,12 +25,15 @@ private:
 
     Material material;
 
-    std::unique_ptr<TransformComposite> model_matrix;
+    std::unique_ptr<DynamicTransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name);
 
     DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name,
                    const glm::vec3& ambient);
+
+    DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name,
+                   const glm::vec3& ambient, const glm::vec3& axis);
 
     ~DrawableObject();
 
@@ -42,10 +46,12 @@ public:
 
     void move(const glm::vec3& delta);
     void rotate(const glm::vec3& delta);
+    void rotateAround(const float& delta, const glm::vec3& point);
     void scale(const glm::vec3& delta);
 
     void setColor(const glm::vec3& color);
     void setAmbient(const glm::vec3& _ambient);
+    void setDiffuse(const glm::vec3& _diffuse);
     void setProperties(const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
     void setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
 

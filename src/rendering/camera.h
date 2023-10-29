@@ -36,8 +36,6 @@ private:
     float current_jump_speed = 0;
 
     float aspect_ratio;
-
-    std::vector<IObserver*> observers;
 private:
     void notifyAll();
 

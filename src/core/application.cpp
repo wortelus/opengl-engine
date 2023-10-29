@@ -119,6 +119,9 @@ void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     } else if (action == GLFW_PRESS)
         scene->handleKeyEventPress(key, scancode, action, mods);
+    else if (action == GLFW_RELEASE)
+        scene->handleKeyEventRelease(key, scancode, action, mods);
+
 }
 
 
@@ -154,5 +157,13 @@ void Application::handleCursorEvent(double x_pos, double y_pos) {
 }
 
 void Application::buttonCallback(GLFWwindow* window, int button, int action, int mode) {
-    if (action == GLFW_PRESS) printf("buttonCallback [%d,%d,%d]\n", button, action, mode);
+    auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+    app->handleMouseButtonEvent(button, action, mode);
+}
+
+void Application::handleMouseButtonEvent(int button, int action, int mode) {
+    if (action == GLFW_PRESS)
+        scene->handleMouseButtonEventPress(button, action, mode);
+    else if (action == GLFW_RELEASE)
+        scene->handleMouseButtonEventRelease(button, action, mode);
 }

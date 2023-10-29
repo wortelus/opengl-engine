@@ -34,7 +34,7 @@ public:
 
 class Rotation : public TransformationAbstract {
 private:
-    glm::vec3 origin;
+    glm::vec3 origin; // TODO: remove this
     glm::vec3 rotation;
 public:
     Rotation();
@@ -55,6 +55,25 @@ public:
 
     void scaleBy(const glm::vec3& offset);
     void setScale(const glm::vec3& scale);
+
+    void update(const EventArgs& event_args) override;
+    std::shared_ptr<glm::mat4> getMatrix() override;
+};
+
+class RotationPoint : public TransformationAbstract {
+private:
+    glm::vec3 origin;
+    glm::vec3 axis;
+    float angle;
+public:
+    explicit RotationPoint(const glm::vec3& rot_axis);
+    RotationPoint(const glm::vec3& rot_axis, const glm::vec3& initial_origin);
+
+    void setAxis(const glm::vec3& new_axis);
+    void setOrigin(const glm::vec3& new_origin);
+
+    void rotateBy(const float& offset);
+    void setRotation(const float& new_rotation);
 
     void update(const EventArgs& event_args) override;
     std::shared_ptr<glm::mat4> getMatrix() override;

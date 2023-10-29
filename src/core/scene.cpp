@@ -26,6 +26,7 @@ Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_wi
     float ratio = (float) initial_width / (float) initial_height;
     this->camera = std::make_unique<Camera>(ratio);
     this->object_manager = std::make_unique<ObjectManager>();
+    this->animation_manager = std::make_unique<AnimationManager>();
 }
 
 void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
@@ -34,6 +35,13 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     // assign shader aliases
     for (const auto object: *object_manager) {
         assignShaderAlias(*object);
+    }
+
+    // assign shader aliases for animations
+    for (const auto object: *animation_manager) {
+        animation_manager->applyAnimations([this](Animation* object) {
+            assignShaderAlias(object->getDrawableObject());
+        });
     }
 
     // init shader uniforms
@@ -61,6 +69,15 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
         object->notifyMaterial();
     }
 
+    // subscribe single shader to drawable objects inside animations
+    for (const auto animation: *animation_manager) {
+        animation_manager->applyAnimations([this](Animation* animation) {
+            Shader* sh = this->shader_loader->loadShader(animation->getShaderAlias());
+            animation->attachShader(sh);
+            animation->notifyShader();
+        });
+    }
+
     // pass camera and light uniforms to shaders
     camera->start();
     light_manager.notifyShaders();
@@ -70,7 +87,24 @@ void Scene::optimizeObjects() {
     object_manager->preprocess();
 }
 
-DrawableObject& Scene::newObject(
+std::shared_ptr<DrawableObject> Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
+                 const std::string &shader_name) {
+    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
+    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, std::move(model),
+                                                                              shader_name, scene_ambient);
+    return object;
+}
+
+std::shared_ptr<DrawableObject>
+Scene::newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position,
+                 const std::string& shader_name, const glm::vec3& axis) {
+    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
+    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, std::move(model),
+                                                                              shader_name, scene_ambient, axis);
+    return object;
+}
+
+DrawableObject& Scene::appendObject(
         const float* vertices,
         const unsigned int& vertices_size,
         const glm::vec3& position,
@@ -81,6 +115,11 @@ DrawableObject& Scene::newObject(
     auto& obj = object_manager->addObject(std::move(object));
     obj.setAmbient(scene_ambient);
     return obj;
+}
+
+
+void Scene::appendAnimation(const std::shared_ptr<Animation>& animation) {
+    animation_manager->addAnimation(animation);
 }
 
 void Scene::appendLight(const Light& light) {
@@ -114,6 +153,19 @@ void Scene::run() {
             object->draw();
         }
 
+        // animations
+        for (const auto animation: *animation_manager) {
+            animation_manager->applyAnimations([this, &delta_time](Animation* animation) {
+                const SHADER_ALIAS_DATATYPE current_alias = animation->getShaderAlias();
+                Shader* sh = shader_loader->loadShader(current_alias);
+                animation->attachShader(sh);
+                animation->step(delta_time);
+                animation->notifyShader();
+                sh->lazyPassUniforms();
+                animation->draw();
+            });
+        }
+
         // update other events like input handling
         glfwPollEvents();
         // put the stuff we've been drawing onto the display
@@ -123,10 +175,12 @@ void Scene::run() {
 
 void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
     switch (key) {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            right_mouse_button_pressed = true;
         case GLFW_KEY_SPACE:
             camera->jump();
             break;
-            // translations
+            // components
         case GLFW_KEY_LEFT:
             object_manager->translate(glm::vec3(-0.1f, 0, 0));
             break;
@@ -172,9 +226,16 @@ void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
     }
 }
 
+void Scene::handleKeyEventRelease(int key, int scancode, int action, int mods) { }
+
 Scene::~Scene() {}
 
 void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
+    if (!right_mouse_button_pressed)
+        return;
+    else
+        printf("x: %f, y: %f\n", x_pos, y_pos);
+
     double x_offset = x_pos - last_x;
     double y_offset = last_y - y_pos;
     last_x = x_pos;
@@ -206,4 +267,24 @@ void Scene::assignShaderAlias(DrawableObject& object) {
         return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet is_dirty
     else
         object.assignShaderAlias(alias);
+}
+
+void Scene::handleMouseButtonEventPress(int button, int action, int mods) {
+    switch (button) {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            right_mouse_button_pressed = true;
+            break;
+        default:
+            break;
+    }
+}
+
+void Scene::handleMouseButtonEventRelease(int button, int action, int mods) {
+    switch (button) {
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            right_mouse_button_pressed = false;
+            break;
+        default:
+            break;
+    }
 }

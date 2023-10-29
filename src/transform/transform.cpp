@@ -108,3 +108,71 @@ void Scale::update(const EventArgs& event_args) {
         this->setScale(uniform->getPayload());
     }
 }
+
+RotationPoint::RotationPoint(const glm::vec3& rot_axis) : origin(glm::vec3(0.0f, 0.0f, 0.0f)), axis(rot_axis) {
+    this->matrix = std::make_shared<glm::mat4>(glm::mat4(1.0));
+}
+
+RotationPoint::RotationPoint(const glm::vec3& rot_axis, const glm::vec3& initial_origin) : origin(initial_origin), axis(rot_axis) {
+    this->matrix = std::make_shared<glm::mat4>(glm::mat4(1.0));
+}
+
+void RotationPoint::setOrigin(const glm::vec3& new_origin) {
+    this->origin = new_origin;
+    this->is_dirty = true;
+}
+
+void RotationPoint::setAxis(const glm::vec3 &new_axis) {
+    this->axis = new_axis;
+    this->is_dirty = true;
+}
+
+void RotationPoint::rotateBy(const float& offset) {
+    this->angle += offset;
+    if (this->angle > 360.0f) {
+        this->angle -= (int)(this->angle / 360.0f) * 360.0f;
+    }
+    this->is_dirty = true;
+}
+
+void RotationPoint::setRotation(const float& new_rotation) {
+    this->angle = new_rotation;
+    if (this->angle > 360.0f) {
+        this->angle -= (int)(this->angle / 360.0f) * 360.0f;
+    }
+    this->is_dirty = true;
+}
+
+void RotationPoint::update(const EventArgs &event_args) {
+    switch (event_args.type) {
+        case EventType::S_ROTATION_POINT_AXIS: {
+            const auto* uniform = static_cast<const EventPayload<glm::vec3>*>(&event_args);
+            this->setAxis(uniform->getPayload());
+            break;
+        } case EventType::S_ROTATION_POINT_ANGLE: {
+            const auto* uniform = static_cast<const EventPayload<float>*>(&event_args);
+            this->setRotation(uniform->getPayload());
+            break;
+        } case EventType::U_ROTATION_POINT_ANGLE: {
+            const auto* uniform = static_cast<const EventPayload<float>*>(&event_args);
+            this->rotateBy(uniform->getPayload());
+            break;
+        } case EventType::S_ROTATION_POINT_ORIGIN: {
+            const auto* uniform = static_cast<const EventPayload<glm::vec3>*>(&event_args);
+            this->setOrigin(uniform->getPayload());
+            break;
+        } default:
+            break;
+    }
+}
+
+std::shared_ptr<glm::mat4> RotationPoint::getMatrix() {
+    if (this->is_dirty) {
+        this->matrix = std::make_shared<glm::mat4>(
+                glm::translate(glm::mat4(1.0), origin) *
+                glm::rotate(glm::mat4(1.0), glm::radians(angle), axis) *
+                glm::translate(glm::mat4(1.0), -origin));
+        this->is_dirty = false;
+    }
+    return this->matrix;
+}

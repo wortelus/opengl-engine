@@ -23,7 +23,7 @@ const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
 // Mouse sensitivity for camera movement
 const float MOVEMENT_SENSITIVITY = 0.5;
-const double MOUSE_SENSITIVITY = 0.1;
+const double MOUSE_SENSITIVITY = 0.5;
 const bool DISABLE_CURSOR = false;
 
 // Movement speed for camera movement

@@ -9,19 +9,42 @@
 DrawableObject::DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model,
                                std::string shader_name)
         : position(position), shader_name(std::move(shader_name)), model(std::move(model)) {
-    this->model_matrix = std::make_unique<TransformComposite>();
+    this->model_matrix = std::make_unique<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
 }
 
-DrawableObject::DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model, std::string shader_name,
+DrawableObject::DrawableObject(const glm::vec3& position,
+                               std::unique_ptr<Model>&& model,
+                               std::string shader_name,
                                const glm::vec3& ambient)
-        : position(position), shader_name(std::move(shader_name)), model(std::move(model)) {
-    this->model_matrix = std::make_unique<TransformComposite>();
+                               : position(position),
+                               shader_name(std::move(shader_name)),
+                               model(std::move(model)) {
+    this->model_matrix = std::make_unique<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
+
+    this->material.ambient = ambient;
+}
+
+DrawableObject::DrawableObject(const glm::vec3 &position,
+                               std::unique_ptr<Model> &&model,
+                               std::string shader_name,
+                               const glm::vec3 &ambient,
+                               const glm::vec3 &axis)
+                               : position(position),
+                               shader_name(std::move(shader_name)),
+                               model(std::move(model))
+                               {
+    this->model_matrix = std::make_unique<DynamicTransformComposite>(axis);
+
+    EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
+    this->model_matrix->update(payload);
+
+    this->material.ambient = ambient;
 }
 
 DrawableObject::~DrawableObject() {
@@ -81,6 +104,13 @@ void DrawableObject::setColor(const glm::vec3& color) {
     this->material.object_color = color;
 }
 
+void DrawableObject::setDiffuse(const glm::vec3 &_diffuse) {
+    this->material.diffuse = _diffuse;
+    if (material.illuminated == ILLUMINATION::AMBIENT) {
+        material.illuminated = ILLUMINATION::DIFFUSE;
+    }
+}
+
 void DrawableObject::notifyModel() {
     EventPayload<std::shared_ptr<glm::mat4>> model_mat = {this->model_matrix->getMatrix(), EventType::U_MODEL_MATRIX};
     notify(model_mat);
@@ -98,4 +128,13 @@ void DrawableObject::notifyMaterial() {
 void DrawableObject::notifyModelParameters() {
     notifyModel();
     notifyMaterial();
+}
+
+void DrawableObject::rotateAround(const float& delta, const glm::vec3& point) {
+    EventPayload<glm::vec3> point_payload {point, EventType::S_ROTATION_POINT_ORIGIN};
+    this->model_matrix->update(point_payload);
+
+    EventPayload<float> rotation_payload{delta, EventType::U_ROTATION_POINT_ANGLE};
+    this->model_matrix->update(rotation_payload);
+
 }
