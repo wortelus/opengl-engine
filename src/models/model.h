@@ -35,8 +35,7 @@ protected:
     std::string fragment_shader_name;
 
     // gl draw type
-    GLenum draw_type;
-
+    GLenum draw_type = GL_TRIANGLES;
 public:
     Model() = default;
     ~Model();
