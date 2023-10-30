@@ -16,7 +16,7 @@ public:
     virtual std::shared_ptr<glm::mat3> getNormalMatrix() = 0;
 };
 
-class TransformComposite : public TransformationAbstract, INormal {
+class [[maybe_unused]] TransformComposite : public TransformationAbstract, INormal {
 private:
     // composite components for the transformation
     std::unique_ptr<Translation> translation;
@@ -39,7 +39,7 @@ public:
     DynamicTransformComposite();
 
     // default dynamic transform composite using origin
-    // M=T×Rorbit×Rself×S
+    // M=T×R_orbit×R_self×S
     explicit DynamicTransformComposite(const glm::vec3& axis);
 
     // explicit dynamic transform composite -> appends rotation along origin

@@ -64,7 +64,7 @@ class RotationPoint : public TransformationAbstract {
 private:
     glm::vec3 origin;
     glm::vec3 axis;
-    float angle;
+    float angle = 0.f;
 public:
     explicit RotationPoint(const glm::vec3& rot_axis);
     RotationPoint(const glm::vec3& rot_axis, const glm::vec3& initial_origin);

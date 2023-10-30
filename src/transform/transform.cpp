@@ -130,7 +130,7 @@ void RotationPoint::setAxis(const glm::vec3 &new_axis) {
 void RotationPoint::rotateBy(const float& offset) {
     this->angle += offset;
     if (this->angle > 360.0f) {
-        this->angle -= (int)(this->angle / 360.0f) * 360.0f;
+        this->angle -= static_cast<float>(static_cast<int>(this->angle / 360.0f)) * 360.0f;
     }
     this->is_dirty = true;
 }
@@ -138,7 +138,7 @@ void RotationPoint::rotateBy(const float& offset) {
 void RotationPoint::setRotation(const float& new_rotation) {
     this->angle = new_rotation;
     if (this->angle > 360.0f) {
-        this->angle -= (int)(this->angle / 360.0f) * 360.0f;
+        this->angle -= static_cast<float>(static_cast<int>(this->angle / 360.0f)) * 360.0f;
     }
     this->is_dirty = true;
 }
