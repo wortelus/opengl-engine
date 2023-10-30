@@ -3,14 +3,8 @@
 // Date of Creation:  22/10/2023
 
 #include "scene_loader.h"
-#include "../../assets/bushes.h"
-#include "../../assets/sphere.h"
-#include "../../assets/tree.h"
-#include "../../assets/suzi_flat.h"
-#include "../../assets/suzi_smooth.h"
-#include "../../assets/gift.h"
-#include "../../assets/plain.h"
 #include "../models/animations/centric_model.h"
+#include "model_loader.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -41,25 +35,25 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
     const float height = -4.5;
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(0, window_reference, initial_width, initial_height);
-    auto& sphere_south_object = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, height, -2.f), "phong");
     sphere_south_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                       glm::vec3(1.0, 1.0, 1.0),
                                       32.f);
 
-    auto& sphere_east_object = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_east_object = scene->appendObject(lazyLoadModel("sphere"),
                                                    glm::vec3(-2.f, height, 0.f), "phong");
     sphere_east_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                      glm::vec3(1.0, 1.0, 1.0),
                                      32.f);
 
-    auto& sphere_north_object = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_north_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, height, 2.f), "phong");
     sphere_north_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                       glm::vec3(1.0, 1.0, 1.0),
                                       32.f);
 
-    auto& sphere_west_object = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_west_object = scene->appendObject(lazyLoadModel("sphere"),
                                                    glm::vec3(2.f, height, 0.f), "phong");
     sphere_west_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                       glm::vec3(1.0, 1.0, 1.0),
@@ -76,7 +70,7 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
-    auto& sphere_south_object = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, 0.f, -2.f), "phong");
     sphere_south_object.setProperties(glm::vec3(1.0, 1.0, 0.0),
                                       glm::vec3(1.0, 1.0, 1.0),
@@ -97,34 +91,34 @@ std::unique_ptr<Scene>
 SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
     scene->setAmbient(glm::vec3(0.01, 0.01, 0.01));
-    auto& sphere_obj = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_obj = scene->appendObject(lazyLoadModel("sphere"),
                                            glm::vec3(-1.f, 1.f, -1.f), "phong");
     sphere_obj.setProperties(glm::vec3(0.6, 0.45, 0.0),
                              glm::vec3(0.6, 0.25, 1.0),
                              12.f);
 
-    auto& tree_obj = scene->appendObject(tree, sizeof(tree),
+    auto& tree_obj = scene->appendObject(lazyLoadModel("tree"),
                                          glm::vec3(2.f, 0.f, 0.f), "blinn");
     tree_obj.setProperties(glm::vec3(0.45, 0.75, 0.1),
                            glm::vec3(0.99, 0.15, 0.1),
                            5.f);
 
 
-    auto& suzi_smooth_obj_a = scene->appendObject(suziSmooth, sizeof(suziSmooth),
+    auto& suzi_smooth_obj_a = scene->appendObject(lazyLoadModel("suzi_smooth"),
                                                   glm::vec3(-4.f, 2.f, -8.f), "phong");
     suzi_smooth_obj_a.setProperties(glm::vec3(0.70, 0.15, 0.65),
                                     glm::vec3(1.0, 0.9, 0.1),
                                     12.f);
 
 
-    auto& suzi_smooth_obj_b = scene->appendObject(suziSmooth, sizeof(suziSmooth),
+    auto& suzi_smooth_obj_b = scene->appendObject(lazyLoadModel("suzi_smooth"),
                                                   glm::vec3(-2.f, 2.f, -8.f), "blinn");
     suzi_smooth_obj_b.setProperties(glm::vec3(0.1, 0.2, 0.85),
                                     glm::vec3(0.3, 0.95, 0.40),
                                     12.f);
 
 
-    auto& plain_obj = scene->appendObject(plain, sizeof(plain),
+    auto& plain_obj = scene->appendObject(lazyLoadModel("plain"),
                                           glm::vec3(0.f, 0.f, 0.f), "lambert");
     plain_obj.setProperties(glm::vec3(0.05, 0.1, 0.01),
                             glm::vec3(0.15, 0.75, 0.45),
@@ -136,7 +130,7 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
     glm::vec3 sun_position = glm::vec3(-4.f, 8.f, -4.f);
     float sun_radius = 2.0f;
 
-    auto& sun_obj = scene->appendObject(sphere, sizeof(sphere),
+    auto& sun_obj = scene->appendObject(lazyLoadModel("sphere"),
                                         sun_position, "blinn");
     sun_obj.setAmbient(glm::vec3(1.0, 0.75, 0.0));
     sun_obj.setProperties(glm::vec3(1.0, 0.15, 0.0),
@@ -172,7 +166,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
 
 
     // sun
-    auto sun_obj = scene->newObject(sphere, sizeof(sphere),
+    auto sun_obj = scene->newObject(lazyLoadModel("sphere"),
                                         glm::vec3(0, height, 0), "blinn");
     sun_obj->setAmbient(glm::vec3(1.0, 0.75, 0.0));
     sun_obj->setProperties(glm::vec3(1.0, 0.15, 0.0),
@@ -182,7 +176,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     std::shared_ptr<CentricComposite> sun_composite = std::make_shared<CentricComposite>(sun_obj);
 
     // earth
-    auto earth_obj = scene->newObject(sphere, sizeof(sphere),
+    auto earth_obj = scene->newObject(lazyLoadModel("sphere"),
                                         glm::vec3(4, height, 0), "blinn", axis);
     earth_obj->setAmbient(glm::vec3(0.0, 0.75, 1.0));
     earth_obj->setProperties(glm::vec3(0.0, 0.15, 1.0),
@@ -193,7 +187,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     earth_composite->setMultiplier(1.f);
 
     // moon
-    auto moon_obj = scene->newObject(sphere, sizeof(sphere),
+    auto moon_obj = scene->newObject(lazyLoadModel("sphere"),
                                         glm::vec3(6, height, 0), "blinn", axis);
     moon_obj->setAmbient(glm::vec3(0.5, 0.5, 0.5));
     moon_obj->setProperties(glm::vec3(0.5, 0.5, 0.5),
@@ -206,7 +200,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
 
 
     // mars
-    auto mars_obj = scene->newObject(sphere, sizeof(sphere),
+    auto mars_obj = scene->newObject(lazyLoadModel("sphere"),
                                      glm::vec3(8, height, 0), "blinn", axis);
     mars_obj->setAmbient(glm::vec3(0.7, 0.2, 0.0));
     mars_obj->setProperties(glm::vec3(0.8, 0.3, 0.0),
@@ -218,7 +212,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     mars_leaf->setMultiplier(0.8f);
 
     // jupiter
-    auto jupiter_obj = scene->newObject(sphere, sizeof(sphere),
+    auto jupiter_obj = scene->newObject(lazyLoadModel("sphere"),
                                         glm::vec3(14, height, 0), "blinn", axis);
     jupiter_obj->setAmbient(glm::vec3(0.9, 0.7, 0.5));
     jupiter_obj->setProperties(glm::vec3(1.0, 0.8, 0.6),
@@ -229,7 +223,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     jupiter_leaf->setMultiplier(0.6f);
 
     // saturn
-    auto saturn_obj = scene->newObject(sphere, sizeof(sphere),
+    auto saturn_obj = scene->newObject(lazyLoadModel("sphere"),
                                        glm::vec3(20, height, 0), "blinn", axis);
     saturn_obj->setAmbient(glm::vec3(0.8, 0.6, 0.2));
     saturn_obj->setProperties(glm::vec3(0.9, 0.7, 0.3),
@@ -240,7 +234,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     saturn_leaf->setMultiplier(0.4f);
 
     // uranus
-    auto uranus_obj = scene->newObject(sphere, sizeof(sphere),
+    auto uranus_obj = scene->newObject(lazyLoadModel("sphere"),
                                        glm::vec3(26, height, 0), "blinn", axis);
     uranus_obj->setAmbient(glm::vec3(0.4, 0.7, 0.7));
     uranus_obj->setProperties(glm::vec3(0.5, 0.8, 0.8),
@@ -251,7 +245,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     uranus_leaf->setMultiplier(0.3f);
 
     // neptune
-    auto neptune_obj = scene->newObject(sphere, sizeof(sphere),
+    auto neptune_obj = scene->newObject(lazyLoadModel("sphere"),
                                         glm::vec3(32, height, 0), "blinn", axis);
     neptune_obj->setAmbient(glm::vec3(0.04, 0.18, 0.55));
     neptune_obj->setProperties(glm::vec3(0.05, 0.2, 0.6),
@@ -288,7 +282,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
     scene->setAmbient(glm::vec3(0.1, 0.1, 0.1));
 
-    auto& tree_first = scene->appendObject(tree, sizeof(tree),
+    auto& tree_first = scene->appendObject(lazyLoadModel("tree"),
                        glm::vec3(-2, 0, -2), "blinn");
     tree_first.setProperties(glm::vec3(0.35, 0.65, 0.05),
                            glm::vec3(0.8, 0.15, 0.1),
@@ -311,7 +305,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
         float rand_x = ((float)rand() / RAND_MAX) * range - range / 2.0f;
         float rand_z = ((float)rand() / RAND_MAX) * range - range / 2.0f;
 
-        auto& tree_obj = scene->appendObject(tree, sizeof(tree),
+        auto& tree_obj = scene->appendObject(lazyLoadModel("tree"),
                                              glm::vec3(rand_x, tree_height, rand_z), "blinn");
         tree_obj.setProperties(glm::vec3(0.55, 0.75, 0.1),
                                glm::vec3(0.99, 0.15, 0.1),
@@ -329,7 +323,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
 
         switch(rand_obj) {
             case 0: {
-                auto& bushes_obj = scene->appendObject(bushes, sizeof(bushes),
+                auto& bushes_obj = scene->appendObject(lazyLoadModel("bushes"),
                                                               glm::vec3(rand_x, tree_height, rand_z), "blinn");
                 bushes_obj.setProperties(glm::vec3(0.55, 0.95, 0.1),
                                          glm::vec3(0.99, 0.15, 0.1),
@@ -339,7 +333,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
                 break;
             }
             case 1: {
-                auto& gift_obj = scene->appendObject(gift, sizeof(gift),
+                auto& gift_obj = scene->appendObject(lazyLoadModel("gift"),
                                                               glm::vec3(rand_x, tree_height, rand_z), "phong");
                 gift_obj.setProperties(glm::vec3(0.9, 0.05, 0.1),
                                        glm::vec3(0.75, 0.15, 0.1),
@@ -350,7 +344,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
                 break;
             }
             case 2: {
-                auto& sphere_obj = scene->appendObject(sphere, sizeof(sphere),
+                auto& sphere_obj = scene->appendObject(lazyLoadModel("sphere"),
                                                               glm::vec3(rand_x, tree_height + 1, rand_z), "blinn");
                 sphere_obj.setProperties(glm::vec3(0.9, 0.02, 0.95),
                                          glm::vec3(0.99, 0.66, 0.96),
@@ -358,7 +352,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
                 break;
             }
             case 3: {
-                auto& suzi_smooth_obj_a = scene->appendObject(suziSmooth, sizeof(suziSmooth),
+                auto& suzi_smooth_obj_a = scene->appendObject(lazyLoadModel("suzi_smooth"),
                                                               glm::vec3(rand_x, tree_height + 1, rand_z), "phong");
                 suzi_smooth_obj_a.setProperties(glm::vec3(0.55, 0.05, 0.85),
                                                 glm::vec3(0.99, 0.55, 0.85),
@@ -381,7 +375,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
         scene->appendLight(light_a);
     }
 
-    auto& plain_obj = scene->appendObject(plain, sizeof(plain),
+    auto& plain_obj = scene->appendObject(lazyLoadModel("plain"),
                                           glm::vec3(0.f, 0.f, 0.f), "lambert");
     plain_obj.setProperties(glm::vec3(0.05, 0.1, 0.01),
                             glm::vec3(0.15, 0.45, 0.25),
@@ -395,7 +389,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneF(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
-    auto& sphere_south_object = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, 0.f, -2.f), "phong_creep");
     sphere_south_object.setProperties(glm::vec3(1.0, 1.0, 0.0),
                                       glm::vec3(1.0, 1.0, 1.0),
@@ -414,32 +408,32 @@ SceneLoader::loadSceneF(GLFWwindow &window_reference, const int &initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneG(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
-    auto& sphere_obj = scene->appendObject(sphere, sizeof(sphere),
+    auto& sphere_obj = scene->appendObject(lazyLoadModel("sphere"),
                                            glm::vec3(0.f, 0.f, -2.f), "blinn");
     sphere_obj.setProperties(glm::vec3(1.0, 1.0, 0.0),
                              glm::vec3(1.0, 1.0, 1.0),
                              1.f);
 
-    auto& suzie_obj = scene->appendObject(suziSmooth, sizeof(suziSmooth),
+    auto& suzie_obj = scene->appendObject(lazyLoadModel("suzi_smooth"),
                                           glm::vec3(0.f, 0.f, 0.f), "blinn");
     suzie_obj.setProperties(glm::vec3(1.0, 1.0, 0.0),
                             glm::vec3(1.0, 1.0, 1.0),
                             1.f);
 
-    auto& plain_obj = scene->appendObject(plain, sizeof(plain),
+    auto& plain_obj = scene->appendObject(lazyLoadModel("plain"),
                                           glm::vec3(0.f, -1.f, 2.f), "blinn");
     plain_obj.setAmbient(glm::vec3(0.05, 0.1, 0.01));
     plain_obj.setDiffuse(glm::vec3(0.15, 0.75, 0.45));
     plain_obj.scale(glm::vec3(128.f, 1.f, 128.f));
 
-    auto& gift_obj = scene->appendObject(gift, sizeof(gift),
+    auto& gift_obj = scene->appendObject(lazyLoadModel("gift"),
                                          glm::vec3(0.f, 0.f, 4.f), "blinn");
     gift_obj.setProperties(glm::vec3(0.8, 0.1, 0.01),
                            glm::vec3(0.15, 0.75, 0.45),
                            glm::vec3(0.7, 0.7, 0.7),
                            32.f);
 
-    auto& tree_obj = scene->appendObject(tree, sizeof(tree),
+    auto& tree_obj = scene->appendObject(lazyLoadModel("tree"),
                                          glm::vec3(0, 0, 6), "blinn");
     tree_obj.setProperties(glm::vec3(0.15, 0.25, 0.05),
                            glm::vec3(0.55, 0.95, 0.1),
@@ -454,4 +448,8 @@ SceneLoader::loadSceneG(GLFWwindow &window_reference, const int &initial_width, 
     scene->appendLight(light_a);
 
     return std::move(scene);
+}
+
+const Model* SceneLoader::lazyLoadModel(const std::string &name) {
+    return ModelLoader::getInstance().loadModel(name);
 }

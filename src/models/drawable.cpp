@@ -6,9 +6,11 @@
 
 #include <utility>
 
-DrawableObject::DrawableObject(const glm::vec3& position, std::unique_ptr<Model>&& model,
+DrawableObject::DrawableObject(const glm::vec3& position, const Model* model,
                                std::string shader_name)
-        : position(position), shader_name(std::move(shader_name)), model(std::move(model)) {
+                               : position(position),
+                               shader_name(std::move(shader_name)),
+                               model(model) {
     this->model_matrix = std::make_unique<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
@@ -16,12 +18,12 @@ DrawableObject::DrawableObject(const glm::vec3& position, std::unique_ptr<Model>
 }
 
 DrawableObject::DrawableObject(const glm::vec3& position,
-                               std::unique_ptr<Model>&& model,
+                               const Model* model,
                                std::string shader_name,
                                const glm::vec3& ambient)
                                : position(position),
                                shader_name(std::move(shader_name)),
-                               model(std::move(model)) {
+                               model(model) {
     this->model_matrix = std::make_unique<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
@@ -31,14 +33,13 @@ DrawableObject::DrawableObject(const glm::vec3& position,
 }
 
 DrawableObject::DrawableObject(const glm::vec3 &position,
-                               std::unique_ptr<Model> &&model,
+                               const Model* model,
                                std::string shader_name,
                                const glm::vec3 &ambient,
                                const glm::vec3 &axis)
                                : position(position),
                                shader_name(std::move(shader_name)),
-                               model(std::move(model))
-                               {
+                               model(model) {
     this->model_matrix = std::make_unique<DynamicTransformComposite>(axis);
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};

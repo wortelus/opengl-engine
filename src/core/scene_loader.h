@@ -33,6 +33,8 @@ private:
     loadSceneF(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     static std::unique_ptr<Scene>
     loadSceneG(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
+
+    static const Model* lazyLoadModel(const std::string &name);
 };
 
 #endif //ZPG_SCENE_LOADER_H

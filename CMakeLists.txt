@@ -14,9 +14,12 @@ include_directories(${GLEW_INCLUDE_DIRS})
 link_libraries(${GLEW_LIBRARIES})
 
 add_executable(zpg src/main.cpp
+        # core functionalities and loaders
         src/core/application.h src/core/application.cpp
         src/core/scene.h src/core/scene.cpp
         src/core/scene_loader.h src/core/scene_loader.cpp
+        src/core/model_loader.h src/core/model_loader.cpp
+        # utilities and constants
         src/util/const.h
         src/util/event_args.h
         src/util/observer.h src/util/observer.cpp

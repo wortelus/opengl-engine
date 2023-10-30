@@ -87,30 +87,30 @@ void Scene::optimizeObjects() {
     object_manager->preprocess();
 }
 
-std::shared_ptr<DrawableObject> Scene::newObject(const float *vertices, const unsigned int &vertices_size, const glm::vec3 &position,
-                 const std::string &shader_name) {
-    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
-    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, std::move(model),
+std::shared_ptr<DrawableObject> Scene::newObject(
+        const Model* model_ptr,
+        const glm::vec3 &position,
+        const std::string &shader_name) {
+    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, model_ptr,
                                                                               shader_name, scene_ambient);
     return object;
 }
 
-std::shared_ptr<DrawableObject>
-Scene::newObject(const float* vertices, const unsigned int& vertices_size, const glm::vec3& position,
-                 const std::string& shader_name, const glm::vec3& axis) {
-    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
-    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, std::move(model),
+std::shared_ptr<DrawableObject>Scene::newObject(
+        const Model* model_ptr,
+        const glm::vec3& position,
+        const std::string& shader_name,
+        const glm::vec3& axis) {
+    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, model_ptr,
                                                                               shader_name, scene_ambient, axis);
     return object;
 }
 
 DrawableObject& Scene::appendObject(
-        const float* vertices,
-        const unsigned int& vertices_size,
+        const Model* model_ptr,
         const glm::vec3& position,
         const std::string& shader_name) {
-    std::unique_ptr<Model> model = std::make_unique<Model>(vertices, vertices_size / sizeof(float), 3, false);
-    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, std::move(model),
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, model_ptr,
                                                                               shader_name, scene_ambient);
     auto& obj = object_manager->addObject(std::move(object));
     obj.setAmbient(scene_ambient);
