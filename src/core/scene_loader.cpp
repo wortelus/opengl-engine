@@ -199,7 +199,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     earth_obj->setColor(glm::vec3(0.0, 0.5, 1.0));
     earth_obj->setAmbient(glm::vec3(0.0, 0.75, 1.0));
     earth_obj->setProperties(glm::vec3(0.0, 0.15, 1.0),
-                          glm::vec3(0.0, 0.0, 1.0),
+                             glm::vec3(1.0, 1.0, 1.0),
                           12.f);
 
     std::shared_ptr<CentricComposite> earth_composite = std::make_shared<CentricComposite>(earth_obj);
@@ -225,7 +225,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     mars_obj->setColor(glm::vec3(0.8, 0.3, 0.0));  // Rusty red-brown
     mars_obj->setAmbient(glm::vec3(0.7, 0.2, 0.0));
     mars_obj->setProperties(glm::vec3(0.8, 0.3, 0.0),
-                            glm::vec3(0.2, 0.1, 0.1),
+                            glm::vec3(1.0, 1.0, 1.0),
                             50.f);
 
 
@@ -238,7 +238,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     jupiter_obj->setColor(glm::vec3(1.0, 0.8, 0.6));  // Mixture of orange and white
     jupiter_obj->setAmbient(glm::vec3(0.9, 0.7, 0.5));
     jupiter_obj->setProperties(glm::vec3(1.0, 0.8, 0.6),
-                               glm::vec3(0.4, 0.3, 0.2),
+                               glm::vec3(1.0, 1.0, 1.0),
                                40.f);
 
     std::shared_ptr<CentricModelLeaf> jupiter_leaf = std::make_shared<CentricModelLeaf>(jupiter_obj);
@@ -250,7 +250,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     saturn_obj->setColor(glm::vec3(0.9, 0.7, 0.3));  // Golden-yellow
     saturn_obj->setAmbient(glm::vec3(0.8, 0.6, 0.2));
     saturn_obj->setProperties(glm::vec3(0.9, 0.7, 0.3),
-                              glm::vec3(0.5, 0.4, 0.3),
+                              glm::vec3(1.0, 1.0, 1.0),
                               45.f);
 
     std::shared_ptr<CentricModelLeaf> saturn_leaf = std::make_shared<CentricModelLeaf>(saturn_obj);
@@ -262,7 +262,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     uranus_obj->setColor(glm::vec3(0.5, 0.8, 0.8));  // Cyan
     uranus_obj->setAmbient(glm::vec3(0.4, 0.7, 0.7));
     uranus_obj->setProperties(glm::vec3(0.5, 0.8, 0.8),
-                              glm::vec3(0.2, 0.3, 0.3),
+                              glm::vec3(1.0, 1.0, 1.0),
                               50.f);
 
     std::shared_ptr<CentricModelLeaf> uranus_leaf = std::make_shared<CentricModelLeaf>(uranus_obj);
@@ -274,7 +274,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     neptune_obj->setColor(glm::vec3(0.05, 0.2, 0.6));  // Deep blue
     neptune_obj->setAmbient(glm::vec3(0.04, 0.18, 0.55));
     neptune_obj->setProperties(glm::vec3(0.05, 0.2, 0.6),
-                               glm::vec3(0.1, 0.15, 0.4),
+                               glm::vec3(1.0, 1.0, 1.0),
                                50.f);
 
     std::shared_ptr<CentricModelLeaf> neptune_leaf = std::make_shared<CentricModelLeaf>(neptune_obj);
@@ -365,7 +365,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
                                                               glm::vec3(rand_x, tree_height, rand_z), "phong");
                 gift_obj.setColor(glm::vec3(0.90, 0.2, 0.35));
                 gift_obj.setProperties(glm::vec3(0.55, 0.35, 0.1),
-                                         glm::vec3(0.75, 0.15, 0.1),
+                                         glm::vec3(0.75, 0.85, 0.8),
                                          32.f);
                 gift_obj.scale(glm::vec3(2., 2., 2.));
                 gift_obj.rotate(glm::vec3(0.f, rand_rotate, 0.f));
@@ -373,9 +373,12 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
             }
             case 2: {
                 auto& sphere_obj = scene->appendObject(sphere, sizeof(sphere),
-                                                              glm::vec3(rand_x, tree_height + 1, rand_z), "lambert");
+                                                              glm::vec3(rand_x, tree_height + 1, rand_z), "blinn");
                 sphere_obj.setColor(glm::vec3(0.1, 0.2, 0.95));
                 sphere_obj.setDiffuse(glm::vec3(0.65, 1.0, 0.85));
+                sphere_obj.setProperties(glm::vec3(0.55, 0.95, 0.1),
+                                         glm::vec3(0.99, 0.66, 0.96),
+                                         32.f);
                 break;
             }
             case 3: {

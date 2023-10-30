@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/10/2023
 
 #ifndef ZPG_ANIMATION_MANAGER_H
 #define ZPG_ANIMATION_MANAGER_H

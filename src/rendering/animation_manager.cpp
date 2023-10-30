@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 29.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  29/10/2023
 
 #include "animation_manager.h"
 #include "../models/animations/centric_model.h"
