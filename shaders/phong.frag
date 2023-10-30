@@ -31,23 +31,22 @@ out vec4 out_color;
 
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 view_direction_norm) {
     vec3 light_direction_n = normalize(light.position - frag_pos_world);
-    float reflection_n = dot(light_direction_n, normal);
-    float diff = max(reflection_n, 0.0);
+    float diff = dot(light_direction_n, normal);
 
-    float dist = length(light.position - frag_pos_world);
-    float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
-    // TODO: maybe optimize vector multiplication
-    vec3 diffuse  =     material.diffuse  * diff * light.intensity * light.color * object_color * attenuation;
-
-    // don't calculate specular if the light is behind the surface
-    if (reflection_n > 0.0) {
+    // don't calculate diffuse and specular if the light is behind the surface
+    if (diff > 0.0) {
         vec3 reflect_direction = reflect(-light_direction_n, normal);
         float spec = pow(max(dot(view_direction_norm, reflect_direction), 0.0), material.shininess);
+
+        float dist = length(light.position - frag_pos_world);
+        float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
+
+        vec3 diffuse  = material.diffuse  * diff * light.intensity * light.color * object_color * attenuation;
         vec3 specular = material.specular * spec * light.intensity * light.color                * attenuation;
         return (diffuse + specular);
     } else {
-        return (diffuse);
+        return vec3(0.0);
     }
 }
 
@@ -55,10 +54,10 @@ void main(void) {
     vec3 view_direction_norm = normalize(ex_view_direction);
     vec3 world_normal_norm = normalize(ex_world_normal);
 
-    vec3 result = vec3(0.0);
+    vec3 color_sum = vec3(0.0);
     for(int i = 0; i < num_lights; ++i) {
-        result += calcPointLight(lights[i], world_normal_norm, ex_world_position.xyz, view_direction_norm);
+        color_sum += calcPointLight(lights[i], world_normal_norm, ex_world_position.xyz, view_direction_norm);
     }
 
-    out_color = vec4(result + material.ambient, 1.0);
+    out_color = vec4(material.ambient + color_sum, 1.0);
 }

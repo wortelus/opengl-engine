@@ -29,23 +29,28 @@ uniform int num_lights;
 out vec4 out_Color;
 
 vec3 calcLambertLight(PointLight light, vec3 normal, vec3 frag_pos_world) {
-    vec3 light_vector = normalize(light.position - frag_pos_world);
-    float dot_product = max(dot(light_vector, normalize(normal)), 0.0);
+    vec3 light_direction_n = normalize(light.position - frag_pos_world);
+    float diff = dot(light_direction_n, normal);
 
-    float dist = length(light.position - frag_pos_world);
-    float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
+    if (diff > 0.0) {
+        float dist = length(light.position - frag_pos_world);
+        float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
-    vec3 diffuse = dot_product * material.diffuse * light.intensity * light.color * attenuation;
+        vec3 diffuse = diff * material.diffuse * light.intensity * light.color * attenuation;
 
-    return (diffuse) * object_color;
+        return (diffuse) * object_color;
+    } else {
+        return vec3(0.0);
+    }
 }
 
 void main(void) {
-    vec3 result = vec3(0.0);
+    vec3 world_normal_norm = normalize(ex_world_normal);
 
+    vec3 color_sum = vec3(0.0);
     for(int i = 0; i < num_lights; ++i) {
-        result += calcLambertLight(lights[i], ex_world_normal, ex_world_position.xyz);
+        color_sum += calcLambertLight(lights[i], world_normal_norm, ex_world_position.xyz);
     }
 
-    out_Color = vec4(result + material.ambient, 1.0);
+    out_Color = vec4(material.ambient + color_sum, 1.0);
 }
