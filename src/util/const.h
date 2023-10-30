@@ -41,7 +41,7 @@ const glm::vec3 CAMERA_TARGET = glm::vec3(0.0f, GROUND_LEVEL, 0.0f);
 const glm::vec3 CAMERA_UP = glm::vec3(0.0f, GROUND_LEVEL + 1.0f, 0.0f);
 
 // Initial camera yaw
-// -90.0 degre
+// -90.0 degrees
 const float CAMERA_YAW = -90.0f;
 // Initial camera pitch
 const float CAMERA_PITCH = 0.0f;

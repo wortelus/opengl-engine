@@ -79,8 +79,8 @@ public:
     void optimizeObjects();
     void run();
 
-    char getSceneId() const { return scene_id; }
-    bool isFinished() const { return is_finished; }
+    [[nodiscard]] char getSceneId() const { return scene_id; }
+    [[nodiscard]] bool isFinished() const { return is_finished; }
     void finish() { is_finished = true; }
 
     inline void continuousMovement(const float& delta_time);

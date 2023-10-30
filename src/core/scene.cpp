@@ -64,7 +64,7 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
         Shader* sh = this->shader_loader->loadShader(object->getShaderAlias());
         object->attach(sh);
 
-        // make use of the loaded shader, and pre-pass uniforms just enought before the rendering loop
+        // make use of the loaded shader, and pre-pass uniforms just enough before the rendering loop
         object->notifyModel();
         object->notifyMaterial();
     }

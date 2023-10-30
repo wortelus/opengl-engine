@@ -12,7 +12,7 @@
 #include "application.h"
 
 Application::Application(const int width, const int height, const char* title) : width(width), height(height),
-                                                                                 title(title) {}
+                                                                                 title(title), ratio(width / height) { }
 
 Application::~Application() {
     glfwDestroyWindow(window);
