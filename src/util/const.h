@@ -8,7 +8,7 @@
 #include "glm/vec3.hpp"
 #include "glm/trigonometric.hpp"
 
-const bool DISABLE_VSYNC = true;
+const bool DISABLE_VSYNC = false;
 
 #define SHADER_ALIAS_DATATYPE int
 #define SHADER_UNLOADED (-1)
