@@ -76,7 +76,6 @@ turning lines of text into a mosaic of pixels and logic, painting stories in rea
 ## Tablets of Future Endeavors
 - Observer on transformations is currently not used.
 We call globally directly in scene all transformation operations (*no notify*).
-- Models could be shared between DrawableObjects, for it is a waste of memory to have multiple copies of the same model.
 - and more _in-code TODO's_
 
 ## The Sacred Relics

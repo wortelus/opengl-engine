@@ -35,7 +35,6 @@ void Translation::update(const EventArgs& event_args) {
     } else if (event_args.type == EventType::S_TRANSLATION) {
         this->setTranslation(uniform->getPayload());
     }
-    // TODO: log invalid operation
 }
 
 Rotation::Rotation() : origin(glm::vec3(1.0f, 0.0f, 0.0f)), rotation(glm::vec3(0.0f, 0.0f, 0.0f)) {

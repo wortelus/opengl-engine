@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include <utility>
+#include <stdexcept>
 
 //Include GLM
 #include "glm/vec3.hpp" // glm::vec3
@@ -26,7 +27,6 @@ void Shader::load() {
 }
 
 void Shader::unload() {
-    //TODO: unload
     if (!active) return;
     glUseProgram(0);
     active = false;
@@ -55,7 +55,7 @@ Shader::~Shader() {
 void Shader::attachShader(const ShaderCode& shader_code) {
     if (shader_code.type == ShaderType::VertexShader) {
         if (vertex_shader != 0) {
-            // TODO: notify about overwriting shader
+            throw std::runtime_error("Vertex shader already attached");
             glDeleteShader(vertex_shader);
         }
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -63,7 +63,7 @@ void Shader::attachShader(const ShaderCode& shader_code) {
         glCompileShader(vertex_shader);
     } else if (shader_code.type == ShaderType::FragmentShader) {
         if (fragment_shader != 0) {
-            // TODO: notify about overwriting shader
+            throw std::runtime_error("Fragment shader already attached");
             glDeleteShader(fragment_shader);
         }
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -208,9 +208,9 @@ void Shader::updateMaterial(const EventArgs& event_args) {
 
 void Shader::passMaterialUniforms() {
     passUniform3fv("material.ambient", material.value.ambient);
-    if (true)
+    if (material.value.illuminated & ILLUMINATION::DIFFUSE)
         passUniform3fv("material.diffuse", material.value.diffuse);
-    if (true) {
+    if (material.value.illuminated & ILLUMINATION::SPECULAR) {
         passUniform3fv("material.specular", material.value.specular);
         passUniform1f("material.shininess", material.value.shininess);
     }
