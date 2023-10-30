@@ -49,7 +49,6 @@ public:
     void rotateAround(const float& delta, const glm::vec3& point);
     void scale(const glm::vec3& delta);
 
-    void setColor(const glm::vec3& color);
     void setAmbient(const glm::vec3& _ambient);
     void setDiffuse(const glm::vec3& _diffuse);
     void setProperties(const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);

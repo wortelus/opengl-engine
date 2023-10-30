@@ -22,7 +22,6 @@ struct PointLight {
     float quadratic;
 };
 
-uniform vec3 object_color;
 uniform Material material;
 uniform PointLight lights[MAX_LIGHTS];
 uniform int num_lights;
@@ -38,24 +37,23 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 frag_pos_world, vec3 vie
     float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
     // TODO: maybe optimize vector multiplication
-    vec3 ambient  =     material.ambient                                         * object_color;
-    vec3 diffuse  =     material.diffuse  * diff * light.intensity * light.color * object_color * attenuation;
+    vec3 diffuse  =     material.diffuse  * diff * light.intensity * light.color * attenuation;
 
     // calculate specular even if the light is behind the surface
     vec3 reflect_direction = reflect(-light_direction_n, normal);
     float spec = pow(max(dot(view_direction_norm, reflect_direction), 0.0), material.shininess);
-    vec3 specular =     material.specular * spec * light.intensity * light.color                * attenuation;
-    return (ambient + diffuse + specular);
+    vec3 specular =     material.specular * spec * light.intensity * light.color * attenuation;
+    return (diffuse + specular);
 }
 
 void main(void) {
     vec3 view_direction_norm = normalize(ex_view_direction);
     vec3 world_normal_norm = normalize(ex_world_normal);
 
-    vec3 result = vec3(0.0);
+    vec3 color_sum = vec3(0.0);
     for(int i = 0; i < num_lights; ++i) {
-        result += calcPointLight(lights[i], world_normal_norm, ex_world_position.xyz, view_direction_norm);
+        color_sum += calcPointLight(lights[i], world_normal_norm, ex_world_position.xyz, view_direction_norm);
     }
 
-    out_color = vec4(result, 1.0);
+    out_color = vec4(material.ambient + color_sum, 1.0);
 }

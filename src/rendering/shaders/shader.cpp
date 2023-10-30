@@ -207,9 +207,6 @@ void Shader::updateMaterial(const EventArgs& event_args) {
 }
 
 void Shader::passMaterialUniforms() {
-    // TODO: remove object color?
-    passUniform3fv("object_color", material.value.object_color);
-
     passUniform3fv("material.ambient", material.value.ambient);
     if (true)
         passUniform3fv("material.diffuse", material.value.diffuse);

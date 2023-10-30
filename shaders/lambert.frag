@@ -9,7 +9,8 @@ const int MAX_LIGHTS = 10;
 struct Material {
     vec3 ambient;
     vec3 diffuse;
-    // vec3 specular; // Not used in this shader.
+    // vec3 specular; --> Not used in this shader.
+    // float shininess; --> Not used in this shader.
 };
 
 struct PointLight {
@@ -21,7 +22,6 @@ struct PointLight {
     float quadratic;
 };
 
-uniform vec3 object_color;
 uniform Material material;
 uniform PointLight lights[MAX_LIGHTS];
 uniform int num_lights;
@@ -36,9 +36,7 @@ vec3 calcLambertLight(PointLight light, vec3 normal, vec3 frag_pos_world) {
         float dist = length(light.position - frag_pos_world);
         float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
 
-        vec3 diffuse = diff * material.diffuse * light.intensity * light.color * attenuation;
-
-        return (diffuse) * object_color;
+        return diff * material.diffuse * light.intensity * light.color * attenuation;
     } else {
         return vec3(0.0);
     }

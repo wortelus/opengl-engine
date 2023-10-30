@@ -18,7 +18,6 @@ const char* const SHADERS_PATH = "shaders";
 
 const char DEFAULT_SCENE = 0;
 
-const glm::vec3 OBJECT_COLOR = glm::vec3(1.0f, 1.0f, 1.0f);
 const glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
 // Mouse sensitivity for camera movement

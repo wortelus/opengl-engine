@@ -100,10 +100,6 @@ void DrawableObject::setProperties(const glm::vec3& _ambient, const glm::vec3& _
     material.illuminated = ILLUMINATION::ALL;
 }
 
-void DrawableObject::setColor(const glm::vec3& color) {
-    this->material.object_color = color;
-}
-
 void DrawableObject::setDiffuse(const glm::vec3 &_diffuse) {
     this->material.diffuse = _diffuse;
     if (material.illuminated == ILLUMINATION::AMBIENT) {

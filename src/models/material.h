@@ -16,7 +16,6 @@ enum ILLUMINATION {
 };
 
 struct Material {
-    glm::vec3 object_color = OBJECT_COLOR;
     glm::vec3 ambient = AMBIENT_LIGHT;
     glm::vec3 diffuse = glm::vec3(0.0);
     glm::vec3 specular = glm::vec3(0.0);
