@@ -66,6 +66,12 @@ std::shared_ptr<glm::mat3> DrawableObject::getNormalMatrix() const {
     return this->model_matrix->getNormalMatrix();
 }
 
+void DrawableObject::setLocation(const glm::vec3 &location) {
+    EventPayload<glm::vec3> payload{location, EventType::S_TRANSLATION};
+    this->model_matrix->update(payload);
+}
+
+
 void DrawableObject::move(const glm::vec3& delta) {
     EventPayload<glm::vec3> payload{delta, EventType::U_TRANSLATION};
     this->model_matrix->update(payload);

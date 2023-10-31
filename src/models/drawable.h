@@ -44,6 +44,7 @@ public:
     void assignShaderAlias(const SHADER_ALIAS_DATATYPE& alias) { this->shader_alias = alias; }
     [[nodiscard]] SHADER_ALIAS_DATATYPE getShaderAlias() const { return this->shader_alias; }
 
+    void setLocation(const glm::vec3& location);
     void move(const glm::vec3& delta);
     void rotate(const glm::vec3& delta);
     void rotateAround(const float& delta, const glm::vec3& point);
