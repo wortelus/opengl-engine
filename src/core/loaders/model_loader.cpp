@@ -1,17 +1,17 @@
-//
-// Created by wortelus on 30.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  30/10/2023
 
 #include <stdexcept>
 #include "model_loader.h"
 
-#include "../../assets/bushes.h"
-#include "../../assets/gift.h"
-#include "../../assets/plain.h"
-#include "../../assets/sphere.h"
-#include "../../assets/suzi_flat.h"
-#include "../../assets/suzi_smooth.h"
-#include "../../assets/tree.h"
+#include "../../../assets/bushes.h"
+#include "../../../assets/gift.h"
+#include "../../../assets/plain.h"
+#include "../../../assets/sphere.h"
+#include "../../../assets/suzi_flat.h"
+#include "../../../assets/suzi_smooth.h"
+#include "../../../assets/tree.h"
 
 ModelLoader::~ModelLoader() {
     for (auto& model : model_repository) {

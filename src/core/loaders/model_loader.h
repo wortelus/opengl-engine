@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 30.10.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  30/10/2023
 
 #ifndef ZPG_MODEL_LOADER_H
 #define ZPG_MODEL_LOADER_H
@@ -8,7 +8,7 @@
 
 #include <memory>
 #include <map>
-#include "../models/model.h"
+#include "../../models/model.h"
 
 class ModelLoader {
 private:

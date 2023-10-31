@@ -16,7 +16,7 @@
 #include <string>
 
 #include "scene.h"
-#include "scene_loader.h"
+#include "loaders/scene_loader.h"
 #include "../rendering/shaders/shader_loader.h"
 #include "../models/drawable.h"
 

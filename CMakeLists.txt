@@ -17,8 +17,8 @@ add_executable(zpg src/main.cpp
         # core functionalities and loaders
         src/core/application.h src/core/application.cpp
         src/core/scene.h src/core/scene.cpp
-        src/core/scene_loader.h src/core/scene_loader.cpp
-        src/core/model_loader.h src/core/model_loader.cpp
+        src/core/loaders/scene_loader.h src/core/loaders/scene_loader.cpp
+        src/core/loaders/model_loader.h src/core/loaders/model_loader.cpp
         # utilities and constants
         src/util/const.h
         src/util/event_args.h

@@ -6,7 +6,7 @@
 #define ZPG_SCENE_LOADER_H
 
 
-#include "scene.h"
+#include "../scene.h"
 
 class SceneLoader {
 public:

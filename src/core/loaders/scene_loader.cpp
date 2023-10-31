@@ -3,7 +3,7 @@
 // Date of Creation:  22/10/2023
 
 #include "scene_loader.h"
-#include "../models/animations/centric_model.h"
+#include "../../models/animations/centric_model.h"
 #include "model_loader.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
@@ -159,7 +159,7 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
     float height = -2.0f;
-    glm::vec3 axis = glm::vec3(0.0f, 1.0f, 1.0f);
+    glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
     scene->setAmbient(glm::vec3(0.5, 0.5, 0.5));
@@ -173,7 +173,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                           glm::vec3(1.0, 0.0, 0.0),
                           12.f);
 
-    std::shared_ptr<CentricComposite> sun_composite = std::make_shared<CentricComposite>(sun_obj);
+    std::shared_ptr<CentricComposite> sun_composite = std::make_shared<CentricComposite>(sun_obj, 0.f);
 
     // earth
     auto earth_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -183,7 +183,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                              glm::vec3(1.0, 1.0, 1.0),
                           12.f);
 
-    std::shared_ptr<CentricComposite> earth_composite = std::make_shared<CentricComposite>(earth_obj);
+    std::shared_ptr<CentricComposite> earth_composite = std::make_shared<CentricComposite>(earth_obj, 2.f);
     earth_composite->setMultiplier(1.f);
 
     // moon
@@ -195,74 +195,74 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                           12.f);
     moon_obj->scale(glm::vec3(-0.75f, -0.75f, -0.75f));
 
-    std::shared_ptr<CentricModelLeaf> moon_leaf = std::make_shared<CentricModelLeaf>(moon_obj);
+    std::shared_ptr<CentricModelLeaf> moon_leaf = std::make_shared<CentricModelLeaf>(moon_obj, 1.f);
     moon_leaf->setMultiplier(1.f);
 
 
-    // mars
-    auto mars_obj = scene->newObject(lazyLoadModel("sphere"),
-                                     glm::vec3(8, height, 0), "blinn", axis);
-    mars_obj->setAmbient(glm::vec3(0.7, 0.2, 0.0));
-    mars_obj->setProperties(glm::vec3(0.8, 0.3, 0.0),
-                            glm::vec3(1.0, 1.0, 1.0),
-                            50.f);
-
-
-    std::shared_ptr<CentricModelLeaf> mars_leaf = std::make_shared<CentricModelLeaf>(mars_obj);
-    mars_leaf->setMultiplier(0.8f);
-
-    // jupiter
-    auto jupiter_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(14, height, 0), "blinn", axis);
-    jupiter_obj->setAmbient(glm::vec3(0.9, 0.7, 0.5));
-    jupiter_obj->setProperties(glm::vec3(1.0, 0.8, 0.6),
-                               glm::vec3(1.0, 1.0, 1.0),
-                               40.f);
-
-    std::shared_ptr<CentricModelLeaf> jupiter_leaf = std::make_shared<CentricModelLeaf>(jupiter_obj);
-    jupiter_leaf->setMultiplier(0.6f);
-
-    // saturn
-    auto saturn_obj = scene->newObject(lazyLoadModel("sphere"),
-                                       glm::vec3(20, height, 0), "blinn", axis);
-    saturn_obj->setAmbient(glm::vec3(0.8, 0.6, 0.2));
-    saturn_obj->setProperties(glm::vec3(0.9, 0.7, 0.3),
-                              glm::vec3(1.0, 1.0, 1.0),
-                              45.f);
-
-    std::shared_ptr<CentricModelLeaf> saturn_leaf = std::make_shared<CentricModelLeaf>(saturn_obj);
-    saturn_leaf->setMultiplier(0.4f);
-
-    // uranus
-    auto uranus_obj = scene->newObject(lazyLoadModel("sphere"),
-                                       glm::vec3(26, height, 0), "blinn", axis);
-    uranus_obj->setAmbient(glm::vec3(0.4, 0.7, 0.7));
-    uranus_obj->setProperties(glm::vec3(0.5, 0.8, 0.8),
-                              glm::vec3(1.0, 1.0, 1.0),
-                              50.f);
-
-    std::shared_ptr<CentricModelLeaf> uranus_leaf = std::make_shared<CentricModelLeaf>(uranus_obj);
-    uranus_leaf->setMultiplier(0.3f);
-
-    // neptune
-    auto neptune_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(32, height, 0), "blinn", axis);
-    neptune_obj->setAmbient(glm::vec3(0.04, 0.18, 0.55));
-    neptune_obj->setProperties(glm::vec3(0.05, 0.2, 0.6),
-                               glm::vec3(1.0, 1.0, 1.0),
-                               50.f);
-
-    std::shared_ptr<CentricModelLeaf> neptune_leaf = std::make_shared<CentricModelLeaf>(neptune_obj);
-    neptune_leaf->setMultiplier(0.2f);
+//    // mars
+//    auto mars_obj = scene->newObject(lazyLoadModel("sphere"),
+//                                     glm::vec3(8, height, 0), "blinn", axis);
+//    mars_obj->setAmbient(glm::vec3(0.7, 0.2, 0.0));
+//    mars_obj->setProperties(glm::vec3(0.8, 0.3, 0.0),
+//                            glm::vec3(1.0, 1.0, 1.0),
+//                            50.f);
+//
+//
+//    std::shared_ptr<CentricModelLeaf> mars_leaf = std::make_shared<CentricModelLeaf>(mars_obj);
+//    mars_leaf->setMultiplier(0.8f);
+//
+//    // jupiter
+//    auto jupiter_obj = scene->newObject(lazyLoadModel("sphere"),
+//                                        glm::vec3(14, height, 0), "blinn", axis);
+//    jupiter_obj->setAmbient(glm::vec3(0.9, 0.7, 0.5));
+//    jupiter_obj->setProperties(glm::vec3(1.0, 0.8, 0.6),
+//                               glm::vec3(1.0, 1.0, 1.0),
+//                               40.f);
+//
+//    std::shared_ptr<CentricModelLeaf> jupiter_leaf = std::make_shared<CentricModelLeaf>(jupiter_obj);
+//    jupiter_leaf->setMultiplier(0.6f);
+//
+//    // saturn
+//    auto saturn_obj = scene->newObject(lazyLoadModel("sphere"),
+//                                       glm::vec3(20, height, 0), "blinn", axis);
+//    saturn_obj->setAmbient(glm::vec3(0.8, 0.6, 0.2));
+//    saturn_obj->setProperties(glm::vec3(0.9, 0.7, 0.3),
+//                              glm::vec3(1.0, 1.0, 1.0),
+//                              45.f);
+//
+//    std::shared_ptr<CentricModelLeaf> saturn_leaf = std::make_shared<CentricModelLeaf>(saturn_obj);
+//    saturn_leaf->setMultiplier(0.4f);
+//
+//    // uranus
+//    auto uranus_obj = scene->newObject(lazyLoadModel("sphere"),
+//                                       glm::vec3(26, height, 0), "blinn", axis);
+//    uranus_obj->setAmbient(glm::vec3(0.4, 0.7, 0.7));
+//    uranus_obj->setProperties(glm::vec3(0.5, 0.8, 0.8),
+//                              glm::vec3(1.0, 1.0, 1.0),
+//                              50.f);
+//
+//    std::shared_ptr<CentricModelLeaf> uranus_leaf = std::make_shared<CentricModelLeaf>(uranus_obj);
+//    uranus_leaf->setMultiplier(0.3f);
+//
+//    // neptune
+//    auto neptune_obj = scene->newObject(lazyLoadModel("sphere"),
+//                                        glm::vec3(32, height, 0), "blinn", axis);
+//    neptune_obj->setAmbient(glm::vec3(0.04, 0.18, 0.55));
+//    neptune_obj->setProperties(glm::vec3(0.05, 0.2, 0.6),
+//                               glm::vec3(1.0, 1.0, 1.0),
+//                               50.f);
+//
+//    std::shared_ptr<CentricModelLeaf> neptune_leaf = std::make_shared<CentricModelLeaf>(neptune_obj);
+//    neptune_leaf->setMultiplier(0.2f);
 
 
     sun_composite->addModel(earth_composite);
-    sun_composite->addModel(mars_leaf);
+//    sun_composite->addModel(mars_leaf);
     earth_composite->addModel(moon_leaf);
-    sun_composite->addModel(jupiter_leaf);
-    sun_composite->addModel(saturn_leaf);
-    sun_composite->addModel(uranus_leaf);
-    sun_composite->addModel(neptune_leaf);
+//    sun_composite->addModel(jupiter_leaf);
+//    sun_composite->addModel(saturn_leaf);
+//    sun_composite->addModel(uranus_leaf);
+//    sun_composite->addModel(neptune_leaf);
 
 
     std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, height, 0),
