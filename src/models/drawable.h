@@ -51,6 +51,7 @@ public:
     void move(const glm::vec3& delta);
     void rotate(const glm::vec3& delta);
     void rotateAround(const float& delta, const glm::vec3& point);
+    void setScale(const glm::vec3& scale);
     void scale(const glm::vec3& delta);
 
     void setAmbient(const glm::vec3& _ambient);

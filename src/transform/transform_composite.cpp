@@ -61,7 +61,7 @@ void DynamicTransformComposite::update(const EventArgs &event_args) {
     this->is_dirty = true;
 }
 
-void DynamicTransformComposite::pushFront(std::shared_ptr<TransformationAbstract> component) {
+void DynamicTransformComposite::setParent(std::shared_ptr<TransformationAbstract> component) {
     this->parent = std::move(component);
     this->is_dirty = true;
 }

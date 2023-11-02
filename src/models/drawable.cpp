@@ -82,6 +82,11 @@ void DrawableObject::rotate(const glm::vec3& delta) {
     this->model_matrix->update(payload);
 }
 
+void DrawableObject::setScale(const glm::vec3 &scale) {
+    EventPayload<glm::vec3> payload{scale, EventType::S_SCALE};
+    this->model_matrix->update(payload);
+}
+
 void DrawableObject::scale(const glm::vec3& delta) {
     EventPayload<glm::vec3> payload{delta, EventType::U_SCALE};
     this->model_matrix->update(payload);
@@ -143,5 +148,5 @@ void DrawableObject::rotateAround(const float& delta, const glm::vec3& point) {
 }
 
 void DrawableObject::setModelParent(std::shared_ptr<DynamicTransformComposite> parent) {
-    this->model_matrix->pushFront(std::move(parent));
+    this->model_matrix->setParent(std::move(parent));
 }

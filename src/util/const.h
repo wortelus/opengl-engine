@@ -51,7 +51,7 @@ const float PROJECTION_FOV = glm::radians(45.0f);
 // Projection near clipping distance
 const float PROJECTION_NEAR = 0.1f;
 // Projection max far clipping distance
-const float PROJECTION_FAR = 100.0f;
+const float PROJECTION_FAR = 1000.0f;
 
 
 #endif //ZPG_CONST_H

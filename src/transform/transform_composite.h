@@ -31,7 +31,7 @@ public:
     // explicit dynamic transform composite -> appends rotation along origin
     explicit DynamicTransformComposite(std::vector<std::shared_ptr<TransformationAbstract>> components);
 
-    void pushFront(std::shared_ptr<TransformationAbstract> component);
+    void setParent(std::shared_ptr<TransformationAbstract> component);
 
     const glm::mat4& getMatrix() override;
     const glm::mat3& getNormalMatrix() override;

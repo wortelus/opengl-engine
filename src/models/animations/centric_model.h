@@ -58,8 +58,6 @@ public:
 
     void addModel(std::shared_ptr<CentricModelComponent> model);
 
-    void step(float delta_time) override;
-
     void bfsTraverse(const std::function<void(CentricModelComponent*)>& func);
 };
 

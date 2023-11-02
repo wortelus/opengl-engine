@@ -5,26 +5,21 @@
 #include "centric_model.h"
 
 void CentricModelComponent::step(float delta_time) {
-    glm::vec3 relative_position = object->getPosition() - parent_center;
-
     float angle_increment = delta_time * rotational_multiplier;
-    glm::vec3 earth_position = glm::vec3(-2,0,0);
-    object->rotateAround(angle_increment, earth_position);
+    object->rotateAround(angle_increment, parent_center);
 }
 
 void CentricComposite::addModel(std::shared_ptr<CentricModelComponent> model) {
+    // Append the current model's matrix to the child's matrix
     model->getDrawableObject().setModelParent(object->getModelComposite());
+
+    // set the rotation center to the child's position
+    // it is based on initial position of model as a relative position to the parent
+    auto rot_center = -model->getDrawableObject().getPosition();
+    model->setCenter(rot_center);
+
+    // append the child to the children vector
     children.push_back(std::move(model));
-}
-
-void CentricComposite::step(float delta_time) {
-    for (const auto& child: children) {
-        child->setCenter(object->getModelMatrix() * glm::vec4(0,0,0,1));
-    }
-
-    float angle_increment = delta_time * rotational_multiplier;
-    glm::vec3 sun_position = glm::vec3(-4,0,0);
-    object->rotateAround(angle_increment, sun_position);
 }
 
 void CentricComposite::bfsTraverse(const std::function<void(CentricModelComponent *)> &func) {
