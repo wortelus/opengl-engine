@@ -28,9 +28,6 @@ public:
     // M=T×R_orbit×R_self×S
     explicit DynamicTransformComposite(const glm::vec3& axis);
 
-    // explicit dynamic transform composite -> appends rotation along origin
-    explicit DynamicTransformComposite(std::vector<std::unique_ptr<TransformationAbstract>> components);
-
     void setParent(std::shared_ptr<TransformationAbstract> component);
 
     const glm::mat4& getMatrix() override;

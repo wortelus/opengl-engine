@@ -18,14 +18,6 @@ DynamicTransformComposite::DynamicTransformComposite(const glm::vec3 &axis) {
     this->components.push_back(std::make_unique<Scale>(glm::vec3(1.0f, 1.0f, 1.0f)));
 }
 
-
-DynamicTransformComposite::DynamicTransformComposite(
-        std::vector<std::unique_ptr<TransformationAbstract>> components) {
-    for(auto & translation : components) {
-        this->components.push_back(std::move(translation));
-    }
-}
-
 const glm::mat4& DynamicTransformComposite::getMatrix() {
     if (this->is_dirty) {
         matrix = glm::mat4(1.0f);
