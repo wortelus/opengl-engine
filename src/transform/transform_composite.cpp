@@ -21,8 +21,13 @@ DynamicTransformComposite::DynamicTransformComposite(const glm::vec3 &axis) {
 const glm::mat4& DynamicTransformComposite::getMatrix() {
     if (this->is_dirty) {
         matrix = glm::mat4(1.0f);
-        if (parent)
-            matrix = parent->getMatrix();
+
+        // weak_ptr handling
+        auto locked_parent = parent.lock();
+        if (locked_parent) {
+            matrix = locked_parent->getMatrix();
+        }
+
         for(auto & component : this->components) {
             matrix = matrix * component->getMatrix();
         }
@@ -35,8 +40,13 @@ const glm::mat4& DynamicTransformComposite::getMatrix() {
 const glm::mat3& DynamicTransformComposite::getNormalMatrix() {
     if (this->is_dirty) {
         matrix = glm::mat4(1.0f);
-        if (parent)
-            matrix = parent->getMatrix();
+
+        // weak_ptr handling
+        auto locked_parent = parent.lock();
+        if (locked_parent) {
+            matrix = locked_parent->getMatrix();
+        }
+
         for(auto & component : this->components) {
             matrix = matrix * component->getMatrix();
         }
@@ -53,7 +63,7 @@ void DynamicTransformComposite::update(const EventArgs &event_args) {
     this->is_dirty = true;
 }
 
-void DynamicTransformComposite::setParent(std::shared_ptr<TransformationAbstract> component) {
+void DynamicTransformComposite::setParent(std::weak_ptr<TransformationAbstract> component) {
     this->parent = std::move(component);
     this->is_dirty = true;
 }

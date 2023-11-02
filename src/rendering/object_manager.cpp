@@ -19,7 +19,7 @@ void ObjectManager::preprocess() {
 
 void ObjectManager::translate(const glm::vec3& translation) {
     for (auto& obj: objects) {
-        obj->move(translation);
+        obj->translate(translation);
     }
 }
 

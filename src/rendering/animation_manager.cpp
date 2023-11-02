@@ -29,7 +29,7 @@ void AnimationManager::applyAnimations(const std::function<void(Animation*)>& fu
 
 void AnimationManager::translate(const glm::vec3 &translation) {
     for(const auto& animation : animations) {
-        animation->getDrawableObject().move(translation);
+        animation->getDrawableObject().translate(translation);
     }
 }
 

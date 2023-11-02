@@ -11,6 +11,7 @@ void CentricModelComponent::step(float delta_time) {
 
 void CentricComposite::addModel(std::shared_ptr<CentricModelComponent> model) {
     // Append the current model's matrix to the child's matrix
+    // setModelParent creates a weak_ptr to the parent's matrix
     model->getDrawableObject().setModelParent(object->getModelComposite());
 
     // set the rotation center to the child's position

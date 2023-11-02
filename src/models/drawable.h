@@ -28,17 +28,14 @@ private:
     std::shared_ptr<DynamicTransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name);
-
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name,
                    const glm::vec3& ambient);
-
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name,
                    const glm::vec3& ambient, const glm::vec3& axis);
-
-    ~DrawableObject();
+    ~DrawableObject() = default;
 
     std::shared_ptr<DynamicTransformComposite> getModelComposite() { return model_matrix; }
-    void setModelParent(std::shared_ptr<DynamicTransformComposite> parent);
+    void setModelParent(std::weak_ptr<DynamicTransformComposite> weak_parent);
 
     [[nodiscard]] const glm::mat4& getModelMatrix() const;
     [[nodiscard]] const glm::mat3& getNormalMatrix() const;
@@ -47,10 +44,14 @@ public:
     void assignShaderAlias(const SHADER_ALIAS_DATATYPE& alias) { this->shader_alias = alias; }
     [[nodiscard]] SHADER_ALIAS_DATATYPE getShaderAlias() const { return this->shader_alias; }
 
-    void setLocation(const glm::vec3& location);
-    void move(const glm::vec3& delta);
+    void setTranslate(const glm::vec3& location);
+    void translate(const glm::vec3& delta);
+
+    void setRotate(const glm::vec3& rotation);
     void rotate(const glm::vec3& delta);
+
     void rotateAround(const float& delta, const glm::vec3& point);
+
     void setScale(const glm::vec3& scale);
     void scale(const glm::vec3& delta);
 
@@ -64,7 +65,6 @@ public:
 
     void notifyModel();
     void notifyMaterial();
-
     void notifyModelParameters();
 
     void draw();
