@@ -11,15 +11,21 @@ Crafted upon the foundation of Debian 12 bookworm, the steadfast and
 unyielding, using the scriptures of CMake.
 
 ## Current state
-- [x] Basic scene with 4 spheres
 - [x] Camera
-- [x] Global transformations
-- [x] WASD Movement + jumping
+- [x] Transformations
+- [x] Chaining transformations matrices (Scene graph)
+- [x] Movement & Gravity
 - [x] Lighting, ambient, diffuse, specular point lights
 - [x] Dynamic shader loading
+- [x] Dynamic model loading
 - [x] Materials
 - [x] Global illumination, constant, Phong, Blinn-Phong point lights
 - [x] Multiple scenes
+
+## Scenes
+- [x] Phong shader test
+- [x] Solar system with planets and moons
+- [x] Random scene with random objects
 
 ## Sacred Scripts of Luminescence
 - **Constant**: The foundational beacon, it emanates unwavering light, 
