@@ -6,21 +6,21 @@
 #include "transform.h"
 
 DynamicTransformComposite::DynamicTransformComposite() {
-    this->components.push_back(std::make_shared<Translation>(glm::vec3(0.0f, 0.0f, 0.0f)));
-    this->components.push_back(std::make_shared<Rotation>());
-    this->components.push_back(std::make_shared<Scale>(glm::vec3(1.0f, 1.0f, 1.0f)));
+    this->components.push_back(std::make_unique<Translation>(glm::vec3(0.0f, 0.0f, 0.0f)));
+    this->components.push_back(std::make_unique<Rotation>());
+    this->components.push_back(std::make_unique<Scale>(glm::vec3(1.0f, 1.0f, 1.0f)));
 }
 
 DynamicTransformComposite::DynamicTransformComposite(const glm::vec3 &axis) {
-    this->components.push_back(std::make_shared<Translation>(glm::vec3(0.0f, 0.0f, 0.0f)));
-    this->components.push_back(std::make_shared<Rotation>());
-    this->components.push_back(std::make_shared<RotationPoint>(axis));
-    this->components.push_back(std::make_shared<Scale>(glm::vec3(1.0f, 1.0f, 1.0f)));
+    this->components.push_back(std::make_unique<Translation>(glm::vec3(0.0f, 0.0f, 0.0f)));
+    this->components.push_back(std::make_unique<Rotation>());
+    this->components.push_back(std::make_unique<RotationPoint>(axis));
+    this->components.push_back(std::make_unique<Scale>(glm::vec3(1.0f, 1.0f, 1.0f)));
 }
 
 
 DynamicTransformComposite::DynamicTransformComposite(
-        std::vector<std::shared_ptr<TransformationAbstract>> components) {
+        std::vector<std::unique_ptr<TransformationAbstract>> components) {
     for(auto & translation : components) {
         this->components.push_back(std::move(translation));
     }
