@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <algorithm>
 #include <utility>
+#include <stdexcept>
 
 //Include GLM
 #include "glm/vec3.hpp" // glm::vec3
@@ -245,8 +246,6 @@ Scene::~Scene() {}
 void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
     if (!right_mouse_button_pressed)
         return;
-    else
-        printf("x: %f, y: %f\n", x_pos, y_pos);
 
     double x_offset = x_pos - last_x;
     double y_offset = last_y - y_pos;
@@ -276,7 +275,7 @@ void Scene::update_aspect_ratio(const int& new_width, const int& new_height) {
 
 void Scene::assignShaderAlias(DrawableObject& object) {
     if (int alias = shader_loader->getShaderAlias(object.getShaderName()); alias == SHADER_UNLOADED)
-        return; // TODO: log, shouldn't happen, the shader doesn't exist or is not yet is_dirty
+        throw std::runtime_error("Shader " + object.getShaderName() + " not loaded yet! Assigning shader alias failed.");
     else
         object.assignShaderAlias(alias);
 }

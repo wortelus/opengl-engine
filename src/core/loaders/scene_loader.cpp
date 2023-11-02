@@ -158,19 +158,26 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
-    float height = -2.0f;
     glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
     scene->setAmbient(glm::vec3(0.5, 0.5, 0.5));
 
+    glm::vec3 sun_pos = glm::vec3(0.0f, -2.0f, -100.0f);
+
+    std::shared_ptr<Light> light_a = std::make_unique<Light>(sun_pos,
+                                                             glm::vec3(1.f, 1.f, 1.f),
+                                                             100.f,
+                                                             1.f, 0.1f, 0.001f); // almost no drop-off
+
+    scene->appendLight(light_a);
 
     // sun
     auto sun_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(0, height, -100), "blinn");
-    sun_obj->setAmbient(glm::vec3(1.0, 0.75, 0.0));
+                                    sun_pos, "blinn");
+    sun_obj->setAmbient(glm::vec3(1.0, 0.35, 0.0));
     sun_obj->setScale(glm::vec3(20.f, 20.f, 20.f));
-    sun_obj->setProperties(glm::vec3(1.0, 0.15, 0.0),
+    sun_obj->setProperties(glm::vec3(1.0, 0.25, 0.0),
                           glm::vec3(1.0, 0.0, 0.0),
                           12.f);
 
@@ -179,7 +186,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     // mercury
     auto mercury_obj = scene->newObject(lazyLoadModel("sphere"),
                                         glm::vec3(3, 0, 0), "blinn", axis);
-    mercury_obj->setAmbient(glm::vec3(0.75, 0.75, 0.75));
+    mercury_obj->setAmbient(glm::vec3(0.45, 0.45, 0.45));
     mercury_obj->setProperties(glm::vec3(0.15, 0.15, 0.15),
                              glm::vec3(1.0, 1.0, 1.0),
                           32.f);
@@ -296,14 +303,6 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     sun_composite->addModel(saturn_leaf);
     sun_composite->addModel(uranus_leaf);
     sun_composite->addModel(neptune_leaf);
-
-
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, height, 0),
-                                                             glm::vec3(1.f, 1.f, 1.f),
-                                                             100.f,
-                                                             1.f, 0.1f, 0.001f); // almost no drop-off
-
-    scene->appendLight(light_a);
 
     // building
     scene->appendAnimation(sun_composite);

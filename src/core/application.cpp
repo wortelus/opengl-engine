@@ -71,6 +71,8 @@ void Application::init() {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     if (DISABLE_VSYNC)
         glfwSwapInterval(0);
+    if (ENABLE_CULL_FACE)
+        glEnable(GL_CULL_FACE);
 
     shaderLoader = std::make_shared<ShaderLoader>();
     shaderLoader->loadShaders();
@@ -126,15 +128,15 @@ void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
 
 
 void Application::windowFocusCallback(GLFWwindow* window, int focused) {
-    printf("windowFocusCallback \n");
+    // printf("windowFocusCallback \n");
 }
 
 void Application::windowIconifyCallback(GLFWwindow* window, int iconified) {
-    printf("windowIconifyCallback \n");
+    // printf("windowIconifyCallback \n");
 }
 
 void Application::windowSizeCallback(GLFWwindow* window, int width, int height) {
-    printf("resize %d, %d \n", width, height);
+    // printf("resize %d, %d \n", width, height);
     glViewport(0, 0, width, height);
 
     auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
