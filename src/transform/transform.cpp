@@ -6,12 +6,12 @@
 #include "glm/ext/matrix_transform.hpp"
 
 Translation::Translation(const glm::vec3& initial_translation) : translation(initial_translation) {
-    this->matrix = std::make_shared<glm::mat4>(glm::translate(glm::mat4(1.0), this->translation));
+    this->matrix = glm::mat4(glm::translate(glm::mat4(1.0), this->translation));
 }
 
-std::shared_ptr<glm::mat4> Translation::getMatrix() {
+const glm::mat4& Translation::getMatrix() {
     if (this->is_dirty) {
-        this->matrix = std::make_shared<glm::mat4>(glm::translate(glm::mat4(1.0), this->translation));
+        this->matrix = glm::mat4(glm::translate(glm::mat4(1.0), this->translation));
         this->is_dirty = false;
     }
     return this->matrix;
@@ -38,11 +38,11 @@ void Translation::update(const EventArgs& event_args) {
 }
 
 Rotation::Rotation() : origin(glm::vec3(1.0f, 0.0f, 0.0f)), rotation(glm::vec3(0.0f, 0.0f, 0.0f)) {
-    this->matrix = std::make_shared<glm::mat4>(glm::rotate(glm::mat4(1.0), .0f, this->origin));
+    this->matrix = glm::mat4(glm::rotate(glm::mat4(1.0), .0f, this->origin));
 }
 
 Rotation::Rotation(const glm::vec3& initial_origin) : origin(initial_origin), rotation(glm::vec3(0.0f, 0.0f, 0.0f)) {
-    this->matrix = std::make_shared<glm::mat4>(glm::rotate(glm::mat4(1.0), .0f, this->origin));
+    this->matrix = glm::mat4(glm::rotate(glm::mat4(1.0), .0f, this->origin));
 }
 
 void Rotation::rotateBy(const glm::vec3& offset) {
@@ -57,9 +57,9 @@ void Rotation::setRotation(const glm::vec3& new_rotation) {
     this->is_dirty = true;
 }
 
-std::shared_ptr<glm::mat4> Rotation::getMatrix() {
+const glm::mat4& Rotation::getMatrix() {
     if (this->is_dirty) {
-        this->matrix = std::make_shared<glm::mat4>(
+        this->matrix = glm::mat4(
                 glm::rotate(glm::mat4(1.0), glm::radians(this->rotation.x), glm::vec3(1.0, 0.0, 0.0)) *
                 glm::rotate(glm::mat4(1.0), glm::radians(this->rotation.y), glm::vec3(0.0, 1.0, 0.0)) *
                 glm::rotate(glm::mat4(1.0), glm::radians(this->rotation.z), glm::vec3(0.0, 0.0, 1.0)));
@@ -78,7 +78,7 @@ void Rotation::update(const EventArgs& event_args) {
 }
 
 Scale::Scale(const glm::vec3& initial_scale) : scale(initial_scale) {
-    this->matrix = std::make_shared<glm::mat4>(glm::scale(glm::mat4(1.0), this->scale));
+    this->matrix = glm::mat4(glm::scale(glm::mat4(1.0), this->scale));
 }
 
 void Scale::scaleBy(const glm::vec3& offset) {
@@ -91,9 +91,9 @@ void Scale::setScale(const glm::vec3& new_scale) {
     this->is_dirty = true;
 }
 
-std::shared_ptr<glm::mat4> Scale::getMatrix() {
+const glm::mat4& Scale::getMatrix() {
     if (this->is_dirty) {
-        matrix = std::make_shared<glm::mat4>(glm::scale(glm::mat4(1.0), this->scale));
+        matrix = glm::mat4(glm::scale(glm::mat4(1.0), this->scale));
         this->is_dirty = false;
     }
     return this->matrix;
@@ -109,11 +109,11 @@ void Scale::update(const EventArgs& event_args) {
 }
 
 RotationPoint::RotationPoint(const glm::vec3& rot_axis) : origin(glm::vec3(0.0f, 0.0f, 0.0f)), axis(rot_axis) {
-    this->matrix = std::make_shared<glm::mat4>(glm::mat4(1.0));
+    this->matrix = glm::mat4(glm::mat4(1.0));
 }
 
 RotationPoint::RotationPoint(const glm::vec3& rot_axis, const glm::vec3& initial_origin) : origin(initial_origin), axis(rot_axis) {
-    this->matrix = std::make_shared<glm::mat4>(glm::mat4(1.0));
+    this->matrix = glm::mat4(glm::mat4(1.0));
 }
 
 void RotationPoint::setOrigin(const glm::vec3& new_origin) {
@@ -165,9 +165,9 @@ void RotationPoint::update(const EventArgs &event_args) {
     }
 }
 
-std::shared_ptr<glm::mat4> RotationPoint::getMatrix() {
+const glm::mat4& RotationPoint::getMatrix() {
     if (this->is_dirty) {
-        this->matrix = std::make_shared<glm::mat4>(
+        this->matrix = glm::mat4(
                 glm::translate(glm::mat4(1.0), origin) *
                 glm::rotate(glm::mat4(1.0), glm::radians(angle), axis) *
                 glm::translate(glm::mat4(1.0), -origin));

@@ -173,7 +173,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                           glm::vec3(1.0, 0.0, 0.0),
                           12.f);
 
-    std::shared_ptr<CentricComposite> sun_composite = std::make_shared<CentricComposite>(sun_obj, 0.f);
+    std::shared_ptr<CentricComposite> sun_composite = std::make_shared<CentricComposite>(sun_obj);
 
     // earth
     auto earth_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -183,7 +183,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                              glm::vec3(1.0, 1.0, 1.0),
                           12.f);
 
-    std::shared_ptr<CentricComposite> earth_composite = std::make_shared<CentricComposite>(earth_obj, 2.f);
+    std::shared_ptr<CentricComposite> earth_composite = std::make_shared<CentricComposite>(earth_obj);
     earth_composite->setMultiplier(1.f);
 
     // moon
@@ -195,8 +195,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                           12.f);
     moon_obj->scale(glm::vec3(-0.75f, -0.75f, -0.75f));
 
-    std::shared_ptr<CentricModelLeaf> moon_leaf = std::make_shared<CentricModelLeaf>(moon_obj, 1.f);
-    moon_leaf->setMultiplier(1.f);
+    std::shared_ptr<CentricModelLeaf> moon_leaf = std::make_shared<CentricModelLeaf>(moon_obj);
+    moon_leaf->setMultiplier(2.f);
 
 
 //    // mars

@@ -58,11 +58,11 @@ void DrawableObject::draw() {
     this->model->draw();
 }
 
-std::shared_ptr<glm::mat4> DrawableObject::getModelMatrix() const {
+const glm::mat4& DrawableObject::getModelMatrix() const {
     return this->model_matrix->getMatrix();
 }
 
-std::shared_ptr<glm::mat3> DrawableObject::getNormalMatrix() const {
+const glm::mat3& DrawableObject::getNormalMatrix() const {
     return this->model_matrix->getNormalMatrix();
 }
 
@@ -115,10 +115,10 @@ void DrawableObject::setDiffuse(const glm::vec3 &_diffuse) {
 }
 
 void DrawableObject::notifyModel() {
-    EventPayload<std::shared_ptr<glm::mat4>> model_mat = {this->model_matrix->getMatrix(), EventType::U_MODEL_MATRIX};
+    EventPayload<glm::mat4> model_mat = {this->model_matrix->getMatrix(), EventType::U_MODEL_MATRIX};
     notify(model_mat);
 
-    EventPayload<std::shared_ptr<glm::mat3>> normal_mat = {this->model_matrix->getNormalMatrix(),
+    EventPayload<glm::mat3> normal_mat = {this->model_matrix->getNormalMatrix(),
                                                            EventType::U_NORMAL_MATRIX};
     notify(normal_mat);
 }

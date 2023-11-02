@@ -23,7 +23,7 @@ void CentricComposite::step(float delta_time) {
 
     object->rotateAround(delta_time * rotational_multiplier, parent_center - world_space_root_position);
 
-    world_space_root_position = glm::vec3(*object->getModelMatrix() * local_position);
+    world_space_root_position = glm::vec3(object->getModelMatrix() * local_position);
 
     for (auto& model: models) {
         model->setCenter(world_space_root_position);

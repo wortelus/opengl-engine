@@ -11,24 +11,9 @@
 
 class INormal {
 protected:
-    std::shared_ptr<glm::mat3> normal_matrix;
+    glm::mat3 normal_matrix;
 public:
-    virtual std::shared_ptr<glm::mat3> getNormalMatrix() = 0;
-};
-
-class [[maybe_unused]] TransformComposite : public TransformationAbstract, INormal {
-private:
-    // composite components for the transformation
-    std::unique_ptr<Translation> translation;
-    std::unique_ptr<Rotation> rotation;
-    std::unique_ptr<Scale> scale;
-public:
-    TransformComposite();
-
-    std::shared_ptr<glm::mat4> getMatrix() override;
-    std::shared_ptr<glm::mat3> getNormalMatrix() override;
-
-    void update(const EventArgs& event_args) override;
+    virtual const glm::mat3& getNormalMatrix() = 0;
 };
 
 class DynamicTransformComposite : public TransformationAbstract, INormal {
@@ -45,8 +30,10 @@ public:
     // explicit dynamic transform composite -> appends rotation along origin
     explicit DynamicTransformComposite(std::vector<std::unique_ptr<TransformationAbstract>> components);
 
-    std::shared_ptr<glm::mat4> getMatrix() override;
-    std::shared_ptr<glm::mat3> getNormalMatrix() override;
+    void addComponent(std::unique_ptr<TransformationAbstract> component);
+
+    const glm::mat4& getMatrix() override;
+    const glm::mat3& getNormalMatrix() override;
     void update(const EventArgs& event_args) override;
 };
 

@@ -37,8 +37,8 @@ public:
 
     ~DrawableObject();
 
-    [[nodiscard]] std::shared_ptr<glm::mat4> getModelMatrix() const;
-    [[nodiscard]] std::shared_ptr<glm::mat3> getNormalMatrix() const;
+    [[nodiscard]] const glm::mat4& getModelMatrix() const;
+    [[nodiscard]] const glm::mat3& getNormalMatrix() const;
 
     [[nodiscard]] const std::string& getShaderName() const { return this->shader_name; }
     void assignShaderAlias(const SHADER_ALIAS_DATATYPE& alias) { this->shader_alias = alias; }

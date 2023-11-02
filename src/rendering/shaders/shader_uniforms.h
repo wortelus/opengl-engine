@@ -23,10 +23,10 @@ struct ShaderUniform {
 };
 
 struct ShaderUniforms {
-    ShaderUniform<std::shared_ptr<glm::mat4>> model;
+    ShaderUniform<glm::mat4> model;
     ShaderUniform<glm::mat4> view;
     ShaderUniform<glm::mat4> projection;
-    ShaderUniform<std::shared_ptr<glm::mat3>> normal;
+    ShaderUniform<glm::mat3> normal;
     ShaderUniform<glm::vec3> camera_position;
 
     ShaderUniforms() = default;
