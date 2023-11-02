@@ -26,3 +26,21 @@ void AnimationManager::applyAnimations(const std::function<void(Animation*)>& fu
         }
     }
 }
+
+void AnimationManager::translate(const glm::vec3 &translation) {
+    for(const auto& animation : animations) {
+        animation->getDrawableObject().move(translation);
+    }
+}
+
+void AnimationManager::rotate(const glm::vec3 &axis_degrees) {
+    for(const auto& animation : animations) {
+        animation->getDrawableObject().rotate(axis_degrees);
+    }
+}
+
+void AnimationManager::scale(const glm::vec3 &scale) {
+    for(const auto& animation : animations) {
+        animation->getDrawableObject().scale(scale);
+    }
+}
