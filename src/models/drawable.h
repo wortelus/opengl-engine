@@ -25,7 +25,7 @@ private:
 
     Material material;
 
-    std::unique_ptr<DynamicTransformComposite> model_matrix;
+    std::shared_ptr<DynamicTransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name);
 
@@ -37,8 +37,11 @@ public:
 
     ~DrawableObject();
 
-    [[nodiscard]] std::shared_ptr<glm::mat4> getModelMatrix() const;
-    [[nodiscard]] std::shared_ptr<glm::mat3> getNormalMatrix() const;
+    std::shared_ptr<DynamicTransformComposite> getModelComposite() { return model_matrix; }
+    void setModelParent(std::shared_ptr<DynamicTransformComposite> parent);
+
+    [[nodiscard]] const glm::mat4& getModelMatrix() const;
+    [[nodiscard]] const glm::mat3& getNormalMatrix() const;
 
     [[nodiscard]] const std::string& getShaderName() const { return this->shader_name; }
     void assignShaderAlias(const SHADER_ALIAS_DATATYPE& alias) { this->shader_alias = alias; }
@@ -48,6 +51,7 @@ public:
     void move(const glm::vec3& delta);
     void rotate(const glm::vec3& delta);
     void rotateAround(const float& delta, const glm::vec3& point);
+    void setScale(const glm::vec3& scale);
     void scale(const glm::vec3& delta);
 
     void setAmbient(const glm::vec3& _ambient);

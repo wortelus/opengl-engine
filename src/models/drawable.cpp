@@ -11,7 +11,7 @@ DrawableObject::DrawableObject(const glm::vec3& position, const Model* model,
                                : position(position),
                                shader_name(std::move(shader_name)),
                                model(model) {
-    this->model_matrix = std::make_unique<DynamicTransformComposite>();
+    this->model_matrix = std::make_shared<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
@@ -24,7 +24,7 @@ DrawableObject::DrawableObject(const glm::vec3& position,
                                : position(position),
                                shader_name(std::move(shader_name)),
                                model(model) {
-    this->model_matrix = std::make_unique<DynamicTransformComposite>();
+    this->model_matrix = std::make_shared<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
@@ -40,7 +40,7 @@ DrawableObject::DrawableObject(const glm::vec3 &position,
                                : position(position),
                                shader_name(std::move(shader_name)),
                                model(model) {
-    this->model_matrix = std::make_unique<DynamicTransformComposite>(axis);
+    this->model_matrix = std::make_shared<DynamicTransformComposite>(axis);
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
@@ -58,11 +58,11 @@ void DrawableObject::draw() {
     this->model->draw();
 }
 
-std::shared_ptr<glm::mat4> DrawableObject::getModelMatrix() const {
+const glm::mat4& DrawableObject::getModelMatrix() const {
     return this->model_matrix->getMatrix();
 }
 
-std::shared_ptr<glm::mat3> DrawableObject::getNormalMatrix() const {
+const glm::mat3& DrawableObject::getNormalMatrix() const {
     return this->model_matrix->getNormalMatrix();
 }
 
@@ -79,6 +79,11 @@ void DrawableObject::move(const glm::vec3& delta) {
 
 void DrawableObject::rotate(const glm::vec3& delta) {
     EventPayload<glm::vec3> payload{delta, EventType::U_ROTATION};
+    this->model_matrix->update(payload);
+}
+
+void DrawableObject::setScale(const glm::vec3 &scale) {
+    EventPayload<glm::vec3> payload{scale, EventType::S_SCALE};
     this->model_matrix->update(payload);
 }
 
@@ -115,10 +120,10 @@ void DrawableObject::setDiffuse(const glm::vec3 &_diffuse) {
 }
 
 void DrawableObject::notifyModel() {
-    EventPayload<std::shared_ptr<glm::mat4>> model_mat = {this->model_matrix->getMatrix(), EventType::U_MODEL_MATRIX};
+    EventPayload<glm::mat4> model_mat = {this->model_matrix->getMatrix(), EventType::U_MODEL_MATRIX};
     notify(model_mat);
 
-    EventPayload<std::shared_ptr<glm::mat3>> normal_mat = {this->model_matrix->getNormalMatrix(),
+    EventPayload<glm::mat3> normal_mat = {this->model_matrix->getNormalMatrix(),
                                                            EventType::U_NORMAL_MATRIX};
     notify(normal_mat);
 }
@@ -140,4 +145,8 @@ void DrawableObject::rotateAround(const float& delta, const glm::vec3& point) {
     EventPayload<float> rotation_payload{delta, EventType::U_ROTATION_POINT_ANGLE};
     this->model_matrix->update(rotation_payload);
 
+}
+
+void DrawableObject::setModelParent(std::shared_ptr<DynamicTransformComposite> parent) {
+    this->model_matrix->setParent(std::move(parent));
 }

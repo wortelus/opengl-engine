@@ -183,43 +183,55 @@ void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
             // components
         case GLFW_KEY_LEFT:
             object_manager->translate(glm::vec3(-0.1f, 0, 0));
+            animation_manager->translate(glm::vec3(-0.1f, 0, 0));
             break;
         case GLFW_KEY_RIGHT:
             object_manager->translate(glm::vec3(0.1f, 0, 0));
+            animation_manager->translate(glm::vec3(0.1f, 0, 0));
             break;
         case GLFW_KEY_UP:
             object_manager->translate(glm::vec3(0, 0.1f, 0));
+            animation_manager->translate(glm::vec3(0, 0.1f, 0));
             break;
         case GLFW_KEY_DOWN:
             object_manager->translate(glm::vec3(0, -0.1f, 0));
+            animation_manager->translate(glm::vec3(0, -0.1f, 0));
             break;
             // rotation along x-axis
         case GLFW_KEY_E:
             object_manager->rotate(glm::vec3(10.f, 0, 0));
+            animation_manager->rotate(glm::vec3(10.f, 0, 0));
             break;
         case GLFW_KEY_F:
             object_manager->rotate(glm::vec3(-10.f, 0, 0));
+            animation_manager->rotate(glm::vec3(-10.f, 0, 0));
             break;
             // rotation along y-axis
         case GLFW_KEY_R:
             object_manager->rotate(glm::vec3(0, 10.f, 0));
+            animation_manager->rotate(glm::vec3(0, 10.f, 0));
             break;
         case GLFW_KEY_G:
             object_manager->rotate(glm::vec3(0, -10.f, 0));
+            animation_manager->rotate(glm::vec3(0, -10.f, 0));
             break;
             // rotation along z-axis
         case GLFW_KEY_T:
             object_manager->rotate(glm::vec3(0, 0, 10.f));
+            animation_manager->rotate(glm::vec3(0, 0, 10.f));
             break;
         case GLFW_KEY_H:
             object_manager->rotate(glm::vec3(0, 0, -10.f));
+            animation_manager->rotate(glm::vec3(0, 0, -10.f));
             break;
             // scaling
         case GLFW_KEY_Z:
             object_manager->scale(glm::vec3(0.1f, 0.1f, 0.1f));
+            animation_manager->scale(glm::vec3(0.1f, 0.1f, 0.1f));
             break;
         case GLFW_KEY_X:
             object_manager->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
+            animation_manager->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
             break;
         default:
             break;

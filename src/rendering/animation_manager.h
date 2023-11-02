@@ -19,6 +19,15 @@ public:
     void addAnimation(const std::shared_ptr<Animation>& animation);
     void applyAnimations(const std::function<void(Animation*)>& func);
 
+    // global objects components
+    void translate(const glm::vec3& translation);
+
+    // global objects rotations
+    void rotate(const glm::vec3& axis_degrees);
+
+    // global objects scaling
+    void scale(const glm::vec3& scale);
+
     //
     // Iterator and ConstIterator definitions below
     //

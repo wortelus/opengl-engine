@@ -5,29 +5,21 @@
 #include "centric_model.h"
 
 void CentricModelComponent::step(float delta_time) {
-    glm::vec4 local_position = glm::vec4(object->getPosition(), 1.0f);
-    glm::vec4 world_position = local_position; // TODO: add model matrix after it starts working
-    glm::vec3 world_space_root_position = glm::vec3(world_position);
-
-    object->rotateAround(delta_time * rotational_multiplier, parent_center - world_space_root_position);
+    float angle_increment = delta_time * rotational_multiplier;
+    object->rotateAround(angle_increment, parent_center);
 }
 
 void CentricComposite::addModel(std::shared_ptr<CentricModelComponent> model) {
-    models.push_back(std::move(model));
-}
+    // Append the current model's matrix to the child's matrix
+    model->getDrawableObject().setModelParent(object->getModelComposite());
 
-void CentricComposite::step(float delta_time) {
-    glm::vec4 local_position = glm::vec4(object->getPosition(), 1.0f);
-    glm::vec4 world_position = local_position; // TODO: add model matrix after it starts working
-    glm::vec3 world_space_root_position = glm::vec3(world_position);
+    // set the rotation center to the child's position
+    // it is based on initial position of model as a relative position to the parent
+    auto rot_center = -model->getDrawableObject().getPosition();
+    model->setCenter(rot_center);
 
-    object->rotateAround(delta_time * rotational_multiplier, parent_center - world_space_root_position);
-
-    world_space_root_position = glm::vec3(*object->getModelMatrix() * local_position);
-
-    for (auto& model: models) {
-        model->setCenter(world_space_root_position);
-    }
+    // append the child to the children vector
+    children.push_back(std::move(model));
 }
 
 void CentricComposite::bfsTraverse(const std::function<void(CentricModelComponent *)> &func) {
@@ -42,7 +34,7 @@ void CentricComposite::bfsTraverse(const std::function<void(CentricModelComponen
 
         auto* composite = dynamic_cast<CentricComposite*>(current);
         if (composite) {
-            for (const auto& child: composite->models) {
+            for (const auto& child: composite->children) {
                 bfs_queue.push(child.get());
             }
         }

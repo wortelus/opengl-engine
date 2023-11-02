@@ -13,10 +13,10 @@
 class TransformationAbstract : public IObserver {
 protected:
     const float default_w = 1.0f;
-    std::shared_ptr<glm::mat4> matrix;
+    glm::mat4 matrix;
     bool is_dirty = false;
 public:
-    virtual std::shared_ptr<glm::mat4> getMatrix() = 0;
+    virtual const glm::mat4& getMatrix() = 0;
 };
 
 class Translation : public TransformationAbstract {
@@ -29,7 +29,7 @@ public:
     void moveBy(const glm::vec3& offset);
 
     void update(const EventArgs& event_args) override;
-    std::shared_ptr<glm::mat4> getMatrix() override;
+    const glm::mat4& getMatrix() override;
 };
 
 class Rotation : public TransformationAbstract {
@@ -44,7 +44,7 @@ public:
     void setRotation(const glm::vec3& rotation);
 
     void update(const EventArgs& event_args) override;
-    std::shared_ptr<glm::mat4> getMatrix() override;
+    const glm::mat4& getMatrix() override;
 };
 
 class Scale : public TransformationAbstract {
@@ -57,7 +57,7 @@ public:
     void setScale(const glm::vec3& scale);
 
     void update(const EventArgs& event_args) override;
-    std::shared_ptr<glm::mat4> getMatrix() override;
+    const glm::mat4& getMatrix() override;
 };
 
 class RotationPoint : public TransformationAbstract {
@@ -76,7 +76,7 @@ public:
     void setRotation(const float& new_rotation);
 
     void update(const EventArgs& event_args) override;
-    std::shared_ptr<glm::mat4> getMatrix() override;
+    const glm::mat4& getMatrix() override;
 };
 
 
