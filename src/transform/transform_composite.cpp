@@ -29,6 +29,8 @@ DynamicTransformComposite::DynamicTransformComposite(
 const glm::mat4& DynamicTransformComposite::getMatrix() {
     if (this->is_dirty) {
         matrix = glm::mat4(1.0f);
+        if (parent)
+            matrix = parent->getMatrix();
         for(auto & component : this->components) {
             matrix = matrix * component->getMatrix();
         }
@@ -41,6 +43,8 @@ const glm::mat4& DynamicTransformComposite::getMatrix() {
 const glm::mat3& DynamicTransformComposite::getNormalMatrix() {
     if (this->is_dirty) {
         matrix = glm::mat4(1.0f);
+        if (parent)
+            matrix = parent->getMatrix();
         for(auto & component : this->components) {
             matrix = matrix * component->getMatrix();
         }
@@ -57,6 +61,7 @@ void DynamicTransformComposite::update(const EventArgs &event_args) {
     this->is_dirty = true;
 }
 
-void DynamicTransformComposite::addComponent(std::shared_ptr<TransformationAbstract> component) {
-    this->components.push_back(std::move(component));
+void DynamicTransformComposite::pushFront(std::shared_ptr<TransformationAbstract> component) {
+    this->parent = std::move(component);
+    this->is_dirty = true;
 }

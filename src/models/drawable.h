@@ -37,6 +37,9 @@ public:
 
     ~DrawableObject();
 
+    std::shared_ptr<DynamicTransformComposite> getModelComposite() { return model_matrix; }
+    void setModelParent(std::shared_ptr<DynamicTransformComposite> parent);
+
     [[nodiscard]] const glm::mat4& getModelMatrix() const;
     [[nodiscard]] const glm::mat3& getNormalMatrix() const;
 

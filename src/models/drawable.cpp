@@ -141,3 +141,7 @@ void DrawableObject::rotateAround(const float& delta, const glm::vec3& point) {
     this->model_matrix->update(rotation_payload);
 
 }
+
+void DrawableObject::setModelParent(std::shared_ptr<DynamicTransformComposite> parent) {
+    this->model_matrix->pushFront(std::move(parent));
+}
