@@ -49,7 +49,7 @@ public:
 
 class CentricComposite : public CentricModelComponent {
 private:
-    std::vector<std::shared_ptr<CentricModelComponent>> models;
+    std::vector<std::shared_ptr<CentricModelComponent>> children;
 public:
     explicit CentricComposite(std::shared_ptr<DrawableObject> object)
             : CentricModelComponent(std::move(object)) {}
