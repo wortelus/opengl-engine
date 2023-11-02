@@ -91,17 +91,17 @@ void Camera::update_aspect_ratio(const int& width, const int& height) {
 }
 
 void Camera::notifyView() {
-    EventPayload<glm::mat4> payload{view, EventType::U_VIEW_MATRIX};
+    EventPayload<const glm::mat4&> payload{view, EventType::U_VIEW_MATRIX};
     notify(payload);
 }
 
 void Camera::notifyProjection() {
-    EventPayload<glm::mat4> payload{projection, EventType::U_PROJECTION_MATRIX};
+    EventPayload<const glm::mat4&> payload{projection, EventType::U_PROJECTION_MATRIX};
     notify(payload);
 }
 
 void Camera::notifyPosition() {
-    EventPayload<glm::vec3> payload{position, EventType::U_CAMERA_POSITION};
+    EventPayload<const glm::vec3&> payload{position, EventType::U_CAMERA_POSITION};
     notify(payload);
 }
 
