@@ -18,7 +18,7 @@ public:
 
 class DynamicTransformComposite : public TransformationAbstract, INormal {
 private:
-    std::vector<std::unique_ptr<TransformationAbstract>> components;
+    std::vector<std::shared_ptr<TransformationAbstract>> components;
 public:
     // default dynamic transform composite, no orbit rotation component
     DynamicTransformComposite();
@@ -28,9 +28,9 @@ public:
     explicit DynamicTransformComposite(const glm::vec3& axis);
 
     // explicit dynamic transform composite -> appends rotation along origin
-    explicit DynamicTransformComposite(std::vector<std::unique_ptr<TransformationAbstract>> components);
+    explicit DynamicTransformComposite(std::vector<std::shared_ptr<TransformationAbstract>> components);
 
-    void addComponent(std::unique_ptr<TransformationAbstract> component);
+    void addComponent(std::shared_ptr<TransformationAbstract> component);
 
     const glm::mat4& getMatrix() override;
     const glm::mat3& getNormalMatrix() override;

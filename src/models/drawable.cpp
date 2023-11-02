@@ -11,7 +11,7 @@ DrawableObject::DrawableObject(const glm::vec3& position, const Model* model,
                                : position(position),
                                shader_name(std::move(shader_name)),
                                model(model) {
-    this->model_matrix = std::make_unique<DynamicTransformComposite>();
+    this->model_matrix = std::make_shared<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
@@ -24,7 +24,7 @@ DrawableObject::DrawableObject(const glm::vec3& position,
                                : position(position),
                                shader_name(std::move(shader_name)),
                                model(model) {
-    this->model_matrix = std::make_unique<DynamicTransformComposite>();
+    this->model_matrix = std::make_shared<DynamicTransformComposite>();
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);
@@ -40,7 +40,7 @@ DrawableObject::DrawableObject(const glm::vec3 &position,
                                : position(position),
                                shader_name(std::move(shader_name)),
                                model(model) {
-    this->model_matrix = std::make_unique<DynamicTransformComposite>(axis);
+    this->model_matrix = std::make_shared<DynamicTransformComposite>(axis);
 
     EventPayload<glm::vec3> payload{this->position, EventType::S_TRANSLATION};
     this->model_matrix->update(payload);

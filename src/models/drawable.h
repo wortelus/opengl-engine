@@ -25,7 +25,7 @@ private:
 
     Material material;
 
-    std::unique_ptr<DynamicTransformComposite> model_matrix;
+    std::shared_ptr<DynamicTransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name);
 
