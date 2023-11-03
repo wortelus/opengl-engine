@@ -54,11 +54,11 @@ public:
 
     void assignShaderAlias(DrawableObject& object);
 
-    std::shared_ptr<DrawableObject> newObject(const Model* model_ptr,
+    std::unique_ptr<DrawableObject> newObject(const Model* model_ptr,
                                               const glm::vec3& position,
                                               const std::string& shader_name);
 
-    std::shared_ptr<DrawableObject> newObject(const Model* model_ptr,
+    std::unique_ptr<DrawableObject> newObject(const Model* model_ptr,
                                               const glm::vec3& position,
                                               const std::string& shader_name,
                                               const glm::vec3& axis);

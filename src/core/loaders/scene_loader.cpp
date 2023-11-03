@@ -3,6 +3,8 @@
 // Date of Creation:  22/10/2023
 
 #include "scene_loader.h"
+
+#include <cmath>
 #include "../../models/animations/centric_model.h"
 #include "model_loader.h"
 
@@ -141,10 +143,10 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
     for (int i = 0; i < num_lights; i++) {
         float angle = (float) i / num_lights * 2.0f * glm::pi<float>();
 
-        glm::vec3 sun_pos_new = glm::vec3(0.0);
-        sun_pos_new.x = sun_position.x + sun_radius * cos(angle);
+        auto sun_pos_new = glm::vec3(0.0);
+        sun_pos_new.x = sun_position.x + sun_radius * std::cos(angle);
         sun_pos_new.y = sun_position.y;
-        sun_pos_new.z = sun_position.z + sun_radius * sin(angle);
+        sun_pos_new.z = sun_position.z + sun_radius * std::sin(angle);
 
         std::shared_ptr<Light> light_a = std::make_unique<Light>(sun_pos_new - glm::vec3(0.f, 2.f, 0.f),
                                                                  glm::vec3(1.f, 1.0f, 0.8f),
@@ -181,7 +183,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                           glm::vec3(1.0, 0.0, 0.0),
                           12.f);
 
-    std::shared_ptr<CentricComposite> sun_composite = std::make_shared<CentricComposite>(sun_obj);
+    auto sun_composite = std::make_unique<CentricComposite>(std::move(sun_obj));
 
     // mercury
     auto mercury_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -190,8 +192,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     mercury_obj->setProperties(glm::vec3(0.15, 0.15, 0.15),
                              glm::vec3(1.0, 1.0, 1.0),
                           32.f);
-
-    std::shared_ptr<CentricComposite> mercury_composite = std::make_shared<CentricComposite>(mercury_obj);
+    mercury_obj->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
+    auto mercury_composite = std::make_unique<CentricComposite>(std::move(mercury_obj));
 
     // venus
     auto venus_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -200,8 +202,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     venus_obj->setProperties(glm::vec3(0.15, 0.15, 0.0),
                              glm::vec3(1.0, 1.0, 1.0),
                           32.f);
-
-    std::shared_ptr<CentricComposite> venus_composite = std::make_shared<CentricComposite>(venus_obj);
+    venus_obj->setScale(glm::vec3(0.3f, 0.3f, 0.3f));
+    auto venus_composite = std::make_unique<CentricComposite>(std::move(venus_obj));
 
     // earth
     auto earth_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -210,8 +212,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     earth_obj->setProperties(glm::vec3(0.0, 0.15, 1.0),
                              glm::vec3(1.0, 1.0, 1.0),
                           32.f);
-
-    std::shared_ptr<CentricComposite> earth_composite = std::make_shared<CentricComposite>(earth_obj);
+    earth_obj->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
+    auto earth_composite = std::make_unique<CentricComposite>(std::move(earth_obj));
 
     // moon
     auto moon_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -220,8 +222,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     moon_obj->setProperties(glm::vec3(0.5, 0.5, 0.5),
                           glm::vec3(0.5, 0.5, 0.5),
                           12.f);
-
-    std::shared_ptr<CentricModelLeaf> moon_leaf = std::make_shared<CentricModelLeaf>(moon_obj);
+    moon_obj->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
+    auto moon_leaf = std::make_unique<CentricModelLeaf>(std::move(moon_obj));
 
     // mars
     auto mars_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -230,9 +232,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     mars_obj->setProperties(glm::vec3(0.8, 0.3, 0.0),
                             glm::vec3(1.0, 1.0, 1.0),
                             50.f);
-
-
-    std::shared_ptr<CentricModelLeaf> mars_leaf = std::make_shared<CentricModelLeaf>(mars_obj);
+    mars_obj->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+    auto mars_leaf = std::make_unique<CentricModelLeaf>(std::move(mars_obj));
 
     // jupiter
     auto jupiter_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -241,8 +242,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     jupiter_obj->setProperties(glm::vec3(1.0, 0.8, 0.6),
                                glm::vec3(1.0, 1.0, 1.0),
                                40.f);
-
-    std::shared_ptr<CentricModelLeaf> jupiter_leaf = std::make_shared<CentricModelLeaf>(jupiter_obj);
+    jupiter_obj->setScale(glm::vec3(1.8f, 1.8f, 1.8f));
+    auto jupiter_leaf = std::make_unique<CentricModelLeaf>(std::move(jupiter_obj));
 
     // saturn
     auto saturn_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -251,8 +252,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     saturn_obj->setProperties(glm::vec3(0.9, 0.7, 0.3),
                               glm::vec3(1.0, 1.0, 1.0),
                               45.f);
-
-    std::shared_ptr<CentricModelLeaf> saturn_leaf = std::make_shared<CentricModelLeaf>(saturn_obj);
+    saturn_obj->setScale(glm::vec3(1.4f, 1.4f, 1.4f));
+    auto saturn_leaf = std::make_unique<CentricModelLeaf>(std::move(saturn_obj));
 
     // uranus
     auto uranus_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -261,8 +262,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     uranus_obj->setProperties(glm::vec3(0.5, 0.8, 0.8),
                               glm::vec3(1.0, 1.0, 1.0),
                               50.f);
-
-    std::shared_ptr<CentricModelLeaf> uranus_leaf = std::make_shared<CentricModelLeaf>(uranus_obj);
+    uranus_obj->setScale(glm::vec3(0.6f, 0.6f, 0.6f));
+    auto uranus_leaf = std::make_unique<CentricModelLeaf>(std::move(uranus_obj));
 
     // neptune
     auto neptune_obj = scene->newObject(lazyLoadModel("sphere"),
@@ -271,18 +272,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     neptune_obj->setProperties(glm::vec3(0.05, 0.2, 0.6),
                                glm::vec3(1.0, 1.0, 1.0),
                                50.f);
-
-    std::shared_ptr<CentricModelLeaf> neptune_leaf = std::make_shared<CentricModelLeaf>(neptune_obj);
-
-    mercury_obj->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
-    venus_obj->setScale(glm::vec3(0.3f, 0.3f, 0.3f));
-    earth_obj->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
-    moon_obj->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
-    mars_obj->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-    jupiter_obj->setScale(glm::vec3(1.8f, 1.8f, 1.8f));
-    saturn_obj->setScale(glm::vec3(1.4f, 1.4f, 1.4f));
-    uranus_obj->setScale(glm::vec3(0.6f, 0.6f, 0.6f));
     neptune_obj->setScale(glm::vec3(0.6f, 0.6f, 0.6f));
+    auto neptune_leaf = std::make_unique<CentricModelLeaf>(std::move(neptune_obj));
 
     mercury_composite->setMultiplier(0.3f);
     venus_composite->setMultiplier(0.25f);
@@ -294,18 +285,64 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     uranus_leaf->setMultiplier(0.01f);
     neptune_leaf->setMultiplier(0.005f);
 
-    sun_composite->addModel(mercury_composite);
-    sun_composite->addModel(venus_composite);
-    sun_composite->addModel(earth_composite);
-    sun_composite->addModel(mars_leaf);
-    earth_composite->addModel(moon_leaf);
-    sun_composite->addModel(jupiter_leaf);
-    sun_composite->addModel(saturn_leaf);
-    sun_composite->addModel(uranus_leaf);
-    sun_composite->addModel(neptune_leaf);
+    sun_composite->addModel(std::move(mercury_composite));
+    sun_composite->addModel(std::move(venus_composite));
+    earth_composite->addModel(std::move(moon_leaf));
+    sun_composite->addModel(std::move(earth_composite));
+    sun_composite->addModel(std::move(mars_leaf));
+    sun_composite->addModel(std::move(jupiter_leaf));
+    sun_composite->addModel(std::move(saturn_leaf));
+    sun_composite->addModel(std::move(uranus_leaf));
+    sun_composite->addModel(std::move(neptune_leaf));
+
+
+    //
+    // Asteroid belt
+    //
+    int num_asteroids = 1000;
+    float asteroid_belt_radius = 40.f;
+    float asteroid_belt_scale = 0.05f;
+    float asteroid_belt_speed = 0.01f;
+    float asteroid_belt_y_randomness = 2.5f;
+    for(int i = 0; i < num_asteroids; i++) {
+        float angle = (float)i / (float)num_asteroids * 2.f * M_PI;
+        float x = asteroid_belt_radius * std::cos(angle);
+        float z = asteroid_belt_radius * std::sin(angle);
+        float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (asteroid_belt_y_randomness) - (asteroid_belt_y_randomness / 2.f);
+        auto asteroid_obj = scene->newObject(lazyLoadModel("sphere"),
+                                             glm::vec3(x, y, z), "constant", axis);
+        asteroid_obj->setAmbient(glm::vec3(0.5, 0.5, 0.5));
+        asteroid_obj->setScale(glm::vec3(asteroid_belt_scale, asteroid_belt_scale, asteroid_belt_scale));
+        auto asteroid_leaf = std::make_unique<CentricModelLeaf>(std::move(asteroid_obj));
+        asteroid_leaf->setMultiplier(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * asteroid_belt_speed);
+        sun_composite->addModel(std::move(asteroid_leaf));
+    }
+
+    //
+    // random asteroids / stars
+    //
+    int num_asteroids_random = 1000;
+    float asteroid_random_radius = 20.f;
+    float asteroid_random_scale = 0.02f;
+    float asteroid_random_speed = 0.0001f;
+    for(int i = 0; i < num_asteroids_random; i++) {
+        float alpha = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 2.f * M_PI;
+        float beta = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * M_PI;  // Corrected range for beta
+        float x = asteroid_random_radius * std::sin(beta) * std::cos(alpha);
+        float y = asteroid_random_radius * std::sin(beta) * std::sin(alpha);
+        float z = asteroid_random_radius * std::cos(beta);
+        auto asteroid_obj = scene->newObject(lazyLoadModel("sphere"),
+                                             glm::vec3(x, y, z), "constant", axis);
+        // haha, redshift
+        asteroid_obj->setAmbient(glm::vec3(0.4 + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 0.3, 0.4, 0.4));
+        asteroid_obj->setScale(glm::vec3(asteroid_random_scale, asteroid_random_scale, asteroid_random_scale));
+        auto asteroid_leaf = std::make_unique<CentricModelLeaf>(std::move(asteroid_obj));
+        asteroid_leaf->setMultiplier(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * asteroid_random_speed);
+        sun_composite->addModel(std::move(asteroid_leaf));
+    }
 
     // building
-    scene->appendAnimation(sun_composite);
+    scene->appendAnimation(std::move(sun_composite));
     return std::move(scene);
 }
 
@@ -328,8 +365,6 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
 
     float tree_height = 0.0f;
     float light_height = 5.0f;
-
-    float tree_radius = 2.0f;
 
     float range = 100.f;
 
@@ -485,3 +520,5 @@ SceneLoader::loadSceneG(GLFWwindow &window_reference, const int &initial_width, 
 const Model* SceneLoader::lazyLoadModel(const std::string &name) {
     return ModelLoader::getInstance().loadModel(name);
 }
+
+#pragma clang diagnostic pop

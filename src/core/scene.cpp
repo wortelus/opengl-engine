@@ -88,21 +88,21 @@ void Scene::optimizeObjects() {
     object_manager->preprocess();
 }
 
-std::shared_ptr<DrawableObject> Scene::newObject(
+std::unique_ptr<DrawableObject> Scene::newObject(
         const Model* model_ptr,
         const glm::vec3 &position,
         const std::string &shader_name) {
-    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, model_ptr,
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, model_ptr,
                                                                               shader_name, scene_ambient);
     return object;
 }
 
-std::shared_ptr<DrawableObject>Scene::newObject(
+std::unique_ptr<DrawableObject>Scene::newObject(
         const Model* model_ptr,
         const glm::vec3& position,
         const std::string& shader_name,
         const glm::vec3& axis) {
-    std::shared_ptr<DrawableObject> object = std::make_shared<DrawableObject>(position, model_ptr,
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(position, model_ptr,
                                                                               shader_name, scene_ambient, axis);
     return object;
 }

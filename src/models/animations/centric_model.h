@@ -17,9 +17,9 @@ class CentricModelComponent : public Animation {
 protected:
     glm::vec3 parent_center = glm::vec3(0.0f);
     float rotational_multiplier = 1.f;
-    std::shared_ptr<DrawableObject> object;
+    std::unique_ptr<DrawableObject> object;
 public:
-    explicit CentricModelComponent(std::shared_ptr<DrawableObject> object)
+    explicit CentricModelComponent(std::unique_ptr<DrawableObject> object)
             : object(std::move(object)) { }
 
     ~CentricModelComponent() override = default;
@@ -41,7 +41,7 @@ class CentricModelLeaf : public CentricModelComponent {
 private:
 
 public:
-    explicit CentricModelLeaf(std::shared_ptr<DrawableObject> object)
+    explicit CentricModelLeaf(std::unique_ptr<DrawableObject> object)
             : CentricModelComponent(std::move(object)) {}
 
     ~CentricModelLeaf() override = default;
@@ -49,14 +49,14 @@ public:
 
 class CentricComposite : public CentricModelComponent {
 private:
-    std::vector<std::shared_ptr<CentricModelComponent>> children;
+    std::vector<std::unique_ptr<CentricModelComponent>> children;
 public:
-    explicit CentricComposite(std::shared_ptr<DrawableObject> object)
+    explicit CentricComposite(std::unique_ptr<DrawableObject> object)
             : CentricModelComponent(std::move(object)) {}
 
     ~CentricComposite() override = default;
 
-    void addModel(std::shared_ptr<CentricModelComponent> model);
+    void addModel(std::unique_ptr<CentricModelComponent> model);
 
     void bfsTraverse(const std::function<void(CentricModelComponent*)>& func);
 };
