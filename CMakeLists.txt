@@ -21,6 +21,7 @@ add_executable(zpg src/main.cpp
         src/core/loaders/model_loader.h src/core/loaders/model_loader.cpp
         # utilities and constants
         src/util/const.h
+        src/util/const_lights.h
         src/util/event_args.h
         src/util/observer.h src/util/observer.cpp
         # models

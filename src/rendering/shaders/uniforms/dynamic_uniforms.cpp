@@ -25,15 +25,18 @@ void DynamicUniforms::lazyPassUniforms() {
     GLint spotlight_num = 0;
     for (const auto& light: *lights_collection.value) {
         if (auto* point_light = dynamic_cast<PointLight*>(light.get())) {
-            setUniforms(point_light->getParameters(), point_loc.data() + (point_parameter_count * point_light_num));
+            setUniforms(point_light->getParameters(),
+                        point_loc.data() + (POINT_CONFIG.parameter_count * point_light_num));
             point_light_num++;
             continue;
         } else if (auto* directional_light = dynamic_cast<DirectionalLight*>(light.get())) {
-            setUniforms(directional_light->getParameters(), directional_loc.data() + (directional_parameter_count * directional_light_num));
+            setUniforms(directional_light->getParameters(),
+                        directional_loc.data() + (DIRECTIONAL_CONFIG.parameter_count * directional_light_num));
             directional_light_num++;
             continue;
         } else if (auto* spotlight = dynamic_cast<Spotlight*>(light.get())) {
-            setUniforms(spotlight->getParameters(), spotlight_loc.data() + (spotlight_parameter_count * spotlight_num));
+            setUniforms(spotlight->getParameters(),
+                        spotlight_loc.data() + (SPOTLIGHT_CONFIG.parameter_count * spotlight_num));
             spotlight_num++;
             continue;
         }
