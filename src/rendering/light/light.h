@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 3.11.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  3/11/2023
 
 #ifndef ZPG_LIGHT_H
 #define ZPG_LIGHT_H
@@ -13,6 +13,8 @@
 #include <GL/glew.h>
 #include "glm/vec3.hpp"
 #include "glm/ext/matrix_float3x3.hpp"
+
+using LIGHT_ID = int;
 
 using LightProperty =
         std::variant<
@@ -30,12 +32,17 @@ struct Attenuation {
 };
 
 class Light {
+private:
+    LIGHT_ID managed_id = -1;
 protected:
     glm::vec3 color;
     float intensity;
 public:
     Light(const glm::vec3& color, const float& intensity) : color(color), intensity(intensity) {}
     virtual ~Light() = default;
+
+    void setManagedId(LIGHT_ID id) { this->managed_id = id; }
+    [[nodiscard]] LIGHT_ID getManagedId() const { return this->managed_id; }
 
     [[nodiscard]] const glm::vec3& getColor() const { return color; }
     [[nodiscard]] float getIntensity() const { return intensity; }

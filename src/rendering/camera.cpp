@@ -3,7 +3,6 @@
 // Date of Creation:  9/10/2023
 
 #include <algorithm>
-#include <cstdio>
 #include "camera.h"
 
 Camera::Camera(float aspect) : aspect_ratio(aspect), position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
@@ -30,6 +29,7 @@ void Camera::move(const double& x_offset, const double& y_offset) {
     view = glm::lookAt(position, position + front, up);
 
     notifyView();
+    notifyFlashlight();
 }
 
 void Camera::moveCharacterSide(const float& offset) {
@@ -44,6 +44,7 @@ void Camera::moveCharacterSide(const float& offset) {
 
     notifyView();
     notifyPosition();
+    notifyFlashlight();
 }
 
 void Camera::moveCharacterFront(const float& offset) {
@@ -56,6 +57,7 @@ void Camera::moveCharacterFront(const float& offset) {
 
     notifyView();
     notifyPosition();
+    notifyFlashlight();
 }
 
 void Camera::jumpProgress(const float& delta_time) {
@@ -74,6 +76,7 @@ void Camera::jumpProgress(const float& delta_time) {
 
     notifyView();
     notifyPosition();
+    notifyFlashlight();
 }
 
 void Camera::jump() {
@@ -113,4 +116,18 @@ void Camera::notifyAll() {
 
 void Camera::start() {
     notifyAll();
+}
+
+void Camera::notifyFlashlight() {
+    auto flashlight_ptr = flashlight.lock();
+
+    flashlight_ptr->setPosition(position);
+    flashlight_ptr->setDirection(front);
+
+    EventPayload<LIGHT_ID> payload{flashlight_ptr->getManagedId(), EventType::U_LIGHT_SINGLE};
+    notify(payload);
+}
+
+void Camera::setFlashlight(const std::weak_ptr<Spotlight>& weak_flashlight) {
+    this->flashlight = weak_flashlight;
 }

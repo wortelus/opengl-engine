@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 3.11.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  3/11/2023
 
 #include "dynamic_uniforms.h"
 
@@ -9,6 +9,9 @@ bool DynamicUniforms::update(const EventArgs& event_args) {
         case EventType::U_LIGHTS: {
             const auto* lights = static_cast<const EventPayload<std::shared_ptr<std::vector<std::shared_ptr<Light>>>>*>(&event_args);
             this->lights_collection.value = std::move(lights->getPayload());
+            this->lights_collection.is_dirty = true;
+        }
+        case EventType::U_LIGHT_SINGLE: {
             this->lights_collection.is_dirty = true;
         }
         default:

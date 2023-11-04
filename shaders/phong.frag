@@ -103,7 +103,6 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos_world, vec3 view_
     float epsilon = light.cutoff - light.outer_cutoff;
     float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
 
-    // Only proceed if the fragment is within the spotlight cone
     if(intensity > 0.0) {
         vec3 reflect_direction = reflect(-light_direction_n, normal);
         float spec = pow(max(dot(view_direction_norm, reflect_direction), 0.0), material.shininess);

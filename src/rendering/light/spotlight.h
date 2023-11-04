@@ -31,6 +31,10 @@ public:
               attenuation{constant, linear, quadratic},
               cutoff(cutoff), outer_cutoff(outerCutoff) {}
 
+
+    void setPosition(const glm::vec3& pos) { this->position = pos; }
+    void setDirection(const glm::vec3& dir) { this->direction = dir; }
+
     [[nodiscard]] const glm::vec3& getPosition() const { return position; }
     [[nodiscard]] const glm::vec3& getDirection() const { return direction; }
     [[nodiscard]] const Attenuation& getAttenuation() const { return attenuation; }

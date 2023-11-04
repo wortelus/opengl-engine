@@ -74,6 +74,11 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
         });
     }
 
+    std::unique_ptr<Spotlight> flashlight = std::make_unique<Spotlight>(FLASHLIGHT);
+    auto fl_id = light_manager.addLight(std::move(flashlight));
+    auto fl = light_manager.getLight(fl_id);
+    this->camera->setFlashlight(std::static_pointer_cast<Spotlight>(fl));
+
     // pass camera and light uniforms to shaders
     camera->start();
     light_manager.notifyShaders();

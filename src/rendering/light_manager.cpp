@@ -11,26 +11,27 @@ LightManager::LightManager() {
     this->lights = std::make_shared<std::vector<std::shared_ptr<Light>>>();
 }
 
-void LightManager::addLight(const Light& light) {
+LIGHT_ID LightManager::addLight(const Light& light) {
     const auto* point_light = dynamic_cast<const PointLight*>(&light);
     if (point_light != nullptr) {
         this->lights->push_back(std::make_shared<PointLight>(*point_light));
-        return;
+        return static_cast<LIGHT_ID>(this->lights->size() - 1);
     }
     const auto* directional_light = dynamic_cast<const DirectionalLight*>(&light);
     if (directional_light != nullptr) {
         this->lights->push_back(std::make_shared<DirectionalLight>(*directional_light));
-        return;
+        return static_cast<LIGHT_ID>(this->lights->size() - 1);
     }
     const auto* spot_light = dynamic_cast<const Spotlight*>(&light);
     if (spot_light != nullptr) {
         this->lights->push_back(std::make_shared<Spotlight>(*spot_light));
-        return;
+        return static_cast<LIGHT_ID>(this->lights->size() - 1);
     }
 }
 
-void LightManager::addLight(const std::shared_ptr<Light>& light) {
+LIGHT_ID LightManager::addLight(const std::shared_ptr<Light>& light) {
     this->lights->push_back(light);
+    return static_cast<LIGHT_ID>(this->lights->size() - 1);
 }
 
 void LightManager::notifyShaders() {

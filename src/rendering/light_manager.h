@@ -11,6 +11,7 @@
 #include "light/light.h"
 #include "../util/observer.h"
 #include "../util/event_args.h"
+#include "../util/const_lights.h"
 
 class LightManager : public ISubject {
 private:
@@ -19,8 +20,10 @@ public:
     LightManager();
     ~LightManager() = default;
 
-    void addLight(const Light& light);
-    void addLight(const std::shared_ptr<Light>& light);
+    LIGHT_ID addLight(const Light& light);
+    LIGHT_ID addLight(const std::shared_ptr<Light>& light);
+
+    [[nodiscard]] std::shared_ptr<Light> getLight(LIGHT_ID id) const { return this->lights->at(id); }
 
     void notifyShaders();
 };

@@ -83,7 +83,6 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos_world) {
     float epsilon = light.cutoff - light.outer_cutoff;
     float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
 
-    // Check if within spotlight cone
     if (intensity > 0) {
         float diff = max(dot(normal, light_direction_n), 0.0);
         if (diff > 0.0) {

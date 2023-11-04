@@ -106,7 +106,6 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 frag_pos_world, vec3 view_
     float epsilon = light.cutoff - light.outer_cutoff;
     float intensity = clamp((theta - light.outer_cutoff) / epsilon, 0.0, 1.0);
 
-    // Only proceed if the fragment is within the spotlight cone
     if(intensity > 0.0) {
         // blinn-phong modification
         vec3 halfway_dir = normalize(light_direction_n + view_direction_norm);
