@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 4.11.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  3/11/2023
 
 #ifndef ZPG_CONST_LIGHTS_H
 #define ZPG_CONST_LIGHTS_H
