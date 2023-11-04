@@ -23,8 +23,8 @@ struct PointLight {
 };
 
 uniform Material material;
-uniform PointLight lights[MAX_LIGHTS];
-uniform int num_lights;
+uniform PointLight point_lights[MAX_LIGHTS];
+uniform int point_lights_count;
 
 out vec4 out_Color;
 
@@ -46,8 +46,8 @@ void main(void) {
     vec3 world_normal_norm = normalize(ex_world_normal);
 
     vec3 color_sum = vec3(0.0);
-    for(int i = 0; i < num_lights; ++i) {
-        color_sum += calcLambertLight(lights[i], world_normal_norm, ex_world_position.xyz);
+    for(int i = 0; i < point_lights_count; ++i) {
+        color_sum += calcLambertLight(point_lights[i], world_normal_norm, ex_world_position.xyz);
     }
 
     out_Color = vec4(material.ambient + color_sum, 1.0);
