@@ -29,7 +29,7 @@ public:
     ShaderUniforms() = default;
 
     void passEvent(const EventArgs& event_args);
-    void updateUniforms();
+    void lazyPassUniforms();
 };
 
 

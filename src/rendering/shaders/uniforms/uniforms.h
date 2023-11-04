@@ -21,14 +21,31 @@ struct ShaderUniform {
     ShaderUniform() = default;
 };
 
-class Uniforms {
-public:
+struct Uniforms {
+    //
+    // Static methods for passing uniforms
+    //
     static void passUniform1i(GLint location, GLint value);
     static void passUniform1f(GLint location, GLfloat value);
     static void passUniform3fv(GLint location, const glm::vec3& value);
     static void passUniform4fv(GLint location, const glm::vec4& value);
     static void passUniformMatrix3fv(GLint location, const glm::mat3& value);
     static void passUniformMatrix4fv(GLint location, const glm::mat4& value);
+
+
+    //
+    // Visitor for passing uniforms (typically used for lights with ambiguous types)
+    //
+    GLint location;
+    explicit Uniforms(GLint loc) : location(loc) {}
+
+    void operator()(const GLint* value) const;
+    void operator()(const GLfloat* value) const;
+    void operator()(const glm::vec3* vec) const;
+    void operator()(const glm::vec4* vec) const;
+    void operator()(const glm::mat3* mat) const;
+    void operator()(const glm::mat4* mat) const;
+
 };
 
 

@@ -43,7 +43,7 @@ void ShaderUniforms::passEvent(const EventArgs& event_args) {
     }
 }
 
-void ShaderUniforms::updateUniforms() {
+void ShaderUniforms::lazyPassUniforms() {
     if (model.is_dirty) {
         Uniforms::passUniformMatrix4fv(model.location, *model.value);
         model.is_dirty = false;

@@ -74,7 +74,7 @@ void Shader::attachShader(const ShaderCode& shader_code) {
 }
 
 void Shader::update(const EventArgs& event_args) {
-    if (dynamic_uniforms.setDynamic(event_args)) return;
+    if (dynamic_uniforms.update(event_args)) return;
 
     if (event_args.type == EventType::U_MATERIAL) {
         updateMaterial(event_args);
@@ -152,8 +152,8 @@ void Shader::passUniformMatrix4fv(const std::string& uniform_name, const glm::ma
 }
 
 void Shader::lazyPassUniforms() {
-    uniforms.updateUniforms();
-    dynamic_uniforms.passAllLights();
+    uniforms.lazyPassUniforms();
+    dynamic_uniforms.lazyPassUniforms();
     if (material.is_dirty) {
         passMaterialUniforms();
         material.is_dirty = false;
