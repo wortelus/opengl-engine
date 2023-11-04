@@ -15,7 +15,8 @@ unyielding, using the scriptures of CMake.
 - [x] Transformations
 - [x] Chaining transformations matrices (Scene graph)
 - [x] Movement & Gravity
-- [x] Lighting, ambient, diffuse, specular point lights
+- [x] Lighting - ambient, diffuse, specular components, attenuation
+- [x] Point lights, directional lights and spotlights
 - [x] Dynamic shader loading
 - [x] Dynamic model loading
 - [x] Materials
@@ -26,6 +27,9 @@ unyielding, using the scriptures of CMake.
 - [x] Phong shader test
 - [x] Solar system with planets and moons
 - [x] Random scene with random objects
+______________________________________________________________________________________
+- [x] Phong creep specular test
+- [x] Directional and spotlight test
 
 ## Sacred Scripts of Luminescence
 - **Constant**: The foundational beacon, it emanates unwavering light, 
@@ -82,6 +86,7 @@ turning lines of text into a mosaic of pixels and logic, painting stories in rea
 ## Tablets of Future Endeavors
 - Observer on transformations is currently not used.
 We call globally directly in scene all transformation operations (*no notify*).
+- After update on U_LIGHTS, all lights are updated, not only the one that was changed. This work is _WIP_.
 - and more _in-code TODO's_
 
 ## The Sacred Relics
