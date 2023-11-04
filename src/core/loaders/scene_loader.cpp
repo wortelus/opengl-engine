@@ -73,6 +73,66 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
+
+    auto light_pos = glm::vec3(0.f, 10.f, 20.f);
+    std::shared_ptr<DirectionalLight> light_a = std::make_unique<DirectionalLight>(-light_pos,
+                                                                       glm::vec3(1.f, 1.f, 1.f),
+                                                                       1.f);
+    scene->appendLight(light_a);
+
+    auto& light_obj = scene->appendObject(lazyLoadModel("sphere"),
+                                          light_pos, "constant");
+    light_obj.setAmbient(glm::vec3(1.0, 0.75, 0.0));
+
+
+    auto& wall_a = scene->appendObject(lazyLoadModel("plain"),
+                                       glm::vec3(-4.f, 0.f, -5.f), "phong");
+    wall_a.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                         glm::vec3(1.0, 1.0, 1.0),
+                         32.f);
+    wall_a.rotate(glm::vec3(glm::vec3(15, 90, 90)));
+    wall_a.setScale(glm::vec3(4.f, 4.f, 4.f));
+
+
+    auto& wall_b = scene->appendObject(lazyLoadModel("plain"),
+                                 glm::vec3(6.f, 0.f, -8.f), "phong");
+    wall_b.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                         glm::vec3(1.0, 1.0, 1.0),
+                         32.f);
+    wall_b.rotate(glm::vec3(glm::vec3(30, 90, 90)));
+    wall_b.setScale(glm::vec3(4.f, 4.f, 4.f));
+
+    auto& wall_c = scene->appendObject(lazyLoadModel("plain"),
+                                 glm::vec3(12.f, 0.f, -3.f), "phong");
+    wall_c.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                         glm::vec3(1.0, 1.0, 1.0),
+                         32.f);
+    wall_c.rotate(glm::vec3(glm::vec3(-20, 90, 90)));
+    wall_c.setScale(glm::vec3(4.f, 4.f, 4.f));
+
+    auto suzie_pos = glm::vec3(-2.f, 0.f, 2.f);
+    auto& suzie = scene->appendObject(lazyLoadModel("suzi_smooth"),
+                                      suzie_pos, "blinn");
+    suzie.setProperties(glm::vec3(0.185, 0.247, 0.812),
+                        glm::vec3(0.2, 0.8, 0.4),
+                        32.f);
+
+
+    auto reflector_pos = glm::vec3(-5.f, 0.f, 10.f);
+    auto& reflector = scene->appendObject(lazyLoadModel("sphere"),
+                                          reflector_pos, "constant");
+    reflector.setAmbient(glm::vec3(1.0, 0.75, 0.0));
+
+    std::shared_ptr<Spotlight> spotlight = std::make_shared<Spotlight>(reflector_pos,
+                                                                       suzie_pos - reflector_pos,
+                                                                       glm::vec3(3.f, 1.f, 3.f),
+                                                                       10.f,
+                                                                       1, 0.01, 0.1,
+                                                                       std::cos(glm::radians(12.5f)),
+                                                                       std::cos(glm::radians(17.5f)));
+    scene->appendLight(spotlight);
+
+
     return std::move(scene);
 }
 

@@ -43,6 +43,8 @@ void DynamicUniforms::lazyPassUniforms() {
     }
 
     Uniforms::passUniform1i(point_num_loc, point_light_num);
+    Uniforms::passUniform1i(directional_num_loc, directional_light_num);
+    Uniforms::passUniform1i(spotlight_num_loc, spotlight_num);
     lights_collection.is_dirty = false;
 }
 

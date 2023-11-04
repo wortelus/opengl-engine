@@ -57,7 +57,7 @@ private:
     template <std::size_t SIZE>
     void initLightUniform(std::array<int, SIZE>& uniform_locations, SHADER_UNIFORM_LOCATION& num_uniform_location,
                                   const char* collection_name, const char* count_name,
-                                  int max_light_count, int light_param_count);
+                                  int max_light_count, const char** param_names, int light_param_count);
 
     void updateMaterial(const EventArgs& event_args);
     void passMaterialUniforms();
