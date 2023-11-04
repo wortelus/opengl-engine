@@ -5,10 +5,12 @@
 #ifndef ZPG_CONST_H
 #define ZPG_CONST_H
 
+#include <GL/glew.h>
 #include "glm/vec3.hpp"
 #include "glm/trigonometric.hpp"
 
 using SHADER_ALIAS_DATATYPE = int;
+using SHADER_UNIFORM_LOCATION = GLint;
 
 inline constexpr bool ENABLE_CULL_FACE = true;
 inline constexpr bool DISABLE_VSYNC = false;

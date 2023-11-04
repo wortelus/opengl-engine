@@ -7,6 +7,7 @@
 #include <cmath>
 #include "../../models/animations/centric_model.h"
 #include "model_loader.h"
+#include "../../rendering/light/point_light.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -61,7 +62,7 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
                                       glm::vec3(1.0, 1.0, 1.0),
                                       32.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, height, 0.f),
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, height, 0.f),
                                                              glm::vec3(1.f, 1.f, 1.f),
                                                              1.f,
                                                              1.f, 0.1f, 0.01f);
@@ -78,7 +79,7 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
                                       glm::vec3(1.0, 1.0, 1.0),
                                       1.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 0.f, -4.f),
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, 0.f, -4.f),
                                                              glm::vec3(1.f, 1.f, 1.f),
                                                              1.f,
                                                              0.1f, 0.f, 0.f); // almost no drop-off
@@ -148,7 +149,7 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
         sun_pos_new.y = sun_position.y;
         sun_pos_new.z = sun_position.z + sun_radius * std::sin(angle);
 
-        std::shared_ptr<Light> light_a = std::make_unique<Light>(sun_pos_new - glm::vec3(0.f, 2.f, 0.f),
+        std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(sun_pos_new - glm::vec3(0.f, 2.f, 0.f),
                                                                  glm::vec3(1.f, 1.0f, 0.8f),
                                                                  0.25f,
                                                                  1.f, 0.1f, 0.01f);
@@ -167,7 +168,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
 
     glm::vec3 sun_pos = glm::vec3(0.0f, -2.0f, -100.0f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(sun_pos,
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(sun_pos,
                                                              glm::vec3(1.f, 1.f, 1.f),
                                                              100.f,
                                                              1.f, 0.1f, 0.001f); // almost no drop-off
@@ -357,7 +358,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
                            glm::vec3(0.8, 0.15, 0.1),
                            5.f);
 
-    std::shared_ptr<Light> light_first = std::make_unique<Light>(glm::vec3(0.f, 5.f, 0.f),
+    std::shared_ptr<PointLight> light_first = std::make_unique<PointLight>(glm::vec3(0.f, 5.f, 0.f),
                                                              glm::vec3(1.f, 1.0f, 0.8f),
                                                              0.25f,
                                                              1.f, 0.1f, 0.01f);
@@ -435,7 +436,7 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
         float rand_x = ((float)rand() / RAND_MAX) * range - range / 2.0f;
         float rand_z = ((float)rand() / RAND_MAX) * range - range / 2.0f;
 
-        std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(rand_x, light_height, rand_z),
+        std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(rand_x, light_height, rand_z),
                                                                  glm::vec3(1.f, 1.f, 1.f),
                                                                  5.f,
                                                                  5.f, 0.1f, 0.01f); // almost no drop-off
@@ -462,7 +463,7 @@ SceneLoader::loadSceneF(GLFWwindow &window_reference, const int &initial_width, 
                                       glm::vec3(1.0, 1.0, 1.0),
                                       1.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 0.f, -4.f),
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, 0.f, -4.f),
                                                              glm::vec3(1.f, 1.f, 1.f),
                                                              1.f,
                                                              0.1f, 0.f, 0.f); // almost no drop-off
@@ -507,7 +508,7 @@ SceneLoader::loadSceneG(GLFWwindow &window_reference, const int &initial_width, 
                            glm::vec3(0.99, 0.15, 0.1),
                            5.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 4.f, 0.f),
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, 4.f, 0.f),
                                                              glm::vec3(1.f, 1.f, 1.f),
                                                              0.1f,
                                                              0.1f, 0.1f, 0.01f);
