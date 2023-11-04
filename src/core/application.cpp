@@ -61,6 +61,7 @@ void Application::init() {
     glDepthFunc(GL_LESS);
 
     glfwSetKeyCallback(window, keyCallback);
+    glfwSetWindowCloseCallback(window, windowCloseCallback);
     glfwSetCursorPosCallback(window, cursorCallback);
     glfwSetMouseButtonCallback(window, buttonCallback);
     glfwSetWindowFocusCallback(window, windowFocusCallback);
@@ -126,6 +127,10 @@ void Application::handleKeyEvent(int key, int scancode, int action, int mods) {
 
 }
 
+void Application::windowCloseCallback(GLFWwindow* window) {
+    auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+    app->scene->finish();
+}
 
 void Application::windowFocusCallback(GLFWwindow* window, int focused) {
     // printf("windowFocusCallback \n");

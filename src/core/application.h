@@ -48,6 +48,7 @@ public:
     void handleMouseButtonEvent(int button, int action, int mode);
     static void errorCallback(int error, const char* description);
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void windowCloseCallback(GLFWwindow* window);
     static void windowFocusCallback(GLFWwindow* window, int focused);
     static void windowIconifyCallback(GLFWwindow* window, int iconified);
     static void windowSizeCallback(GLFWwindow* window, int width, int height);
