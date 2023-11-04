@@ -4,20 +4,6 @@
 
 #include "spotlight.h"
 
-constexpr std::array<const char*, 9> Spotlight::getParameterNames() {
-    return std::array<const char*, 9>{
-            "position",
-            "direction",
-            "color",
-            "intensity",
-            "constant",
-            "linear",
-            "quadratic",
-            "cutoff",
-            "outer_cutoff"
-    };
-}
-
 std::vector<std::tuple<std::string, LightProperty>> Spotlight::getParameters() const {
     return {
             std::make_tuple("position", LightProperty(&position)),

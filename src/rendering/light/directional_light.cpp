@@ -4,14 +4,6 @@
 
 #include "directional_light.h"
 
-constexpr std::array<const char*, 3> DirectionalLight::getParameterNames() {
-    return std::array<const char*, 3>{
-            "direction",
-            "color",
-            "intensity"
-    };
-}
-
 std::vector<std::tuple<std::string, LightProperty>> DirectionalLight::getParameters() const {
     return {
             std::make_tuple("direction", LightProperty(&direction)),

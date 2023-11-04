@@ -21,7 +21,14 @@ public:
 
     [[nodiscard]] const glm::vec3& getDirection() const { return direction; }
 
-    static constexpr std::array<const char*, 3> getParameterNames();
+    static constexpr std::array<const char*, 3> getParameterNames() {
+        return std::array<const char*, 3>{
+                "direction",
+                "color",
+                "intensity"
+        };
+    }
+
     [[nodiscard]] std::vector<std::tuple<std::string, LightProperty>> getParameters() const final;
 };
 

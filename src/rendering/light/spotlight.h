@@ -22,10 +22,13 @@ public:
               const glm::vec3& direction,
               const glm::vec3& color,
               const float& intensity,
-              const Attenuation& attenuation,
+              const float& constant,
+              const float& linear,
+              const float& quadratic,
               const float& cutoff,
               const float& outerCutoff)
-            : Light(color, intensity), position(position), direction(direction), attenuation(attenuation),
+            : Light(color, intensity), position(position), direction(direction),
+              attenuation{constant, linear, quadratic},
               cutoff(cutoff), outer_cutoff(outerCutoff) {}
 
     [[nodiscard]] const glm::vec3& getPosition() const { return position; }
@@ -35,7 +38,20 @@ public:
     [[nodiscard]] float getOuterCutoff() const { return outer_cutoff; }
 
 
-    static constexpr std::array<const char*, 9> getParameterNames();
+    static constexpr std::array<const char*, 9> getParameterNames() {
+        return std::array<const char*, 9>{
+                "position",
+                "direction",
+                "color",
+                "intensity",
+                "constant",
+                "linear",
+                "quadratic",
+                "cutoff",
+                "outer_cutoff"
+        };
+    }
+
     [[nodiscard]] std::vector<std::tuple<std::string, LightProperty>> getParameters() const final;
 };
 
