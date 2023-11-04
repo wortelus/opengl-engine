@@ -1,5 +1,5 @@
-// Creator: Daniel Slavík
-// E-Mail: sla0331@vsb.cz
-// Date of Creation:  16/10/2023
+//
+// Created by wortelus on 3.11.23.
+//
 
 #include "light.h"
