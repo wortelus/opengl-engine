@@ -32,12 +32,14 @@ add_executable(zpg src/main.cpp
         src/models/animations/centric_model.h src/models/animations/centric_model.cpp
         # shaders
         src/rendering/shaders/shader_loader.h src/rendering/shaders/shader_loader.cpp
-        src/rendering/shaders/shader_uniforms.h src/rendering/shaders/shader_uniforms.cpp
         src/rendering/shaders/shader.h src/rendering/shaders/shader.cpp
         # camera
         src/rendering/camera.h src/rendering/camera.cpp
         # light
         src/rendering/light/light.h src/rendering/light/light.cpp
+        src/rendering/light/point_light.h src/rendering/light/point_light.cpp
+        src/rendering/light/directional_light.h src/rendering/light/directional_light.cpp
+        src/rendering/light/spotlight.h src/rendering/light/spotlight.cpp
         # managers
         src/rendering/light_manager.h src/rendering/light_manager.cpp
         src/rendering/object_manager.h src/rendering/object_manager.cpp
@@ -45,6 +47,10 @@ add_executable(zpg src/main.cpp
         # transformations
         src/transform/transform.h src/transform/transform.cpp
         src/transform/transform_composite.h src/transform/transform_composite.cpp
+        # shader uniforms
+        src/rendering/shaders/uniforms/uniforms.h src/rendering/shaders/uniforms/uniforms.cpp
+        src/rendering/shaders/uniforms/shader_uniforms.h src/rendering/shaders/uniforms/shader_uniforms.cpp
+        src/rendering/shaders/uniforms/dynamic_uniforms.h src/rendering/shaders/uniforms/dynamic_uniforms.cpp
         )
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)

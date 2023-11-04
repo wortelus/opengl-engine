@@ -1,5 +1,6 @@
-libs/
-cmake-build-debug
-.idea/
-massif.out.*
+/.idea/
 /build/
+/CMakeFiles/
+/libs/
+/cmake-build-debug/
+massif.out.*
