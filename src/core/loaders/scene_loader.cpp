@@ -7,6 +7,7 @@
 #include <cmath>
 #include "../../models/animations/centric_model.h"
 #include "model_loader.h"
+#include "../../rendering/light/point_light.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -58,13 +59,13 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
     auto& sphere_west_object = scene->appendObject(lazyLoadModel("sphere"),
                                                    glm::vec3(2.f, height, 0.f), "phong");
     sphere_west_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
-                                      glm::vec3(1.0, 1.0, 1.0),
-                                      32.f);
+                                     glm::vec3(1.0, 1.0, 1.0),
+                                     32.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, height, 0.f),
-                                                             glm::vec3(1.f, 1.f, 1.f),
-                                                             1.f,
-                                                             1.f, 0.1f, 0.01f);
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, height, 0.f),
+                                                                       glm::vec3(1.f, 1.f, 1.f),
+                                                                       1.f,
+                                                                       1.f, 0.1f, 0.01f);
     scene->appendLight(light_a);
     return std::move(scene);
 }
@@ -72,18 +73,65 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
-    auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
-                                                    glm::vec3(0.f, 0.f, -2.f), "phong");
-    sphere_south_object.setProperties(glm::vec3(1.0, 1.0, 0.0),
-                                      glm::vec3(1.0, 1.0, 1.0),
-                                      1.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 0.f, -4.f),
-                                                             glm::vec3(1.f, 1.f, 1.f),
-                                                             1.f,
-                                                             0.1f, 0.f, 0.f); // almost no drop-off
-
+    auto light_pos = glm::vec3(0.f, 10.f, 20.f);
+    std::shared_ptr<DirectionalLight> light_a = std::make_unique<DirectionalLight>(-light_pos,
+                                                                       glm::vec3(1.f, 1.f, 1.f),
+                                                                       1.f);
     scene->appendLight(light_a);
+
+    auto& light_obj = scene->appendObject(lazyLoadModel("sphere"),
+                                          light_pos, "constant");
+    light_obj.setAmbient(glm::vec3(1.0, 0.75, 0.0));
+
+
+    auto& wall_a = scene->appendObject(lazyLoadModel("plain"),
+                                       glm::vec3(-4.f, 0.f, -5.f), "phong");
+    wall_a.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                         glm::vec3(1.0, 1.0, 1.0),
+                         32.f);
+    wall_a.rotate(glm::vec3(glm::vec3(15, 90, 90)));
+    wall_a.setScale(glm::vec3(4.f, 4.f, 4.f));
+
+
+    auto& wall_b = scene->appendObject(lazyLoadModel("plain"),
+                                 glm::vec3(6.f, 0.f, -8.f), "lambert");
+    wall_b.setProperties(glm::vec3(0.785, 0.9, 0.812),
+                         glm::vec3(1.0, 1.0, 1.0),
+                         32.f);
+    wall_b.rotate(glm::vec3(glm::vec3(30, 90, 90)));
+    wall_b.setScale(glm::vec3(4.f, 4.f, 4.f));
+
+    auto& wall_c = scene->appendObject(lazyLoadModel("plain"),
+                                 glm::vec3(12.f, 0.f, -3.f), "phong");
+    wall_c.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                         glm::vec3(1.0, 1.0, 1.0),
+                         32.f);
+    wall_c.rotate(glm::vec3(glm::vec3(-20, 90, 90)));
+    wall_c.setScale(glm::vec3(4.f, 4.f, 4.f));
+
+    auto suzie_pos = glm::vec3(-2.f, 0.f, 2.f);
+    auto& suzie = scene->appendObject(lazyLoadModel("suzi_smooth"),
+                                      suzie_pos, "blinn");
+    suzie.setProperties(glm::vec3(0.185, 0.247, 0.812),
+                        glm::vec3(0.2, 0.8, 0.4),
+                        32.f);
+
+
+    auto reflector_pos = glm::vec3(-5.f, 0.f, 10.f);
+    auto& reflector = scene->appendObject(lazyLoadModel("sphere"),
+                                          reflector_pos, "constant");
+    reflector.setAmbient(glm::vec3(1.0, 0.75, 0.0));
+
+    std::shared_ptr<Spotlight> spotlight = std::make_shared<Spotlight>(reflector_pos,
+                                                                       suzie_pos - reflector_pos,
+                                                                       glm::vec3(3.f, 1.f, 3.f),
+                                                                       10.f,
+                                                                       1, 0.01, 0.1,
+                                                                       std::cos(glm::radians(12.5f)),
+                                                                       std::cos(glm::radians(17.5f)));
+    scene->appendLight(spotlight);
+
 
     return std::move(scene);
 }
@@ -148,10 +196,10 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
         sun_pos_new.y = sun_position.y;
         sun_pos_new.z = sun_position.z + sun_radius * std::sin(angle);
 
-        std::shared_ptr<Light> light_a = std::make_unique<Light>(sun_pos_new - glm::vec3(0.f, 2.f, 0.f),
-                                                                 glm::vec3(1.f, 1.0f, 0.8f),
-                                                                 0.25f,
-                                                                 1.f, 0.1f, 0.01f);
+        std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(sun_pos_new - glm::vec3(0.f, 2.f, 0.f),
+                                                                           glm::vec3(1.f, 1.0f, 0.8f),
+                                                                           0.25f,
+                                                                           1.f, 0.1f, 0.01f);
         scene->appendLight(light_a);
     }
 
@@ -159,7 +207,7 @@ SceneLoader::loadSceneC(GLFWwindow& window_reference, const int& initial_width, 
 }
 
 std::unique_ptr<Scene>
-SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
+SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
@@ -167,10 +215,10 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
 
     glm::vec3 sun_pos = glm::vec3(0.0f, -2.0f, -100.0f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(sun_pos,
-                                                             glm::vec3(1.f, 1.f, 1.f),
-                                                             100.f,
-                                                             1.f, 0.1f, 0.001f); // almost no drop-off
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(sun_pos,
+                                                                       glm::vec3(1.f, 1.f, 1.f),
+                                                                       100.f,
+                                                                       1.f, 0.1f, 0.001f); // almost no drop-off
 
     scene->appendLight(light_a);
 
@@ -180,8 +228,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     sun_obj->setAmbient(glm::vec3(1.0, 0.35, 0.0));
     sun_obj->setScale(glm::vec3(20.f, 20.f, 20.f));
     sun_obj->setProperties(glm::vec3(1.0, 0.25, 0.0),
-                          glm::vec3(1.0, 0.0, 0.0),
-                          12.f);
+                           glm::vec3(1.0, 0.0, 0.0),
+                           12.f);
 
     auto sun_composite = std::make_unique<CentricComposite>(std::move(sun_obj));
 
@@ -190,38 +238,38 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
                                         glm::vec3(3, 0, 0), "blinn", axis);
     mercury_obj->setAmbient(glm::vec3(0.45, 0.45, 0.45));
     mercury_obj->setProperties(glm::vec3(0.15, 0.15, 0.15),
-                             glm::vec3(1.0, 1.0, 1.0),
-                          32.f);
+                               glm::vec3(1.0, 1.0, 1.0),
+                               32.f);
     mercury_obj->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
     auto mercury_composite = std::make_unique<CentricComposite>(std::move(mercury_obj));
 
     // venus
     auto venus_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(6, 0, 0), "blinn", axis);
+                                      glm::vec3(6, 0, 0), "blinn", axis);
     venus_obj->setAmbient(glm::vec3(0.75, 0.75, 0.0));
     venus_obj->setProperties(glm::vec3(0.15, 0.15, 0.0),
                              glm::vec3(1.0, 1.0, 1.0),
-                          32.f);
+                             32.f);
     venus_obj->setScale(glm::vec3(0.3f, 0.3f, 0.3f));
     auto venus_composite = std::make_unique<CentricComposite>(std::move(venus_obj));
 
     // earth
     auto earth_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(10, 0, 0), "blinn", axis);
+                                      glm::vec3(10, 0, 0), "blinn", axis);
     earth_obj->setAmbient(glm::vec3(0.0, 0.75, 1.0));
     earth_obj->setProperties(glm::vec3(0.0, 0.15, 1.0),
                              glm::vec3(1.0, 1.0, 1.0),
-                          32.f);
+                             32.f);
     earth_obj->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
     auto earth_composite = std::make_unique<CentricComposite>(std::move(earth_obj));
 
     // moon
     auto moon_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(2, 0, 0), "blinn", glm::vec3(0.0f, 1.0f, 1.0f));
+                                     glm::vec3(2, 0, 0), "blinn", glm::vec3(0.0f, 1.0f, 1.0f));
     moon_obj->setAmbient(glm::vec3(0.5, 0.5, 0.5));
     moon_obj->setProperties(glm::vec3(0.5, 0.5, 0.5),
-                          glm::vec3(0.5, 0.5, 0.5),
-                          12.f);
+                            glm::vec3(0.5, 0.5, 0.5),
+                            12.f);
     moon_obj->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
     auto moon_leaf = std::make_unique<CentricModelLeaf>(std::move(moon_obj));
 
@@ -304,11 +352,12 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     float asteroid_belt_scale = 0.05f;
     float asteroid_belt_speed = 0.01f;
     float asteroid_belt_y_randomness = 2.5f;
-    for(int i = 0; i < num_asteroids; i++) {
-        float angle = (float)i / (float)num_asteroids * 2.f * M_PI;
+    for (int i = 0; i < num_asteroids; i++) {
+        float angle = (float) i / (float) num_asteroids * 2.f * M_PI;
         float x = asteroid_belt_radius * std::cos(angle);
         float z = asteroid_belt_radius * std::sin(angle);
-        float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (asteroid_belt_y_randomness) - (asteroid_belt_y_randomness / 2.f);
+        float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (asteroid_belt_y_randomness) -
+                  (asteroid_belt_y_randomness / 2.f);
         auto asteroid_obj = scene->newObject(lazyLoadModel("sphere"),
                                              glm::vec3(x, y, z), "constant", axis);
         asteroid_obj->setAmbient(glm::vec3(0.5, 0.5, 0.5));
@@ -325,7 +374,7 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
     float asteroid_random_radius = 20.f;
     float asteroid_random_scale = 0.02f;
     float asteroid_random_speed = 0.0001f;
-    for(int i = 0; i < num_asteroids_random; i++) {
+    for (int i = 0; i < num_asteroids_random; i++) {
         float alpha = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 2.f * M_PI;
         float beta = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * M_PI;  // Corrected range for beta
         float x = asteroid_random_radius * std::sin(beta) * std::cos(alpha);
@@ -334,7 +383,8 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
         auto asteroid_obj = scene->newObject(lazyLoadModel("sphere"),
                                              glm::vec3(x, y, z), "constant", axis);
         // haha, redshift
-        asteroid_obj->setAmbient(glm::vec3(0.4 + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 0.3, 0.4, 0.4));
+        asteroid_obj->setAmbient(
+                glm::vec3(0.4 + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 0.3, 0.4, 0.4));
         asteroid_obj->setScale(glm::vec3(asteroid_random_scale, asteroid_random_scale, asteroid_random_scale));
         auto asteroid_leaf = std::make_unique<CentricModelLeaf>(std::move(asteroid_obj));
         asteroid_leaf->setMultiplier(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * asteroid_random_speed);
@@ -347,20 +397,20 @@ SceneLoader::loadSceneD(GLFWwindow &window_reference, const int &initial_width, 
 }
 
 std::unique_ptr<Scene>
-SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
+SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
     scene->setAmbient(glm::vec3(0.1, 0.1, 0.1));
 
     auto& tree_first = scene->appendObject(lazyLoadModel("tree"),
-                       glm::vec3(-2, 0, -2), "blinn");
+                                           glm::vec3(-2, 0, -2), "blinn");
     tree_first.setProperties(glm::vec3(0.35, 0.65, 0.05),
-                           glm::vec3(0.8, 0.15, 0.1),
-                           5.f);
+                             glm::vec3(0.8, 0.15, 0.1),
+                             5.f);
 
-    std::shared_ptr<Light> light_first = std::make_unique<Light>(glm::vec3(0.f, 5.f, 0.f),
-                                                             glm::vec3(1.f, 1.0f, 0.8f),
-                                                             0.25f,
-                                                             1.f, 0.1f, 0.01f);
+    std::shared_ptr<PointLight> light_first = std::make_unique<PointLight>(glm::vec3(0.f, 5.f, 0.f),
+                                                                           glm::vec3(1.f, 1.0f, 0.8f),
+                                                                           0.25f,
+                                                                           1.f, 0.1f, 0.01f);
     scene->appendLight(light_first);
 
     float tree_height = 0.0f;
@@ -369,8 +419,8 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
     float range = 100.f;
 
     for (int i = 0; i < 150; i++) {
-        float rand_x = ((float)rand() / RAND_MAX) * range - range / 2.0f;
-        float rand_z = ((float)rand() / RAND_MAX) * range - range / 2.0f;
+        float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
+        float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
 
         auto& tree_obj = scene->appendObject(lazyLoadModel("tree"),
                                              glm::vec3(rand_x, tree_height, rand_z), "blinn");
@@ -380,18 +430,18 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
     }
 
     for (int i = 0; i < 25; i++) {
-        float rand_x = ((float)rand() / RAND_MAX) * range - range / 2.0f;
-        float rand_z = ((float)rand() / RAND_MAX) * range - range / 2.0f;
+        float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
+        float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
 
-        int rand_obj = ((float)rand() / RAND_MAX) * 4.0f;
+        int rand_obj = ((float) rand() / RAND_MAX) * 4.0f;
 
-        float rand_rotate = ((float)rand() / RAND_MAX) * 360.0f;
-        float rand_scale = ((float)rand() / RAND_MAX) * 2.f + 2.f;
+        float rand_rotate = ((float) rand() / RAND_MAX) * 360.0f;
+        float rand_scale = ((float) rand() / RAND_MAX) * 2.f + 2.f;
 
-        switch(rand_obj) {
+        switch (rand_obj) {
             case 0: {
                 auto& bushes_obj = scene->appendObject(lazyLoadModel("bushes"),
-                                                              glm::vec3(rand_x, tree_height, rand_z), "blinn");
+                                                       glm::vec3(rand_x, tree_height, rand_z), "blinn");
                 bushes_obj.setProperties(glm::vec3(0.55, 0.95, 0.1),
                                          glm::vec3(0.99, 0.15, 0.1),
                                          32.f);
@@ -401,18 +451,18 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
             }
             case 1: {
                 auto& gift_obj = scene->appendObject(lazyLoadModel("gift"),
-                                                              glm::vec3(rand_x, tree_height, rand_z), "phong");
+                                                     glm::vec3(rand_x, tree_height, rand_z), "phong");
                 gift_obj.setProperties(glm::vec3(0.9, 0.05, 0.1),
                                        glm::vec3(0.75, 0.15, 0.1),
-                                         glm::vec3(0.75, 0.85, 0.8),
-                                         65.f);
+                                       glm::vec3(0.75, 0.85, 0.8),
+                                       65.f);
                 gift_obj.scale(glm::vec3(2., 2., 2.));
                 gift_obj.rotate(glm::vec3(0.f, rand_rotate, 0.f));
                 break;
             }
             case 2: {
                 auto& sphere_obj = scene->appendObject(lazyLoadModel("sphere"),
-                                                              glm::vec3(rand_x, tree_height + 1, rand_z), "blinn");
+                                                       glm::vec3(rand_x, tree_height + 1, rand_z), "blinn");
                 sphere_obj.setProperties(glm::vec3(0.9, 0.02, 0.95),
                                          glm::vec3(0.99, 0.66, 0.96),
                                          65.f);
@@ -432,13 +482,13 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
 
 
     for (int i = 0; i < 8; i++) {
-        float rand_x = ((float)rand() / RAND_MAX) * range - range / 2.0f;
-        float rand_z = ((float)rand() / RAND_MAX) * range - range / 2.0f;
+        float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
+        float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
 
-        std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(rand_x, light_height, rand_z),
-                                                                 glm::vec3(1.f, 1.f, 1.f),
-                                                                 5.f,
-                                                                 5.f, 0.1f, 0.01f); // almost no drop-off
+        std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(rand_x, light_height, rand_z),
+                                                                           glm::vec3(1.f, 1.f, 1.f),
+                                                                           5.f,
+                                                                           5.f, 0.1f, 0.01f); // almost no drop-off
         scene->appendLight(light_a);
     }
 
@@ -454,18 +504,19 @@ SceneLoader::loadSceneE(GLFWwindow &window_reference, const int &initial_width, 
 }
 
 std::unique_ptr<Scene>
-SceneLoader::loadSceneF(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
+SceneLoader::loadSceneF(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
     auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
-                                                    glm::vec3(0.f, 0.f, -2.f), "phong_creep");
-    sphere_south_object.setProperties(glm::vec3(1.0, 1.0, 0.0),
+                                                    glm::vec3(0.f, 0.f, -2.f), "phong");
+    sphere_south_object.setProperties(glm::vec3(0.2, 0.0, 0.0),
+                                      glm::vec3(1.0, 1.0, 0.0),
                                       glm::vec3(1.0, 1.0, 1.0),
                                       1.f);
 
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 0.f, -4.f),
-                                                             glm::vec3(1.f, 1.f, 1.f),
-                                                             1.f,
-                                                             0.1f, 0.f, 0.f); // almost no drop-off
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, 0.f, -4.f),
+                                                                       glm::vec3(1.f, 1.f, 1.f),
+                                                                       1.f,
+                                                                       1.f, 0.01f, 0.1f); // almost no drop-off
 
     scene->appendLight(light_a);
 
@@ -473,51 +524,26 @@ SceneLoader::loadSceneF(GLFWwindow &window_reference, const int &initial_width, 
 }
 
 std::unique_ptr<Scene>
-SceneLoader::loadSceneG(GLFWwindow &window_reference, const int &initial_width, const int &initial_height) {
+SceneLoader::loadSceneG(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(1, window_reference, initial_width, initial_height);
-    auto& sphere_obj = scene->appendObject(lazyLoadModel("sphere"),
-                                           glm::vec3(0.f, 0.f, -2.f), "blinn");
-    sphere_obj.setProperties(glm::vec3(1.0, 1.0, 0.0),
-                             glm::vec3(1.0, 1.0, 1.0),
-                             1.f);
+    auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
+                                                    glm::vec3(0.f, 0.f, -2.f), "phong_creep");
+    sphere_south_object.setProperties(glm::vec3(0.2, 0.0, 0.0),
+                                      glm::vec3(1.0, 1.0, 0.0),
+                                      glm::vec3(1.0, 1.0, 1.0),
+                                      1.f);
 
-    auto& suzie_obj = scene->appendObject(lazyLoadModel("suzi_smooth"),
-                                          glm::vec3(0.f, 0.f, 0.f), "blinn");
-    suzie_obj.setProperties(glm::vec3(1.0, 1.0, 0.0),
-                            glm::vec3(1.0, 1.0, 1.0),
-                            1.f);
-
-    auto& plain_obj = scene->appendObject(lazyLoadModel("plain"),
-                                          glm::vec3(0.f, -1.f, 2.f), "blinn");
-    plain_obj.setAmbient(glm::vec3(0.05, 0.1, 0.01));
-    plain_obj.setDiffuse(glm::vec3(0.15, 0.75, 0.45));
-    plain_obj.scale(glm::vec3(128.f, 1.f, 128.f));
-
-    auto& gift_obj = scene->appendObject(lazyLoadModel("gift"),
-                                         glm::vec3(0.f, 0.f, 4.f), "blinn");
-    gift_obj.setProperties(glm::vec3(0.8, 0.1, 0.01),
-                           glm::vec3(0.15, 0.75, 0.45),
-                           glm::vec3(0.7, 0.7, 0.7),
-                           32.f);
-
-    auto& tree_obj = scene->appendObject(lazyLoadModel("tree"),
-                                         glm::vec3(0, 0, 6), "blinn");
-    tree_obj.setProperties(glm::vec3(0.15, 0.25, 0.05),
-                           glm::vec3(0.55, 0.95, 0.1),
-                           glm::vec3(0.99, 0.15, 0.1),
-                           5.f);
-
-    std::shared_ptr<Light> light_a = std::make_unique<Light>(glm::vec3(0.f, 4.f, 0.f),
-                                                             glm::vec3(1.f, 1.f, 1.f),
-                                                             0.1f,
-                                                             0.1f, 0.1f, 0.01f);
+    std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, 0.f, -4.f),
+                                                                       glm::vec3(1.f, 1.f, 1.f),
+                                                                       1.f,
+                                                                       1.f, 0.01f, 0.1f); // almost no drop-off
 
     scene->appendLight(light_a);
 
     return std::move(scene);
 }
 
-const Model* SceneLoader::lazyLoadModel(const std::string &name) {
+const Model* SceneLoader::lazyLoadModel(const std::string& name) {
     return ModelLoader::getInstance().loadModel(name);
 }
 

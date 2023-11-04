@@ -23,7 +23,7 @@
 class Application {
 private:
     GLFWwindow* window;
-    std::shared_ptr<ShaderLoader> shaderLoader;
+    std::shared_ptr<ShaderLoader> shader_loader;
 
     int current_scene_id = DEFAULT_SCENE;
     std::unique_ptr<Scene> scene;

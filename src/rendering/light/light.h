@@ -1,22 +1,27 @@
-// Creator: Daniel Slavík
-// E-Mail: sla0331@vsb.cz
-// Date of Creation:  16/10/2023
+//
+// Created by wortelus on 3.11.23.
+//
 
 #ifndef ZPG_LIGHT_H
 #define ZPG_LIGHT_H
 
-//Include GLEW
+#include <array>
+#include <vector>
+#include <string>
+#include <tuple>
+#include <variant>
 #include <GL/glew.h>
-//Include GLFW
-#include <GLFW/glfw3.h>
-#include <algorithm>
+#include "glm/vec3.hpp"
+#include "glm/ext/matrix_float3x3.hpp"
 
-//Include GLM
-#include "glm/vec3.hpp" // glm::vec3
-#include "glm/vec4.hpp" // glm::vec4
-#include "glm/mat4x4.hpp" // glm::mat4
-#include "glm/gtc/matrix_transform.hpp" // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include "glm/gtc/type_ptr.hpp" // glm::value_ptr
+using LightProperty =
+        std::variant<
+                const glm::mat3*,
+                const glm::mat4*,
+                const glm::vec3*,
+                const GLint*,
+                const GLfloat*
+        >;
 
 struct Attenuation {
     float constant;
@@ -25,25 +30,18 @@ struct Attenuation {
 };
 
 class Light {
-private:
-    glm::vec3 position;
+protected:
     glm::vec3 color;
     float intensity;
-    Attenuation attenuation;
 public:
-    Light(const glm::vec3& position,
-          const glm::vec3& color,
-          const float& intensity,
-          const float& constant, const float& linear, const float& quadratic)
-            : position(position),
-              color(color),
-              intensity(intensity),
-              attenuation({constant, linear, quadratic}) {};
+    Light(const glm::vec3& color, const float& intensity) : color(color), intensity(intensity) {}
+    virtual ~Light() = default;
 
-    [[nodiscard]] const glm::vec3& getPosition() const { return position; }
     [[nodiscard]] const glm::vec3& getColor() const { return color; }
     [[nodiscard]] float getIntensity() const { return intensity; }
-    [[nodiscard]] const Attenuation& getAttenuation() const { return attenuation; }
+
+    [[nodiscard]] virtual std::vector<std::tuple<std::string, LightProperty>> getParameters() const = 0;
 };
+
 
 #endif //ZPG_LIGHT_H
