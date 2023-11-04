@@ -45,11 +45,6 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
         });
     }
 
-    // init shader uniforms
-    for (auto shader: *this->shader_loader) {
-        shader->initUniforms();
-    }
-
     // subscribe shaders to camera
     for (auto shader: *this->shader_loader) {
         camera->attach(shader);

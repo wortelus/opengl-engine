@@ -167,38 +167,44 @@ void Shader::initUniforms() {
     uniforms.normal.location = glGetUniformLocation(shader_program, "normal_matrix");
     uniforms.camera_position.location = glGetUniformLocation(shader_program, "camera_position");
 
-    if (name == "mvp_empty" || name == "constant")
-        return;
+    initLightUniforms();
+}
 
-    dynamic_uniforms.point_num_loc = glGetUniformLocation(shader_program, DynamicUniforms::point_num_varname);
-    for (int i = 0; i < DynamicUniforms::point_num_max; i++) {
+void Shader::initLightUniforms() {
+    initLightUniform(dynamic_uniforms.point_loc, dynamic_uniforms.point_num_loc,
+                     DynamicUniforms::point_varname, DynamicUniforms::point_num_varname,
+                     DynamicUniforms::point_num_max, DynamicUniforms::point_parameter_count);
+    initLightUniform(dynamic_uniforms.directional_loc, dynamic_uniforms.directional_num_loc,
+                     DynamicUniforms::directional_varname, DynamicUniforms::directional_num_varname,
+                     DynamicUniforms::directional_num_max, DynamicUniforms::directional_parameter_count);
+    initLightUniform(dynamic_uniforms.spotlight_loc, dynamic_uniforms.spotlight_num_loc,
+                     DynamicUniforms::spotlight_varname, DynamicUniforms::spotlight_num_varname,
+                     DynamicUniforms::spotlight_num_max, DynamicUniforms::spotlight_parameter_count);
+}
+
+template <std::size_t SIZE>
+void Shader::initLightUniform(std::array<int, SIZE>& uniform_locations, SHADER_UNIFORM_LOCATION& num_uniform_location,
+                              const std::string& collection_name, const std::string& count_name,
+                              int max_light_count, int light_param_count) {
+    num_uniform_location = glGetUniformLocation(shader_program, count_name.c_str());
+    if (num_uniform_location == -1) {
+        printf("Uniform %s not found in %s shader - skipping light init.\n", count_name.c_str(), name.c_str());
+        return;
+    }
+
+    for (int i = 0; i < max_light_count; i++) {
         auto p = PointLight::getParameterNames();
-        for (int j = 0; j < DynamicUniforms::point_parameter_count; j++) {
+        for (int j = 0; j < light_param_count; j++) {
             std::string varname_element_name =
-                    std::string(DynamicUniforms::point_varname) + "[" + std::to_string(i) + "]." + p[j];
+                    collection_name + "[" + std::to_string(i) + "]." + p[j];
             GLint loc = glGetUniformLocation(shader_program, varname_element_name.c_str());
             if (loc == -1)
                 throw std::runtime_error("Uniform " + varname_element_name + " not found in " + name + " shader.");
-            if (loc == 0)
-                printf("Uniform %s not found in %s shader.\n", varname_element_name.c_str(), name.c_str());
-            dynamic_uniforms.point_loc[i*DynamicUniforms::point_parameter_count + j] = loc;
+            uniform_locations[i*light_param_count + j] = loc;
         }
     }
-}
 
-//void Shader::passLight(const std::shared_ptr<Light>& light, const std::string& prefix) const {
-//    PointLight* point_light = dynamic_cast<PointLight*>(light.get());
-//    auto pos = light->getPosition();
-//    auto color = light->getColor();
-//    auto intensity = light->getIntensity();
-//    auto attenuation = light->getAttenuation();
-//    passUniform3fv(prefix + ".position", pos);
-//    passUniform3fv(prefix + ".color", color);
-//    passUniform1f(prefix + ".intensity", intensity);
-//    passUniform1f(prefix + ".constant", attenuation.constant);
-//    passUniform1f(prefix + ".linear", attenuation.linear);
-//    passUniform1f(prefix + ".quadratic", attenuation.quadratic);
-//}
+}
 
 void Shader::updateMaterial(const EventArgs& event_args) {
     auto* material_payload = static_cast<const EventPayload<Material>*>(&event_args);

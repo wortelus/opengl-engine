@@ -74,11 +74,16 @@ void Application::init() {
     if (ENABLE_CULL_FACE)
         glEnable(GL_CULL_FACE);
 
-    shaderLoader = std::make_shared<ShaderLoader>();
-    shaderLoader->loadShaders();
+    shader_loader = std::make_shared<ShaderLoader>();
+    shader_loader->loadShaders();
+
+    // init shader uniform locations
+    for (auto shader: *this->shader_loader) {
+        shader->initUniforms();
+    }
 
     scene = SceneLoader::loadScene(&current_scene_id, *window, width, height);
-    scene->init(shaderLoader);
+    scene->init(shader_loader);
 }
 
 void Application::nextScene() {
@@ -91,7 +96,7 @@ void Application::run() {
     do {
         if (scene->getSceneId() != this->current_scene_id) {
             scene = SceneLoader::loadScene(&current_scene_id, *window, width, height);
-            scene->init(shaderLoader);
+            scene->init(shader_loader);
         }
         scene->run();
     } while (!glfwWindowShouldClose(window));
