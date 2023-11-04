@@ -95,8 +95,8 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
 
 
     auto& wall_b = scene->appendObject(lazyLoadModel("plain"),
-                                 glm::vec3(6.f, 0.f, -8.f), "phong");
-    wall_b.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                                 glm::vec3(6.f, 0.f, -8.f), "lambert");
+    wall_b.setProperties(glm::vec3(0.785, 0.9, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
     wall_b.rotate(glm::vec3(glm::vec3(30, 90, 90)));
