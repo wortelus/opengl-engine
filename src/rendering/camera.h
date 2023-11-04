@@ -10,6 +10,7 @@
 //Include GLFW
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <memory>
 
 //Include GLM
 #include "glm/vec3.hpp" // glm::vec3
@@ -20,6 +21,7 @@
 
 #include "../util/const.h"
 #include "../util/observer.h"
+#include "light/spotlight.h"
 
 class Camera : public ISubject {
 private:
@@ -36,24 +38,27 @@ private:
     float current_jump_speed = 0;
 
     float aspect_ratio;
+
+    std::weak_ptr<Spotlight> flashlight;
 private:
     void notifyAll();
 
     void notifyView();
     void notifyProjection();
     void notifyPosition();
+    void notifyFlashlight();
 public:
     explicit Camera(float aspect);
 
     void start();
 
-    void move(const double& x_offset, const double& y_offset);
+    void setFlashlight(const std::weak_ptr<Spotlight>& weak_flashlight);
 
     void update_aspect_ratio(const int& width, const int& height);
 
+    void move(const double& x_offset, const double& y_offset);
     void moveCharacterSide(const float& offset);
     void moveCharacterFront(const float& offset);
-
     void jump();
     void jumpProgress(const float& delta_time);
 

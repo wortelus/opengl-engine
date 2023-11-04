@@ -11,6 +11,9 @@ bool DynamicUniforms::update(const EventArgs& event_args) {
             this->lights_collection.value = std::move(lights->getPayload());
             this->lights_collection.is_dirty = true;
         }
+        case EventType::U_LIGHT_SINGLE: {
+            this->lights_collection.is_dirty = true;
+        }
         default:
             return false;
     }

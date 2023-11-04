@@ -6,9 +6,18 @@
 #define ZPG_CONST_LIGHTS_H
 
 #include <cstdio>
+#include "../rendering/light/light.h"
 #include "../rendering/light/point_light.h"
 #include "../rendering/light/directional_light.h"
 #include "../rendering/light/spotlight.h"
+
+inline static Spotlight FLASHLIGHT(glm::vec3(0.0),
+        glm::vec3(1.0),
+        glm::vec3(3.f, 1.f, 3.f),
+        2.f,
+        1, 0.1, 0.01,
+        std::cos(glm::radians(12.5f)),
+        std::cos(glm::radians(17.5f)));
 
 struct LightConfig {
     const char* collection_name;
