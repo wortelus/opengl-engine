@@ -20,7 +20,8 @@ bool DynamicUniforms::update(const EventArgs& event_args) {
 }
 
 void DynamicUniforms::lazyPassUniforms() {
-    if (!lights_collection.is_dirty)
+    if (!lights_collection.is_dirty ||
+        (point_num_loc == -1 && directional_num_loc == -1 && spotlight_num_loc == -1))
         return;
 
     GLint point_light_num = 0;

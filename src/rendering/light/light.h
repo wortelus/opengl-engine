@@ -42,7 +42,7 @@ public:
     virtual ~Light() = default;
 
     void setManagedId(LIGHT_ID id) { this->managed_id = id; }
-    [[nodiscard]] LIGHT_ID getManagedId() const { return this->managed_id; }
+    [[nodiscard]] LIGHT_ID getManagedId() const;
 
     [[nodiscard]] const glm::vec3& getColor() const { return color; }
     [[nodiscard]] float getIntensity() const { return intensity; }
