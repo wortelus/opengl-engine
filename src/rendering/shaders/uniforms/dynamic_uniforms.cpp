@@ -29,12 +29,9 @@ void DynamicUniforms::lazyPassUniforms() {
     lazyPassMaterial();
 }
 
-void DynamicUniforms::setUniforms(const std::vector<std::tuple<std::string, LightProperty>>& properties,
-                                  const GLint* locations) {
-    for (size_t i = 0; i < properties.size(); ++i) {
-        const auto& [name, prop] = properties[i];
-        GLint loc = locations[i];
-        std::visit(Uniforms(loc), prop);
+void DynamicUniforms::setUniforms(const LightProperty* properties, size_t size, const GLint* locations) {
+    for (size_t i = 0; i < size; ++i) {
+        std::visit(Uniforms(locations[i]), properties[i]);
     }
 }
 
@@ -61,17 +58,17 @@ void DynamicUniforms::lazyPassLights() {
     GLint spotlight_num = 0;
     for (const auto& light: *lights_collection.value) {
         if (auto* point_light = dynamic_cast<PointLight*>(light.get())) {
-            setUniforms(point_light->getParameters(),
+            setUniforms(point_light->getParameters().cbegin(), POINT_CONFIG.parameter_count,
                         point_loc.data() + (POINT_CONFIG.parameter_count * point_light_num));
             point_light_num++;
             continue;
         } else if (auto* directional_light = dynamic_cast<DirectionalLight*>(light.get())) {
-            setUniforms(directional_light->getParameters(),
+            setUniforms(directional_light->getParameters().cbegin(), DIRECTIONAL_CONFIG.parameter_count,
                         directional_loc.data() + (DIRECTIONAL_CONFIG.parameter_count * directional_light_num));
             directional_light_num++;
             continue;
         } else if (auto* spotlight = dynamic_cast<Spotlight*>(light.get())) {
-            setUniforms(spotlight->getParameters(),
+            setUniforms(spotlight->getParameters().cbegin(), SPOTLIGHT_CONFIG.parameter_count,
                         spotlight_loc.data() + (SPOTLIGHT_CONFIG.parameter_count * spotlight_num));
             spotlight_num++;
             continue;

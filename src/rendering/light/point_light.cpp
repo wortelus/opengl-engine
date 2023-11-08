@@ -4,13 +4,13 @@
 
 #include "point_light.h"
 
-std::vector<std::tuple<std::string, LightProperty>> PointLight::getParameters() const {
+std::array<LightProperty, 6> PointLight::getParameters() const {
     return {
-            std::make_tuple("position", LightProperty(&position)),
-            std::make_tuple("color", LightProperty(&color)),
-            std::make_tuple("intensity", LightProperty(&intensity)),
-            std::make_tuple("constant", LightProperty(&attenuation.constant)),
-            std::make_tuple("linear", LightProperty(&attenuation.linear)),
-            std::make_tuple("quadratic", LightProperty(&attenuation.quadratic))
+            LightProperty(&position),
+            LightProperty(&color),
+            LightProperty(&intensity),
+            LightProperty(&attenuation.constant),
+            LightProperty(&attenuation.linear),
+            LightProperty(&attenuation.quadratic)
     };
 }

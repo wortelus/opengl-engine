@@ -44,7 +44,7 @@ public:
         };
     }
 
-    [[nodiscard]] std::vector<std::tuple<std::string, LightProperty>> getParameters() const final;
+    [[nodiscard]] std::array<LightProperty, 6> getParameters() const;
 };
 
 #endif //ZPG_POINT_LIGHT_H
