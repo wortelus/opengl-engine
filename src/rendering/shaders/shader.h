@@ -47,9 +47,7 @@ private:
     GLuint fragment_shader = 0;
 
     ShaderUniforms uniforms;
-
     DynamicUniforms dynamic_uniforms;
-    ShaderUniform<Material> material;
 private:
     void attachShader(const ShaderCode& shader_code);
 
@@ -58,9 +56,7 @@ private:
     void initLightUniform(std::array<int, SIZE>& uniform_locations, SHADER_UNIFORM_LOCATION& num_uniform_location,
                                   const char* collection_name, const char* count_name,
                                   int max_light_count, const char** param_names, int light_param_count);
-
-    void updateMaterial(const EventArgs& event_args);
-    void passMaterialUniforms();
+    void initMaterialUniforms();
 public:
     Shader(const SHADER_ALIAS_DATATYPE shader_alias, std::string name,
            const ShaderCode& vertex_shader_code, const ShaderCode& fragment_shader_code);

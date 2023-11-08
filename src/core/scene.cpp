@@ -148,7 +148,6 @@ void Scene::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (const auto object: *object_manager) {
             Shader* sh = shader_loader->loadShader(object->getShaderAlias());
-            object->attach(sh);
             object->notifyModelParameters();
             sh->lazyPassUniforms();
             object->draw();
@@ -159,7 +158,6 @@ void Scene::run() {
             animation_manager->applyAnimations([this, &delta_time](Animation* animation) {
                 const SHADER_ALIAS_DATATYPE current_alias = animation->getShaderAlias();
                 Shader* sh = shader_loader->loadShader(current_alias);
-                animation->attachShader(sh);
                 animation->step(delta_time);
                 animation->notifyShader();
                 sh->lazyPassUniforms();

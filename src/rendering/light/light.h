@@ -46,8 +46,6 @@ public:
 
     [[nodiscard]] const glm::vec3& getColor() const { return color; }
     [[nodiscard]] float getIntensity() const { return intensity; }
-
-    [[nodiscard]] virtual std::vector<std::tuple<std::string, LightProperty>> getParameters() const = 0;
 };
 
 

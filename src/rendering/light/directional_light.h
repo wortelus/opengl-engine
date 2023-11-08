@@ -29,7 +29,7 @@ public:
         };
     }
 
-    [[nodiscard]] std::vector<std::tuple<std::string, LightProperty>> getParameters() const final;
+    [[nodiscard]] std::array<LightProperty, 3> getParameters() const;
 };
 
 

@@ -76,11 +76,6 @@ void Shader::attachShader(const ShaderCode& shader_code) {
 void Shader::update(const EventArgs& event_args) {
     if (dynamic_uniforms.update(event_args)) return;
 
-    if (event_args.type == EventType::U_MATERIAL) {
-        updateMaterial(event_args);
-        return;
-    }
-
     if (event_args.type < EventType::U_1I) {
         uniforms.passEvent(event_args);
         return;
@@ -154,10 +149,6 @@ void Shader::passUniformMatrix4fv(const std::string& uniform_name, const glm::ma
 void Shader::lazyPassUniforms() {
     uniforms.lazyPassUniforms();
     dynamic_uniforms.lazyPassUniforms();
-    if (material.is_dirty) {
-        passMaterialUniforms();
-        material.is_dirty = false;
-    }
 }
 
 void Shader::initUniforms() {
@@ -168,6 +159,7 @@ void Shader::initUniforms() {
     uniforms.camera_position.location = glGetUniformLocation(shader_program, "camera_position");
 
     initLightUniforms();
+    initMaterialUniforms();
 }
 
 void Shader::initLightUniforms() {
@@ -180,6 +172,13 @@ void Shader::initLightUniforms() {
     initLightUniform(dynamic_uniforms.spotlight_loc, dynamic_uniforms.spotlight_num_loc,
                         SPOTLIGHT_CONFIG.collection_name, SPOTLIGHT_CONFIG.count_name,
                         SPOTLIGHT_CONFIG.max_count, Spotlight::getParameterNames().begin(), SPOTLIGHT_CONFIG.parameter_count);
+}
+
+void Shader::initMaterialUniforms() {
+    dynamic_uniforms.material_loc[0] = glGetUniformLocation(shader_program, "material.ambient");
+    dynamic_uniforms.material_loc[1] = glGetUniformLocation(shader_program, "material.diffuse");
+    dynamic_uniforms.material_loc[2] = glGetUniformLocation(shader_program, "material.specular");
+    dynamic_uniforms.material_loc[3] = glGetUniformLocation(shader_program, "material.shininess");
 }
 
 template <std::size_t SIZE>
@@ -203,21 +202,4 @@ void Shader::initLightUniform(std::array<int, SIZE>& uniform_locations, SHADER_U
         }
     }
 
-}
-
-void Shader::updateMaterial(const EventArgs& event_args) {
-    auto* material_payload = static_cast<const EventPayload<Material>*>(&event_args);
-    this->material.value = material_payload->getPayload();
-    this->material.is_dirty = true;
-}
-
-void Shader::passMaterialUniforms() {
-    passUniform3fv("material.ambient", material.value.ambient);
-    if (material.value.illuminated & ILLUMINATION::DIFFUSE)
-        passUniform3fv("material.diffuse", material.value.diffuse);
-    if (material.value.illuminated & ILLUMINATION::SPECULAR) {
-        passUniform3fv("material.specular", material.value.specular);
-        passUniform1f("material.shininess", material.value.shininess);
-    }
-    material.is_dirty = false;
 }

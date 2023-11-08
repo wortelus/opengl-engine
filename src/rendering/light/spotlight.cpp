@@ -4,16 +4,16 @@
 
 #include "spotlight.h"
 
-std::vector<std::tuple<std::string, LightProperty>> Spotlight::getParameters() const {
+std::array<LightProperty, 9> Spotlight::getParameters() const {
     return {
-            std::make_tuple("position", LightProperty(&position)),
-            std::make_tuple("direction", LightProperty(&direction)),
-            std::make_tuple("color", LightProperty(&color)),
-            std::make_tuple("intensity", LightProperty(&intensity)),
-            std::make_tuple("constant", LightProperty(&attenuation.constant)),
-            std::make_tuple("linear", LightProperty(&attenuation.linear)),
-            std::make_tuple("quadratic", LightProperty(&attenuation.quadratic)),
-            std::make_tuple("cutoff", LightProperty(&cutoff)),
-            std::make_tuple("outer_cutoff", LightProperty(&outer_cutoff))
+            LightProperty(&position),
+            LightProperty(&direction),
+            LightProperty(&color),
+            LightProperty(&intensity),
+            LightProperty(&attenuation.constant),
+            LightProperty(&attenuation.linear),
+            LightProperty(&attenuation.quadratic),
+            LightProperty(&cutoff),
+            LightProperty(&outer_cutoff)
     };
 }
