@@ -399,19 +399,7 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
-    scene->setAmbient(glm::vec3(0.1, 0.1, 0.1));
-
-    auto& tree_first = scene->appendObject(lazyLoadModel("tree"),
-                                           glm::vec3(-2, 0, -2), "blinn");
-    tree_first.setProperties(glm::vec3(0.35, 0.65, 0.05),
-                             glm::vec3(0.8, 0.15, 0.1),
-                             5.f);
-
-    std::shared_ptr<PointLight> light_first = std::make_unique<PointLight>(glm::vec3(0.f, 5.f, 0.f),
-                                                                           glm::vec3(1.f, 1.0f, 0.8f),
-                                                                           0.25f,
-                                                                           1.f, 0.1f, 0.01f);
-    scene->appendLight(light_first);
+    scene->setAmbient(glm::vec3(0,0,0));
 
     float tree_height = 0.0f;
     float light_height = 5.0f;
@@ -452,8 +440,7 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
             case 1: {
                 auto& gift_obj = scene->appendObject(lazyLoadModel("gift"),
                                                      glm::vec3(rand_x, tree_height, rand_z), "phong");
-                gift_obj.setProperties(glm::vec3(0.9, 0.05, 0.1),
-                                       glm::vec3(0.75, 0.15, 0.1),
+                gift_obj.setProperties(glm::vec3(0.75, 0.15, 0.1),
                                        glm::vec3(0.75, 0.85, 0.8),
                                        65.f);
                 gift_obj.scale(glm::vec3(2., 2., 2.));
@@ -466,6 +453,12 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                 sphere_obj.setProperties(glm::vec3(0.9, 0.02, 0.95),
                                          glm::vec3(0.99, 0.66, 0.96),
                                          65.f);
+
+//                std::shared_ptr<PointLight> sphere_obj_light = std::make_unique<PointLight>(glm::vec3(rand_x, light_height, rand_z),
+//                                                                                      glm::vec3(1.f, 0.7f, 0.5f),
+//                                                                                      1.f,
+//                                                                                      1.f, 0.1f, 0.01f);
+//                scene->appendLight(sphere_obj_light);
                 break;
             }
             case 3: {
@@ -474,28 +467,19 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                 suzi_smooth_obj_a.setProperties(glm::vec3(0.55, 0.05, 0.85),
                                                 glm::vec3(0.99, 0.55, 0.85),
                                                 32.f);
-                suzi_smooth_obj_a.scale(glm::vec3(rand_scale, rand_scale, rand_scale));
                 suzi_smooth_obj_a.rotate(glm::vec3(0.f, rand_rotate, 0.f));
             }
         }
     }
 
-
-    for (int i = 0; i < 8; i++) {
-        float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
-        float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
-
-        std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(rand_x, light_height, rand_z),
-                                                                           glm::vec3(1.f, 1.f, 1.f),
-                                                                           5.f,
-                                                                           5.f, 0.1f, 0.01f); // almost no drop-off
-        scene->appendLight(light_a);
-    }
+    std::shared_ptr<DirectionalLight> main_light = std::make_unique<DirectionalLight>(glm::vec3(-1.f, -1.f, -1.f),
+                                                                                      glm::vec3(1.f, 0.75f, 0.75f),
+                                                                                      0.15f);
+    scene->appendLight(main_light);
 
     auto& plain_obj = scene->appendObject(lazyLoadModel("plain"),
                                           glm::vec3(0.f, 0.f, 0.f), "lambert");
-    plain_obj.setProperties(glm::vec3(0.05, 0.1, 0.01),
-                            glm::vec3(0.15, 0.45, 0.25),
+    plain_obj.setProperties(glm::vec3(0.15, 0.45, 0.25),
                             glm::vec3(0.0, 0.0, 0.0),
                             0.f);
     plain_obj.scale(glm::vec3(128.f, 1.f, 128.f));

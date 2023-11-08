@@ -57,7 +57,7 @@ void ShaderLoader::loadShaders() {
                                                               fragment_shader.c_str()
                                                    }));
 
-        printf("Successfully is_dirty shader %s(%d)\n", name.c_str(), next_alias);
+        printf("Successfully loaded shader %s(%d)\n", name.c_str(), next_alias);
     }
 }
 
