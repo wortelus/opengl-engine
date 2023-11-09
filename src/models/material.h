@@ -7,6 +7,7 @@
 
 #include "glm/vec3.hpp"
 #include "../util/const.h"
+#include "texture.h"
 
 enum ILLUMINATION {
     AMBIENT = (1u << 0),
@@ -16,6 +17,8 @@ enum ILLUMINATION {
 };
 
 struct Material {
+    Texture* texture = nullptr;
+
     glm::vec3 ambient = AMBIENT_LIGHT;
     glm::vec3 diffuse = glm::vec3(0.0);
     glm::vec3 specular = glm::vec3(0.0);

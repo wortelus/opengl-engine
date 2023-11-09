@@ -38,6 +38,12 @@ void ShaderUniforms::passEvent(const EventArgs& event_args) {
             camera_position.is_dirty = true;
             break;
         }
+        case EventType::U_TEXTURE: {
+            const auto* tex_id = static_cast<const EventPayload<TEXTURE_ID>*>(&event_args);
+            this->texture_id.value = tex_id->getPayload();
+            this->texture_id.is_dirty = true;
+            break;
+        }
         default:
             break;
     }

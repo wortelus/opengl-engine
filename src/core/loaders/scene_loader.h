@@ -34,7 +34,11 @@ private:
     static std::unique_ptr<Scene>
     loadSceneG(GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
 
+    //
+    // Facade functions for loading models and textures
+    //
     static const Model* lazyLoadModel(const std::string &name);
+    static std::pair<Model*, Texture*> lazyLoadModel(const char* name, const char* texture_name);
 };
 
 #endif //ZPG_SCENE_LOADER_H

@@ -1,6 +1,6 @@
-//
-// Created by wortelus on 9.11.23.
-//
+// Creator: Daniel Slavík
+// E-Mail: sla0331@vsb.cz
+// Date of Creation:  6/11/2023
 
 #ifndef ZPG_TEXTURE_LOADER_H
 #define ZPG_TEXTURE_LOADER_H

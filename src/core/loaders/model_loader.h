@@ -10,16 +10,44 @@
 #include <map>
 #include "../../models/model.h"
 
+struct ModelKey {
+    const char* name;
+    ModelOptions options;
+
+    ModelKey(const char* name, ModelOptions options) : name(name), options(options) { }
+
+    bool operator<(const ModelKey& other) const {
+        int cmp = strcmp(name, other.name);
+        if (cmp != 0) return cmp < 0;
+        return options < other.options;
+    }
+    bool operator==(const ModelKey& other) const {
+        return strcmp(name, other.name) == 0 && options == other.options;
+    }
+    bool operator!=(const ModelKey& other) const {
+        return !(*this == other);
+    }
+    bool operator>(const ModelKey& other) const {
+        return !(*this < other) && *this != other;
+    }
+    bool operator<=(const ModelKey& other) const {
+        return *this < other || *this == other;
+    }
+    bool operator>=(const ModelKey& other) const {
+        return *this > other || *this == other;
+    }
+};
+
 class ModelLoader {
 private:
-    std::map<std::string, Model*> model_repository;
+    std::map<ModelKey, Model*> model_repository;
 
     // Private constructor to prevent instantiation
     ModelLoader() { }
     ~ModelLoader();
 
 private:
-    const Model* loadModel(const std::string& name, const float* vertices, const int& vertices_size);
+    const Model* loadModel(const ModelKey& model_key, const float* vertices, const int& vertices_size);
 public:
     ModelLoader(ModelLoader const&) = delete;
     void operator=(ModelLoader const&) = delete;
@@ -31,6 +59,7 @@ public:
     }
 
     const Model* loadModel(const std::string& name);
+    const Model* loadModel(const ModelKey& model_key);
 };
 
 

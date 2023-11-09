@@ -26,6 +26,7 @@ public:
     ShaderUniform<const glm::mat4*> projection;
     ShaderUniform<const glm::mat3*> normal;
     ShaderUniform<const glm::vec3*> camera_position;
+    ShaderUniform<TEXTURE_ID> texture_id = {.value = 0};
     ShaderUniforms() = default;
 
     void passEvent(const EventArgs& event_args);
