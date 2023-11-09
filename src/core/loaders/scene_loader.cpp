@@ -532,7 +532,7 @@ SceneLoader::loadSceneG(GLFWwindow& window_reference, const int& initial_width, 
     return std::move(scene);
 }
 
-const Model* SceneLoader::lazyLoadModel(const std::string& name) {
+const Model* SceneLoader::lazyLoadModel(const char* name) {
     return ModelLoader::getInstance().loadModel(name);
 }
 

@@ -14,7 +14,18 @@ struct ModelKey {
     const char* name;
     ModelOptions options;
 
-    ModelKey(const char* name, ModelOptions options) : name(name), options(options) { }
+    ModelKey(const char* name, ModelOptions options)
+            : name(name), options(options) { }
+
+    // The default copy (and copy assignment) constructor is fine since we're just copying a pointer
+    // to read-only C string.
+    ModelKey(const ModelKey& other) = default;
+    ModelKey& operator=(const ModelKey& other) = default;
+
+    // Deleted move constructor and assignment operator
+    ModelKey(ModelKey&& other) noexcept = delete;
+    ModelKey& operator=(ModelKey&& other) noexcept = delete;
+    ~ModelKey() = default;
 
     // used for std::map find()
     bool operator<(const ModelKey& other) const {
@@ -44,7 +55,7 @@ public:
         return instance;
     }
 
-    const Model* loadModel(const std::string& name);
+    const Model* loadModel(const char* name);
     const Model* loadModel(const ModelKey& model_key);
 };
 

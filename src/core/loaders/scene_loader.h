@@ -37,7 +37,7 @@ private:
     //
     // Facade functions for loading models and textures
     //
-    static const Model* lazyLoadModel(const std::string &name);
+    static const Model* lazyLoadModel(const char* name);
     static std::pair<const Model*, const Texture*> lazyLoadModel(const char* name, const char* texture_name);
 };
 

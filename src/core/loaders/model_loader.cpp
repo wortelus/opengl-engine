@@ -20,8 +20,8 @@ ModelLoader::~ModelLoader() {
     }
 }
 
-const Model* ModelLoader::loadModel(const std::string& name) {
-    return this->loadModel(ModelKey{name.c_str(), ModelOptions::NONE});
+const Model* ModelLoader::loadModel(const char* name) {
+    return this->loadModel(ModelKey{name, ModelOptions::NONE});
 }
 
 const Model* ModelLoader::loadModel(const ModelKey& model_key) {
@@ -50,7 +50,7 @@ const Model* ModelLoader::loadModel(const ModelKey& model_key, const float* vert
     auto it = model_repository.find(model_key);
     if (it == model_repository.end()) {
         auto* model = new Model(vertices, static_cast<int>(vertices_size / sizeof(float)), model_key.options);
-        model_repository[model_key] = model;
+        model_repository[model_key] = model; // copying ModelKey
         return model;
     }
     return it->second;
