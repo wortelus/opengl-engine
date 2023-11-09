@@ -10,11 +10,10 @@
 class Texture {
 private:
     const TEXTURE_ID texture_id;
-    const GLenum unit;
+    const GLenum texture_unit;
 public:
-    void load();
     explicit Texture(TEXTURE_ID id);
-    explicit Texture(TEXTURE_ID id, GLenum type);
+    explicit Texture(TEXTURE_ID id, GLenum unit);
 
     [[nodiscard]] TEXTURE_ID getTextureId() const { return texture_id; }
 

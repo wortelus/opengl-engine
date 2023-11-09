@@ -155,6 +155,6 @@ void DrawableObject::notifyModelParameters() {
     notifyMaterial();
 }
 
-void DrawableObject::assignTexture(Texture* texture) {
+void DrawableObject::assignTexture(const Texture* texture) {
     this->material.texture = texture;
 }

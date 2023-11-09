@@ -16,25 +16,11 @@ struct ModelKey {
 
     ModelKey(const char* name, ModelOptions options) : name(name), options(options) { }
 
+    // used for std::map find()
     bool operator<(const ModelKey& other) const {
         int cmp = strcmp(name, other.name);
         if (cmp != 0) return cmp < 0;
         return options < other.options;
-    }
-    bool operator==(const ModelKey& other) const {
-        return strcmp(name, other.name) == 0 && options == other.options;
-    }
-    bool operator!=(const ModelKey& other) const {
-        return !(*this == other);
-    }
-    bool operator>(const ModelKey& other) const {
-        return !(*this < other) && *this != other;
-    }
-    bool operator<=(const ModelKey& other) const {
-        return *this < other || *this == other;
-    }
-    bool operator>=(const ModelKey& other) const {
-        return *this > other || *this == other;
     }
 };
 

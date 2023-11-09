@@ -5,24 +5,17 @@
 #include <GL/glew.h>
 #include "texture.h"
 
-void Texture::load() {
-    glBindTexture(GL_TEXTURE_2D, texture_id);
-    glActiveTexture(GL_TEXTURE0);
+Texture::Texture(const TEXTURE_ID id) : texture_id(id), texture_unit(GL_TEXTURE0) { }
 
-    // set the texture wrapping/filtering options (on the currently bound texture object)
-}
-
-Texture::Texture(const TEXTURE_ID id) : texture_id(id), unit(GL_TEXTURE0) { }
-
-Texture::Texture(const TEXTURE_ID id, const GLenum type) : texture_id(id), unit(type) {
-    glBindTexture(type, texture_id);
-    glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+Texture::Texture(const TEXTURE_ID id, const GLenum unit) : texture_id(id), texture_unit(unit) {
+    glBindTexture(texture_unit, texture_id);
+    glTexParameteri(texture_unit, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(texture_unit, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(texture_unit, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(texture_unit, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void Texture::bind() const {
-    glActiveTexture(unit);
+    glActiveTexture(texture_unit);
     glBindTexture(GL_TEXTURE_2D, texture_id);
 }

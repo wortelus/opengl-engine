@@ -38,7 +38,7 @@ private:
     // Facade functions for loading models and textures
     //
     static const Model* lazyLoadModel(const std::string &name);
-    static std::pair<Model*, Texture*> lazyLoadModel(const char* name, const char* texture_name);
+    static std::pair<const Model*, const Texture*> lazyLoadModel(const char* name, const char* texture_name);
 };
 
 #endif //ZPG_SCENE_LOADER_H

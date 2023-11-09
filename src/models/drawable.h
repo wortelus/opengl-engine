@@ -60,7 +60,7 @@ public:
     void setProperties(const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
     void setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
 
-    void assignTexture(Texture* texture);
+    void assignTexture(const Texture* texture);
 
     [[nodiscard]] const glm::vec3& getPosition() const { return this->position; }
     [[nodiscard]] const Material& getMaterial() const { return this->material; }

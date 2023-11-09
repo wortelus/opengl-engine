@@ -536,11 +536,10 @@ const Model* SceneLoader::lazyLoadModel(const std::string& name) {
     return ModelLoader::getInstance().loadModel(name);
 }
 
-std::pair<Model*, Texture*> SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
-    // TODO: are we breaking const-correctness here?
+std::pair<const Model*, const Texture*> SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
     const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name, ModelOptions::TEXTURED});
     const Texture* t = TextureLoader::getInstance().loadTexture(texture_name);
-    return std::make_pair(const_cast<Model*>(m), const_cast<Texture*>(t));
+    return std::make_pair(m, t);
 }
 
 #pragma clang diagnostic pop

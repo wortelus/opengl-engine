@@ -17,7 +17,7 @@ enum ILLUMINATION {
 };
 
 struct Material {
-    Texture* texture = nullptr;
+    const Texture* texture = nullptr;
 
     glm::vec3 ambient = AMBIENT_LIGHT;
     glm::vec3 diffuse = glm::vec3(0.0);
