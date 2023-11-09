@@ -50,6 +50,9 @@ DrawableObject::DrawableObject(const glm::vec3& position,
 
 
 void DrawableObject::draw() {
+    if (this->model->isTextured()) {
+        this->material.texture->bind();
+    }
     this->model->draw();
 }
 
@@ -145,6 +148,13 @@ void DrawableObject::notifyMaterial() {
 }
 
 void DrawableObject::notifyModelParameters() {
+    if (this->model->isTextured()) {
+        notify(EventPayload<TEXTURE_ID>{this->material.texture->getTextureId(), EventType::U_TEXTURE});
+    }
     notifyModel();
     notifyMaterial();
+}
+
+void DrawableObject::assignTexture(Texture* texture) {
+    this->material.texture = texture;
 }
