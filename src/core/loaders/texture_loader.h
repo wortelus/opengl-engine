@@ -8,7 +8,7 @@
 
 #include <string>
 #include <map>
-#include "../../models/texture.h"
+#include "../../models/properties/texture.h"
 
 class TextureLoader {
 private:

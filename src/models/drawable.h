@@ -8,11 +8,11 @@
 
 #include <variant>
 #include "glm/vec3.hpp"
-#include "../transform/transform_composite.h"
-#include "../util/observer.h"
 #include "model.h"
-#include "material.h"
+#include "properties/material.h"
+#include "../transform/transform_composite.h"
 #include "../util/const.h"
+#include "../util/observer.h"
 
 class DrawableObject : public ISubjectSingle {
 private:

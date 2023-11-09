@@ -5,7 +5,7 @@
 #ifndef ZPG_TEXTURE_H
 #define ZPG_TEXTURE_H
 
-#include "../util/const.h"
+#include "../../util/const.h"
 
 class Texture {
 private:

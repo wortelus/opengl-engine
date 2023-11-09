@@ -21,15 +21,18 @@ add_executable(zpg src/main.cpp
         src/core/scene.h src/core/scene.cpp
         src/core/loaders/scene_loader.h src/core/loaders/scene_loader.cpp
         src/core/loaders/model_loader.h src/core/loaders/model_loader.cpp
+        src/core/loaders/texture_loader.h src/core/loaders/texture_loader.cpp
         # utilities and constants
         src/util/const.h
         src/util/const_lights.h
         src/util/event_args.h
         src/util/observer.h src/util/observer.cpp
         # models
-        src/models/material.h
         src/models/drawable.h src/models/drawable.cpp
         src/models/model.h src/models/model.cpp
+        # model properties
+        src/models/properties/material.h
+        src/models/properties/texture.h src/models/properties/texture.cpp
         # models animations
         src/models/animations/animation.h
         src/models/animations/centric_model.h src/models/animations/centric_model.cpp
@@ -54,8 +57,6 @@ add_executable(zpg src/main.cpp
         src/rendering/shaders/uniforms/uniforms.h src/rendering/shaders/uniforms/uniforms.cpp
         src/rendering/shaders/uniforms/shader_uniforms.h src/rendering/shaders/uniforms/shader_uniforms.cpp
         src/rendering/shaders/uniforms/dynamic_uniforms.h src/rendering/shaders/uniforms/dynamic_uniforms.cpp
-        # textures
-        src/models/texture.h src/models/texture.cpp
-        src/core/loaders/texture_loader.h src/core/loaders/texture_loader.cpp)
+        )
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} ${SOIL_LIBRARY} glfw glm::glm GLEW::GLEW)

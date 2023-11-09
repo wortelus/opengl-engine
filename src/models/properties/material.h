@@ -6,7 +6,7 @@
 #define ZPG_MATERIAL_H
 
 #include "glm/vec3.hpp"
-#include "../util/const.h"
+#include "../../util/const.h"
 #include "texture.h"
 
 enum ILLUMINATION {

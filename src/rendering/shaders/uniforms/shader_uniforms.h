@@ -10,7 +10,7 @@
 #include "glm/ext/matrix_float4x4.hpp"
 
 #include "../../light/light.h"
-#include "../../../models/material.h"
+#include "../../../models/properties/material.h"
 #include "../../../util/event_args.h"
 #include "uniforms.h"
 
