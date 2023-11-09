@@ -8,6 +8,7 @@
 #include "../../models/animations/centric_model.h"
 #include "model_loader.h"
 #include "../../rendering/light/point_light.h"
+#include "texture_loader.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -85,30 +86,34 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     light_obj.setAmbient(glm::vec3(1.0, 0.75, 0.0));
 
 
-    auto& wall_a = scene->appendObject(lazyLoadModel("plain"),
-                                       glm::vec3(-4.f, 0.f, -5.f), "phong");
+    auto wall_a_assets = lazyLoadModel("triangle_tex", "wood.png");
+    auto& wall_a = scene->appendObject(wall_a_assets.first,
+                                       glm::vec3(-4.f, 0.f, -5.f), "phong_tex");
+    wall_a.assignTexture(wall_a_assets.second);
     wall_a.setProperties(glm::vec3(0.385, 0.647, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
-    wall_a.rotate(glm::vec3(glm::vec3(15, 90, 90)));
-    wall_a.setScale(glm::vec3(4.f, 4.f, 4.f));
+    wall_a.rotate(glm::vec3(glm::vec3(15, 0, 0)));
+    wall_a.setScale(glm::vec3(6.f, 6.f, 6.f));
 
 
-    auto& wall_b = scene->appendObject(lazyLoadModel("plain"),
-                                 glm::vec3(6.f, 0.f, -8.f), "lambert");
+    auto& wall_b = scene->appendObject(wall_a_assets.first,
+                                 glm::vec3(6.f, 0.f, -8.f), "phong_tex");
+    wall_b.assignTexture(wall_a_assets.second);
     wall_b.setProperties(glm::vec3(0.785, 0.9, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
-    wall_b.rotate(glm::vec3(glm::vec3(30, 90, 90)));
-    wall_b.setScale(glm::vec3(4.f, 4.f, 4.f));
+    wall_b.rotate(glm::vec3(glm::vec3(30, 0, 0)));
+    wall_b.setScale(glm::vec3(8.f, 8.f, 8.f));
 
-    auto& wall_c = scene->appendObject(lazyLoadModel("plain"),
-                                 glm::vec3(12.f, 0.f, -3.f), "phong");
+    auto& wall_c = scene->appendObject(wall_a_assets.first,
+                                 glm::vec3(12.f, 0.f, -3.f), "phong_tex");
+    wall_c.assignTexture(wall_a_assets.second);
     wall_c.setProperties(glm::vec3(0.385, 0.647, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
-    wall_c.rotate(glm::vec3(glm::vec3(-20, 90, 90)));
-    wall_c.setScale(glm::vec3(4.f, 4.f, 4.f));
+    wall_c.rotate(glm::vec3(glm::vec3(-20, 0, 0)));
+    wall_c.setScale(glm::vec3(4.f, 8.f, 6.f));
 
     auto suzie_pos = glm::vec3(-2.f, 0.f, 2.f);
     auto& suzie = scene->appendObject(lazyLoadModel("suzi_smooth"),
@@ -529,6 +534,13 @@ SceneLoader::loadSceneG(GLFWwindow& window_reference, const int& initial_width, 
 
 const Model* SceneLoader::lazyLoadModel(const std::string& name) {
     return ModelLoader::getInstance().loadModel(name);
+}
+
+std::pair<Model*, Texture*> SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
+    // TODO: are we breaking const-correctness here?
+    const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name, ModelOptions::TEXTURED});
+    const Texture* t = TextureLoader::getInstance().loadTexture(texture_name);
+    return std::make_pair(const_cast<Model*>(m), const_cast<Texture*>(t));
 }
 
 #pragma clang diagnostic pop

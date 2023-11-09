@@ -3,6 +3,8 @@ project(zpg)
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_library(SOIL_LIBRARY NAMES SOIL PATHS /usr/lib)
+
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
@@ -52,6 +54,8 @@ add_executable(zpg src/main.cpp
         src/rendering/shaders/uniforms/uniforms.h src/rendering/shaders/uniforms/uniforms.cpp
         src/rendering/shaders/uniforms/shader_uniforms.h src/rendering/shaders/uniforms/shader_uniforms.cpp
         src/rendering/shaders/uniforms/dynamic_uniforms.h src/rendering/shaders/uniforms/dynamic_uniforms.cpp
-        )
+        # textures
+        src/models/texture.h src/models/texture.cpp
+        src/core/loaders/texture_loader.h src/core/loaders/texture_loader.cpp)
 
-target_link_libraries(zpg ${OPENGL_LIBRARIES} glfw glm::glm GLEW::GLEW)
+target_link_libraries(zpg ${OPENGL_LIBRARIES} ${SOIL_LIBRARY} glfw glm::glm GLEW::GLEW)
