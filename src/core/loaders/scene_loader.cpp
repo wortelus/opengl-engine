@@ -409,6 +409,9 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
+    auto skybox_assets = lazyLoadCubeMap("cube", "skybox", ".jpg");
+    auto& skybox = scene->assignSkybox(skybox_assets.first);
+    skybox.assignTexture(skybox_assets.second);
     scene->setAmbient(glm::vec3(0,0,0));
 
     float tree_height = 0.0f;
@@ -487,12 +490,15 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                                                                                       0.15f);
     scene->appendLight(main_light);
 
-    auto& plain_obj = scene->appendObject(lazyLoadModel("plain"),
-                                          glm::vec3(0.f, 0.f, 0.f), "lambert");
+    auto plain_assets = lazyLoadModel("triangle_tex", "grass.png");
+    auto& plain_obj = scene->appendObject(plain_assets.first,
+                                          glm::vec3(0.f, 0.f, 0.f), "phong_tex");
+    plain_obj.assignTexture(plain_assets.second);
     plain_obj.setProperties(glm::vec3(0.15, 0.45, 0.25),
                             glm::vec3(0.0, 0.0, 0.0),
-                            0.f);
-    plain_obj.scale(glm::vec3(128.f, 1.f, 128.f));
+                            32.f);
+    plain_obj.scale(glm::vec3(128.f, 128.f, 1.f));
+    plain_obj.rotate(glm::vec3(-90.f, 0.f, 0.f));
 
     return std::move(scene);
 }
