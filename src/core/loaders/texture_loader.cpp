@@ -31,14 +31,14 @@ const Texture* TextureLoader::loadTexture(const char* name) {
 }
 
 const Texture* TextureLoader::loadCubeMap(const char* name, const char* extension) {
-    std::string path = std::string(ASSETS_PATH) + name;
+    std::string path = std::string(ASSETS_PATH) + name + "/";
     std::array<std::string, 6> skybox_texture_names = {
-            path + "_px" + extension,
-            path + "_nx" + extension,
-            path + "_py" + extension,
-            path + "_ny" + extension,
-            path + "_pz" + extension,
-            path + "_nz" + extension
+            path + "px" + extension,
+            path + "nx" + extension,
+            path + "py" + extension,
+            path + "ny" + extension,
+            path + "pz" + extension,
+            path + "nz" + extension
     };
     auto it = texture_repository.find(name);
     if (it == texture_repository.end()) {
