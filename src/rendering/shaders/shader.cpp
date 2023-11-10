@@ -157,7 +157,6 @@ void Shader::initUniforms() {
     uniforms.projection.location = glGetUniformLocation(shader_program, "projection_matrix");
     uniforms.normal.location = glGetUniformLocation(shader_program, "normal_matrix");
     uniforms.camera_position.location = glGetUniformLocation(shader_program, "camera_position");
-    uniforms.texture_id.location = glGetUniformLocation(shader_program, "texture_id");
 
     initLightUniforms();
     initMaterialUniforms();
