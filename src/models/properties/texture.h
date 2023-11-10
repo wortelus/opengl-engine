@@ -16,6 +16,7 @@ public:
     explicit Texture(TEXTURE_ID id, GLenum unit);
 
     [[nodiscard]] TEXTURE_ID getTextureId() const { return texture_id; }
+    [[nodiscard]] TEXTURE_UNIT getTextureUnit() const { return (texture_unit - GL_TEXTURE0); }
 
     void bind() const;
 };

@@ -33,7 +33,7 @@ enum class EventType {
     U_CAMERA_POSITION,
 
     U_MATERIAL,
-    U_TEXTURE,
+    U_TEXTURE_UNIT,
 
     U_LIGHT_SINGLE,
     U_LIGHTS,

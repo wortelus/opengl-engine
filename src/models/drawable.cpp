@@ -144,6 +144,10 @@ void DrawableObject::notifyModel() const {
 
 void DrawableObject::notifyMaterial() const {
     notify(EventPayload<const Material*>{&this->material, EventType::U_MATERIAL});
+    if (this->model->isTextured()) {
+        notify(EventPayload<TEXTURE_UNIT>{this->material.texture->getTextureUnit(),
+                                                 EventType::U_TEXTURE_UNIT});
+    }
 }
 
 void DrawableObject::notifyModelParameters() const {
