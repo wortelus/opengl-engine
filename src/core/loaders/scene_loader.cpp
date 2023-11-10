@@ -39,6 +39,11 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
     const float height = -4.5;
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(0, window_reference, initial_width, initial_height);
+
+    auto skybox_assets = lazyLoadCubeMap("cube", "skybox", ".jpg");
+    auto& skybox = scene->assignSkybox(skybox_assets.first);
+    skybox.assignTexture(skybox_assets.second);
+
     auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, height, -2.f), "phong");
     sphere_south_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
@@ -539,6 +544,13 @@ const Model* SceneLoader::lazyLoadModel(const char* name) {
 std::pair<const Model*, const Texture*> SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
     const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name, ModelOptions::TEXTURED});
     const Texture* t = TextureLoader::getInstance().loadTexture(texture_name);
+    return std::make_pair(m, t);
+}
+
+std::pair<const Model*, const Texture*>
+SceneLoader::lazyLoadCubeMap(const char* name, const char* skybox_name, const char* texture_extension) {
+    const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name, ModelOptions::ONLY_VERTICES});
+    const Texture* t = TextureLoader::getInstance().loadCubeMap(skybox_name, texture_extension);
     return std::make_pair(m, t);
 }
 

@@ -10,6 +10,11 @@ DrawableObject& ObjectManager::addObject(std::unique_ptr<DrawableObject> obj) {
     return *objects.back();
 }
 
+DrawableObject& ObjectManager::assignSkybox(std::unique_ptr<DrawableObject> obj) {
+    skybox = std::move(obj);
+    return *skybox;
+}
+
 void ObjectManager::preprocess() {
     std::sort(objects.begin(), objects.end(),
               [](const std::unique_ptr<DrawableObject>& a, const std::unique_ptr<DrawableObject>& b) {

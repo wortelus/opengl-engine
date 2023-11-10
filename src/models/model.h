@@ -26,6 +26,7 @@ enum ModelOptions {
     NONE = 0,
     STRIP = (1u << 0),
     TEXTURED = (1u << 1),
+    ONLY_VERTICES = (1u << 2),
 };
 
 class Model {
@@ -53,6 +54,8 @@ public:
     [[nodiscard]] bool isStrip () const { return this->model_options & ModelOptions::STRIP; }
 
     void draw() const;
+
+    static int getStrideFromOptions(ModelOptions options);
 };
 
 

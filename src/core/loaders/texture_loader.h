@@ -29,6 +29,7 @@ public:
     }
 
     const Texture* loadTexture(const char* name);
+    const Texture* loadCubeMap(const char* name, const char* extension);
 };
 
 #endif //ZPG_TEXTURE_LOADER_H

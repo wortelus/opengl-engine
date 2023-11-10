@@ -13,6 +13,7 @@
 #include "../../../assets/suzi_smooth.h"
 #include "../../../assets/tree.h"
 #include "../../../assets/triangle_tex.h"
+#include "../../../assets/cube.h"
 
 ModelLoader::~ModelLoader() {
     for (auto& model : model_repository) {
@@ -40,7 +41,9 @@ const Model* ModelLoader::loadModel(const ModelKey& model_key) {
     } else if (strcmp(model_key.name, "tree") == 0) {
         return loadModel(model_key, tree, sizeof(tree));
     } else if (strcmp(model_key.name, "triangle_tex") == 0) {
-            return loadModel(model_key, triangle, sizeof(triangle));
+        return loadModel(model_key, triangle, sizeof(triangle));
+    } else if (strcmp(model_key.name, "cube") == 0) {
+        return loadModel(model_key, skycube, sizeof(skycube));
     } else {
         throw std::runtime_error("ModelLoader::loadModel: Unknown model name: " + std::string(model_key.name));
     }

@@ -66,6 +66,7 @@ public:
     DrawableObject& appendObject(const Model* model_ptr,
                                  const glm::vec3& position,
                                  const std::string& shader_name);
+    DrawableObject& assignSkybox(const Model* model_ptr);
 
     void appendAnimation(const std::shared_ptr<Animation>& animation);
 

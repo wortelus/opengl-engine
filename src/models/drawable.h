@@ -22,10 +22,9 @@ private:
     SHADER_ALIAS_DATATYPE shader_alias = 0;
 
     const Model* model;
+    std::shared_ptr<DynamicTransformComposite> model_matrix;
 
     Material material;
-
-    std::shared_ptr<DynamicTransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name);
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name,
@@ -65,11 +64,11 @@ public:
     [[nodiscard]] const glm::vec3& getPosition() const { return this->position; }
     [[nodiscard]] const Material& getMaterial() const { return this->material; }
 
-    void notifyModel();
-    void notifyMaterial();
-    void notifyModelParameters();
+    void notifyModel() const;
+    void notifyMaterial() const;
+    void notifyModelParameters() const;
 
-    void draw();
+    void draw() const;
 };
 
 

@@ -45,7 +45,7 @@ Model::Model(const float* vertices, int total_count) : vao(0), vbo(0) {
 }
 
 Model::Model(const float* vertices, int total_count, ModelOptions options) : model_options(options) {
-    int stride = options & ModelOptions::TEXTURED ? 8 : 6;
+    int stride = getStrideFromOptions(options);
     this->vertices_count = static_cast<GLsizei>(total_count / stride);
 
     glGenBuffers(1, &this->vbo);
@@ -72,6 +72,10 @@ Model::Model(const float* vertices, int total_count, ModelOptions options) : mod
         glEnableVertexAttribArray(2); //enable vertex attributes
         glVertexAttribPointer(2, 2,
                               GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (6 * sizeof(float)));
+    } else if (options & ModelOptions::ONLY_VERTICES) {
+        glEnableVertexAttribArray(0); //enable vertex attributes
+        glVertexAttribPointer(0, 3,
+                              GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
     } else {
         glEnableVertexAttribArray(0); //enable vertex attributes
         glVertexAttribPointer(0, 3,
@@ -92,4 +96,16 @@ void Model::draw() const {
     glBindVertexArray(this->vao);
     auto draw_type = this->isStrip() ? GL_TRIANGLE_STRIP : GL_TRIANGLES;
     glDrawArrays(draw_type, 0, this->vertices_count);
+}
+
+// TODO: rework to additive flags
+int Model::getStrideFromOptions(ModelOptions options) {
+    switch (options) {
+        case ModelOptions::TEXTURED:
+            return 8;
+        case ModelOptions::ONLY_VERTICES:
+            return 3;
+        default:
+            return 6;
+    }
 }
