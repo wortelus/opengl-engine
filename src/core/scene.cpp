@@ -74,6 +74,16 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
         });
     }
 
+    // subscribe single shader to skybox
+    if (object_manager->hasSkybox()) {
+        auto& skybox = object_manager->getSkybox();
+        assignShaderAlias(skybox);
+        Shader* sh = this->shader_loader->loadShader(skybox.getShaderAlias());
+        skybox.attach(sh);
+        skybox.notifyModel();
+        skybox.notifyMaterial();
+    }
+
     std::unique_ptr<Spotlight> flashlight = std::make_unique<Spotlight>(FLASHLIGHT);
     auto fl_id = light_manager.addLight(std::move(flashlight));
     auto fl = light_manager.getLight(fl_id);
@@ -118,6 +128,13 @@ DrawableObject& Scene::appendObject(
     return obj;
 }
 
+DrawableObject& Scene::assignSkybox(const Model* model_ptr) {
+    std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(glm::vec3(0, 0, 0), model_ptr,
+                                                                              "skybox", scene_ambient);
+    auto& obj = object_manager->assignSkybox(std::move(object));
+    obj.setAmbient(scene_ambient);
+    return obj;
+}
 
 void Scene::appendAnimation(const std::shared_ptr<Animation>& animation) {
     animation_manager->addAnimation(animation);
@@ -144,8 +161,16 @@ void Scene::run() {
         continuousMovement(delta_time);
         camera->jumpProgress(delta_time);
 
-        // clear color and depth buffer
+        // wipe the drawing surface clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if (const auto& skybox = object_manager->getSkybox(); object_manager->hasSkybox()) {
+            Shader* sh = shader_loader->loadShader(skybox.getShaderAlias());
+            skybox.notifyModelParameters();
+            sh->lazyPassUniforms();
+            skybox.draw();
+        }
+
+        glClear(GL_DEPTH_BUFFER_BIT);
         for (const auto object: *object_manager) {
             Shader* sh = shader_loader->loadShader(object->getShaderAlias());
             object->notifyModelParameters();

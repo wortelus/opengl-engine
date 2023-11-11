@@ -8,11 +8,11 @@
 
 #include <variant>
 #include "glm/vec3.hpp"
-#include "../transform/transform_composite.h"
-#include "../util/observer.h"
 #include "model.h"
-#include "material.h"
+#include "properties/material.h"
+#include "../transform/transform_composite.h"
 #include "../util/const.h"
+#include "../util/observer.h"
 
 class DrawableObject : public ISubjectSingle {
 private:
@@ -22,10 +22,9 @@ private:
     SHADER_ALIAS_DATATYPE shader_alias = 0;
 
     const Model* model;
+    std::shared_ptr<DynamicTransformComposite> model_matrix;
 
     Material material;
-
-    std::shared_ptr<DynamicTransformComposite> model_matrix;
 public:
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name);
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name,
@@ -60,14 +59,16 @@ public:
     void setProperties(const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
     void setProperties(const glm::vec3& _ambient, const glm::vec3& _diffuse, const glm::vec3& _specular, float _shininess);
 
+    void assignTexture(const Texture* texture);
+
     [[nodiscard]] const glm::vec3& getPosition() const { return this->position; }
     [[nodiscard]] const Material& getMaterial() const { return this->material; }
 
-    void notifyModel();
-    void notifyMaterial();
-    void notifyModelParameters();
+    void notifyModel() const;
+    void notifyMaterial() const;
+    void notifyModelParameters() const;
 
-    void draw();
+    void draw() const;
 };
 
 

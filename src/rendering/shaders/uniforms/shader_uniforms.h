@@ -10,7 +10,7 @@
 #include "glm/ext/matrix_float4x4.hpp"
 
 #include "../../light/light.h"
-#include "../../../models/material.h"
+#include "../../../models/properties/material.h"
 #include "../../../util/event_args.h"
 #include "uniforms.h"
 
@@ -26,6 +26,7 @@ public:
     ShaderUniform<const glm::mat4*> projection;
     ShaderUniform<const glm::mat3*> normal;
     ShaderUniform<const glm::vec3*> camera_position;
+    ShaderUniform<TEXTURE_UNIT> texture_unit{.value = 0}; // default texture unit is 0
     ShaderUniforms() = default;
 
     void passEvent(const EventArgs& event_args);

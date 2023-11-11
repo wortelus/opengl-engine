@@ -75,6 +75,8 @@ void Application::init() {
     if (ENABLE_CULL_FACE)
         glEnable(GL_CULL_FACE);
 
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
     shader_loader = std::make_shared<ShaderLoader>();
     shader_loader->loadShaders();
 

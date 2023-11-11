@@ -9,11 +9,17 @@
 
 class ObjectManager {
 private:
+    std::unique_ptr<DrawableObject> skybox;
     std::vector<std::unique_ptr<DrawableObject>> objects;
 public:
     ~ObjectManager();
 
     DrawableObject& addObject(std::unique_ptr<DrawableObject> obj);
+
+    DrawableObject& assignSkybox(std::unique_ptr<DrawableObject> obj);
+    [[nodiscard]] bool hasSkybox() const { return skybox != nullptr; }
+    [[nodiscard]] DrawableObject& getSkybox() const { return *skybox; }
+
     void preprocess();
 
     // global objects components

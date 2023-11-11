@@ -22,6 +22,15 @@
 #include <array>
 #include "../util/observer.h"
 
+enum ModelOptions {
+    UNKNOWN = 0,
+    VERTICES = (1u << 0),
+    NORMALS = (1u << 1),
+    TEXTURED_UV = (1u << 3),
+    SKYBOX = (1u << 4),
+    STRIP = (1u << 5)
+};
+
 class Model {
 protected:
     std::vector<IObserver*> observers;
@@ -35,15 +44,20 @@ protected:
     std::string fragment_shader_name;
 
     // gl draw type
-    GLenum draw_type = GL_TRIANGLES;
+    ModelOptions model_options = ModelOptions::UNKNOWN;
 public:
     Model() = default;
     ~Model();
 
     explicit Model(const float* vertices, int total_count);
-    explicit Model(const float* vertices, int total_count, int stride, bool strip);
+    explicit Model(const float* vertices, int total_count, ModelOptions options);
+
+    [[nodiscard]] bool isTextured () const;
+    [[nodiscard]] bool isStrip () const { return this->model_options & ModelOptions::STRIP; }
 
     void draw() const;
+
+    static int getStrideFromOptions(ModelOptions options);
 };
 
 

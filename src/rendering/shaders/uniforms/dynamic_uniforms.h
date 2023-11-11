@@ -8,7 +8,7 @@
 #include <array>
 #include <memory>
 #include <stdexcept>
-#include "../../../models/material.h"
+#include "../../../models/properties/material.h"
 #include "../../../util/const.h"
 #include "../../light/light.h"
 #include "../../light/point_light.h"

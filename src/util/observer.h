@@ -20,7 +20,7 @@ class ISubject {
 public:
     void attach(IObserver* observer);
     void detach(IObserver* observer);
-    void notify(const EventArgs& event_args);
+    void notify(const EventArgs& event_args) const;
 };
 
 class ISubjectSingle {
@@ -28,7 +28,7 @@ class ISubjectSingle {
 public:
     void attach(IObserver* new_observer);
     void detach();
-    void notify(const EventArgs& event_args);
+    void notify(const EventArgs& event_args) const;
 };
 
 

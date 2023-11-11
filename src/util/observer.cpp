@@ -5,7 +5,7 @@
 #include "observer.h"
 #include <algorithm>
 
-void ISubject::notify(const EventArgs& event_args) {
+void ISubject::notify(const EventArgs& event_args) const {
     for (auto observer: this->observers) {
         observer->update(event_args);
     }
@@ -24,7 +24,7 @@ void ISubjectSingle::attach(IObserver* new_observer) {
     this->observer = new_observer;
 }
 
-void ISubjectSingle::notify(const EventArgs& event_args) {
+void ISubjectSingle::notify(const EventArgs& event_args) const {
     if (this->observer != nullptr) this->observer->update(event_args);
 }
 

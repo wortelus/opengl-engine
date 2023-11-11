@@ -11,13 +11,16 @@
 
 using SHADER_ALIAS_DATATYPE = int;
 using SHADER_UNIFORM_LOCATION = GLint;
+using TEXTURE_ID = GLuint;
+using TEXTURE_UNIT = GLuint;
 
-inline constexpr bool ENABLE_CULL_FACE = true;
+inline constexpr bool ENABLE_CULL_FACE = false;
 inline constexpr bool DISABLE_VSYNC = false;
 
 inline constexpr SHADER_ALIAS_DATATYPE SHADER_UNLOADED = (-1);
 
-const char* const SHADERS_PATH = "shaders";
+const char* const SHADERS_PATH = "shaders/";
+const char* const ASSETS_PATH = "assets/";
 
 inline constexpr char DEFAULT_SCENE = 0;
 

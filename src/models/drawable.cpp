@@ -49,7 +49,9 @@ DrawableObject::DrawableObject(const glm::vec3& position,
 }
 
 
-void DrawableObject::draw() {
+void DrawableObject::draw() const {
+    if (this->model->isTextured())
+        this->material.texture->bind();
     this->model->draw();
 }
 
@@ -132,7 +134,7 @@ void DrawableObject::setDiffuse(const glm::vec3& _diffuse) {
     }
 }
 
-void DrawableObject::notifyModel() {
+void DrawableObject::notifyModel() const {
     notify(EventPayload<const glm::mat4*>{&this->model_matrix->getMatrix(),
                                           EventType::U_MODEL_MATRIX});
 
@@ -140,11 +142,19 @@ void DrawableObject::notifyModel() {
                                           EventType::U_NORMAL_MATRIX});
 }
 
-void DrawableObject::notifyMaterial() {
-    notify(EventPayload<Material*>{&this->material, EventType::U_MATERIAL});
+void DrawableObject::notifyMaterial() const {
+    notify(EventPayload<const Material*>{&this->material, EventType::U_MATERIAL});
+    if (this->model->isTextured()) {
+        notify(EventPayload<TEXTURE_UNIT>{this->material.texture->getTextureUnit(),
+                                                 EventType::U_TEXTURE_UNIT});
+    }
 }
 
-void DrawableObject::notifyModelParameters() {
+void DrawableObject::notifyModelParameters() const {
     notifyModel();
     notifyMaterial();
+}
+
+void DrawableObject::assignTexture(const Texture* texture) {
+    this->material.texture = texture;
 }
