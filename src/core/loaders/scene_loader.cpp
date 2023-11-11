@@ -82,8 +82,8 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
 
     auto light_pos = glm::vec3(0.f, 10.f, 20.f);
     std::shared_ptr<DirectionalLight> light_a = std::make_unique<DirectionalLight>(-light_pos,
-                                                                       glm::vec3(1.f, 1.f, 1.f),
-                                                                       1.f);
+                                                                                   glm::vec3(1.f, 1.f, 1.f),
+                                                                                   1.f);
     scene->appendLight(light_a);
 
     auto& light_obj = scene->appendObject(lazyLoadModel("sphere"),
@@ -103,7 +103,7 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
 
 
     auto& wall_b = scene->appendObject(wall_a_assets.first,
-                                 glm::vec3(6.f, 0.f, -8.f), "phong_tex");
+                                       glm::vec3(6.f, 0.f, -8.f), "phong_tex");
     wall_b.assignTexture(wall_a_assets.second);
     wall_b.setProperties(glm::vec3(0.785, 0.9, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
@@ -112,7 +112,7 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     wall_b.setScale(glm::vec3(8.f, 8.f, 8.f));
 
     auto& wall_c = scene->appendObject(wall_a_assets.first,
-                                 glm::vec3(12.f, 0.f, -3.f), "phong_tex");
+                                       glm::vec3(12.f, 0.f, -3.f), "phong_tex");
     wall_c.assignTexture(wall_a_assets.second);
     wall_c.setProperties(glm::vec3(0.385, 0.647, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
@@ -221,6 +221,9 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
+    auto skybox_assets = lazyLoadCubeMap("cube", "skybox_space", ".png");
+    auto& skybox = scene->assignSkybox(skybox_assets.first);
+    skybox.assignTexture(skybox_assets.second);
     scene->setAmbient(glm::vec3(0.5, 0.5, 0.5));
 
     glm::vec3 sun_pos = glm::vec3(0.0f, -2.0f, -100.0f);
@@ -377,30 +380,6 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
         sun_composite->addModel(std::move(asteroid_leaf));
     }
 
-    //
-    // random asteroids / stars
-    //
-    int num_asteroids_random = 1000;
-    float asteroid_random_radius = 20.f;
-    float asteroid_random_scale = 0.02f;
-    float asteroid_random_speed = 0.0001f;
-    for (int i = 0; i < num_asteroids_random; i++) {
-        float alpha = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 2.f * M_PI;
-        float beta = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * M_PI;  // Corrected range for beta
-        float x = asteroid_random_radius * std::sin(beta) * std::cos(alpha);
-        float y = asteroid_random_radius * std::sin(beta) * std::sin(alpha);
-        float z = asteroid_random_radius * std::cos(beta);
-        auto asteroid_obj = scene->newObject(lazyLoadModel("sphere"),
-                                             glm::vec3(x, y, z), "constant", axis);
-        // haha, redshift
-        asteroid_obj->setAmbient(
-                glm::vec3(0.4 + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * 0.3, 0.4, 0.4));
-        asteroid_obj->setScale(glm::vec3(asteroid_random_scale, asteroid_random_scale, asteroid_random_scale));
-        auto asteroid_leaf = std::make_unique<CentricModelLeaf>(std::move(asteroid_obj));
-        asteroid_leaf->setMultiplier(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * asteroid_random_speed);
-        sun_composite->addModel(std::move(asteroid_leaf));
-    }
-
     // building
     scene->appendAnimation(std::move(sun_composite));
     return std::move(scene);
@@ -412,14 +391,14 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
     auto skybox_assets = lazyLoadCubeMap("cube", "skybox", ".jpg");
     auto& skybox = scene->assignSkybox(skybox_assets.first);
     skybox.assignTexture(skybox_assets.second);
-    scene->setAmbient(glm::vec3(0,0,0));
+    scene->setAmbient(glm::vec3(0, 0, 0));
 
     float tree_height = 0.0f;
     float light_height = 5.0f;
 
     float range = 100.f;
 
-    for (int i = 0; i < 150; i++) {
+    for (int i = 0; i < 100; i++) {
         float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
         float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
 
@@ -430,7 +409,7 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                                2.5f);
     }
 
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < 100; i++) {
         float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
         float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
 
@@ -496,7 +475,7 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
     plain_obj.assignTexture(plain_assets.second);
     plain_obj.setProperties(glm::vec3(0.15, 0.45, 0.25),
                             glm::vec3(0.0, 0.0, 0.0),
-                            32.f);
+                            10.f);
     plain_obj.scale(glm::vec3(128.f, 128.f, 1.f));
     plain_obj.rotate(glm::vec3(-90.f, 0.f, 0.f));
 
@@ -548,14 +527,18 @@ const Model* SceneLoader::lazyLoadModel(const char* name) {
 }
 
 std::pair<const Model*, const Texture*> SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
-    const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name, ModelOptions::TEXTURED});
+    const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name,
+                                                                   static_cast<ModelOptions>(ModelOptions::VERTICES |
+                                                                                             ModelOptions::NORMALS |
+                                                                                             ModelOptions::TEXTURED_UV)});
     const Texture* t = TextureLoader::getInstance().loadTexture(texture_name);
     return std::make_pair(m, t);
 }
 
 std::pair<const Model*, const Texture*>
 SceneLoader::lazyLoadCubeMap(const char* name, const char* skybox_name, const char* texture_extension) {
-    const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name, ModelOptions::ONLY_VERTICES});
+    const Model* m = ModelLoader::getInstance().loadModel(
+            ModelKey{name, static_cast<ModelOptions>(ModelOptions::VERTICES | ModelOptions::SKYBOX)});
     const Texture* t = TextureLoader::getInstance().loadCubeMap(skybox_name, texture_extension);
     return std::make_pair(m, t);
 }

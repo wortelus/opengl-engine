@@ -23,10 +23,12 @@
 #include "../util/observer.h"
 
 enum ModelOptions {
-    NONE = 0,
-    STRIP = (1u << 0),
-    TEXTURED = (1u << 1),
-    ONLY_VERTICES = (1u << 2),
+    UNKNOWN = 0,
+    VERTICES = (1u << 0),
+    NORMALS = (1u << 1),
+    TEXTURED_UV = (1u << 3),
+    SKYBOX = (1u << 4),
+    STRIP = (1u << 5)
 };
 
 class Model {
@@ -42,7 +44,7 @@ protected:
     std::string fragment_shader_name;
 
     // gl draw type
-    ModelOptions model_options = ModelOptions::NONE;
+    ModelOptions model_options = ModelOptions::UNKNOWN;
 public:
     Model() = default;
     ~Model();
@@ -50,7 +52,7 @@ public:
     explicit Model(const float* vertices, int total_count);
     explicit Model(const float* vertices, int total_count, ModelOptions options);
 
-    [[nodiscard]] bool isTextured () const { return this->model_options & ModelOptions::TEXTURED; }
+    [[nodiscard]] bool isTextured () const;
     [[nodiscard]] bool isStrip () const { return this->model_options & ModelOptions::STRIP; }
 
     void draw() const;

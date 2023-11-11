@@ -45,7 +45,7 @@ Model::Model(const float* vertices, int total_count) : vao(0), vbo(0) {
 }
 
 Model::Model(const float* vertices, int total_count, ModelOptions options) : model_options(options) {
-    int stride = getStrideFromOptions(options);
+    auto stride = getStrideFromOptions(options);
     this->vertices_count = static_cast<GLsizei>(total_count / stride);
 
     glGenBuffers(1, &this->vbo);
@@ -58,33 +58,30 @@ Model::Model(const float* vertices, int total_count, ModelOptions options) : mod
     glBindVertexArray(this->vao); //bind the VAO
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 
+    glEnableVertexAttribArray(0); //enable vertex attributes
+    // vertex positions ->
+    glVertexAttribPointer(0, 3,
+                          GL_FLOAT, GL_FALSE, static_cast<GLsizei>(stride * sizeof(float)), (void*) 0);
+
     // using the following lines we will tell the GPU how to read the data
-    if (options & ModelOptions::TEXTURED) {
-        glEnableVertexAttribArray(0); //enable vertex attributes
-        // vertex positions ->
-        glVertexAttribPointer(0, 3,
-                              GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) 0);
+    // normals
+    if (options & ModelOptions::NORMALS) {
         // vertex normals ->
         glEnableVertexAttribArray(1); //enable vertex attributes
         glVertexAttribPointer(1, 3,
-                              GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (3 * sizeof(float)));
+                              GL_FLOAT, GL_FALSE, static_cast<GLsizei>(stride * sizeof(float)), (void*) (3 * sizeof(float)));
+    }
+    // texture coords
+    if (options & ModelOptions::TEXTURED_UV) {
         // vertex texture coords ->
         glEnableVertexAttribArray(2); //enable vertex attributes
         glVertexAttribPointer(2, 2,
-                              GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*) (6 * sizeof(float)));
-    } else if (options & ModelOptions::ONLY_VERTICES) {
-        glEnableVertexAttribArray(0); //enable vertex attributes
-        glVertexAttribPointer(0, 3,
-                              GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    } else {
-        glEnableVertexAttribArray(0); //enable vertex attributes
-        glVertexAttribPointer(0, 3,
-                              GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) 0);
-        // vertex normals ->
-        glEnableVertexAttribArray(1); //enable vertex attributes
-        glVertexAttribPointer(1, 3,
-                              GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (3 * sizeof(float)));
+                              GL_FLOAT, GL_FALSE, static_cast<GLsizei>(stride * sizeof(float)), (void*) (6 * sizeof(float)));
     }
+}
+
+bool Model::isTextured() const {
+    return this->model_options & ModelOptions::TEXTURED_UV || this->model_options & ModelOptions::SKYBOX;
 }
 
 Model::~Model() {
@@ -93,19 +90,21 @@ Model::~Model() {
 }
 
 void Model::draw() const {
-    glBindVertexArray(this->vao);
     auto draw_type = this->isStrip() ? GL_TRIANGLE_STRIP : GL_TRIANGLES;
+
+    glBindVertexArray(this->vao);
     glDrawArrays(draw_type, 0, this->vertices_count);
 }
 
-// TODO: rework to additive flags
 int Model::getStrideFromOptions(ModelOptions options) {
-    switch (options) {
-        case ModelOptions::TEXTURED:
-            return 8;
-        case ModelOptions::ONLY_VERTICES:
-            return 3;
-        default:
+    if (options & ModelOptions::VERTICES) {
+        if (options & ModelOptions::NORMALS) {
+            if (options & ModelOptions::TEXTURED_UV) {
+                return 8;
+            }
             return 6;
+        }
+        return 3;
     }
+    throw std::runtime_error("Model::getStrideFromOptions: Unknown options");
 }

@@ -22,7 +22,7 @@ ModelLoader::~ModelLoader() {
 }
 
 const Model* ModelLoader::loadModel(const char* name) {
-    return this->loadModel(ModelKey{name, ModelOptions::NONE});
+    return this->loadModel(ModelKey{name, static_cast<ModelOptions>(ModelOptions::VERTICES | ModelOptions::NORMALS)});
 }
 
 const Model* ModelLoader::loadModel(const ModelKey& model_key) {
