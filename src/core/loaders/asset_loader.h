@@ -21,7 +21,7 @@ static constexpr unsigned int importOptions = aiProcess_Triangulate
                                               | aiProcess_CalcTangentSpace;           // calculates the tangents and bitangents for the imported meshes
 
 struct Asset {
-    const Model* model;
+    const Model model;
     const Material material;
 };
 
@@ -35,7 +35,7 @@ private:
     ~AssetLoader();
 
 private:
-    const Model* readAssetModel(const aiScene* scene);
+    Model readAssetModel(const aiScene* scene);
     Material readMaterial(const aiScene* scene);
 public:
     AssetLoader(AssetLoader const&) = delete;

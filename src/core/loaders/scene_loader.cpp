@@ -132,10 +132,6 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     auto& house = scene->appendObject(house_obj,
                                       glm::vec3(15.f, 0.f, 10.f), "phong_tex");
     house.assignTexture(house_tex);
-    house.setProperties(glm::vec3(0.385, 0.647, 0.812),
-                        glm::vec3(1.0, 1.0, 1.0),
-                        32.f);
-
 
     auto reflector_pos = glm::vec3(-5.f, 0.f, 10.f);
     auto& reflector = scene->appendObject(lazyLoadModel("sphere"),
@@ -418,11 +414,14 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                                2.5f);
     }
 
-    for (int i = 0; i < 100; i++) {
+    // prevent the light count overflow
+    int light_count = 0;
+
+    for (int i = 0; i < 80; i++) {
         float rand_x = ((float) rand() / RAND_MAX) * range - range / 2.0f;
         float rand_z = ((float) rand() / RAND_MAX) * range - range / 2.0f;
 
-        int rand_obj = ((float) rand() / RAND_MAX) * 4.0f;
+        int rand_obj = ((float) rand() / RAND_MAX) * 8.0f;
 
         float rand_rotate = ((float) rand() / RAND_MAX) * 360.0f;
         float rand_scale = ((float) rand() / RAND_MAX) * 2.f + 2.f;
@@ -455,11 +454,15 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                                          glm::vec3(0.99, 0.66, 0.96),
                                          65.f);
 
-//                std::shared_ptr<PointLight> sphere_obj_light = std::make_unique<PointLight>(glm::vec3(rand_x, light_height, rand_z),
-//                                                                                      glm::vec3(1.f, 0.7f, 0.5f),
-//                                                                                      1.f,
-//                                                                                      1.f, 0.1f, 0.01f);
-//                scene->appendLight(sphere_obj_light);
+                if (light_count <= 5) {
+                    std::shared_ptr<PointLight> sphere_obj_light = std::make_unique<PointLight>(
+                            glm::vec3(rand_x, light_height, rand_z),
+                            glm::vec3(1.f, 0.7f, 0.5f),
+                            1.f,
+                            1.f, 0.1f, 0.01f);
+                    scene->appendLight(sphere_obj_light);
+                    light_count++;
+                }
                 break;
             }
             case 3: {
@@ -469,6 +472,17 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                                                 glm::vec3(0.99, 0.55, 0.85),
                                                 32.f);
                 suzi_smooth_obj_a.rotate(glm::vec3(0.f, rand_rotate, 0.f));
+            }
+            default: {
+                auto [zombie_obj, zombie_mat, zombie_tex] = lazyLoadAssetModel("zombie.obj", "zombie.png");
+                auto& zombie = scene->appendObject(zombie_obj,
+                                                   glm::vec3(rand_x, tree_height, rand_z), "phong_tex");
+                zombie.assignTexture(zombie_tex);
+                zombie.setProperties(glm::vec3(0.55, 0.05, 0.85),
+                                     glm::vec3(0.99, 0.55, 0.85),
+                                     32.f);
+                zombie.rotate(glm::vec3(0.f, rand_rotate, 0.f));
+                zombie.scale(glm::vec3(1.5, 1.5, 1.5));
             }
         }
     }
@@ -557,7 +571,7 @@ std::tuple<const Model*, const Material, const Texture*>
 SceneLoader::lazyLoadAssetModel(const char* obj_name, const char* texture_name) {
     const auto* asset = AssetLoader::getInstance().loadAssetModel(obj_name);
     const Texture* t = TextureLoader::getInstance().loadTexture(texture_name);
-    return std::make_tuple(asset->model, asset->material, t);
+    return std::make_tuple(&asset->model, asset->material, t);
 }
 
 #pragma clang diagnostic pop

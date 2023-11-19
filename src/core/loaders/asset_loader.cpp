@@ -18,17 +18,15 @@ const Asset* AssetLoader::loadAssetModel(const char* filename) {
     if (it == model_repository.end()) {
         // load the file
         const aiScene* scene = importer.ReadFile(path.c_str(), importOptions);
-        auto model = readAssetModel(scene);
-        auto material = readMaterial(scene);
-        auto asset = new Asset{model, material};
+        auto* asset = new Asset{readAssetModel(scene), readMaterial(scene)};
 
         model_repository[filename] = asset;
-        return asset;
+        return model_repository[filename];
     }
     return it->second;
 }
 
-const Model* AssetLoader::readAssetModel(const aiScene* scene) {
+Model AssetLoader::readAssetModel(const aiScene* scene) {
     if (!scene)
         throw std::runtime_error("ModelLoader::readAssetModel: " + std::string(importer.GetErrorString()));
 
@@ -64,7 +62,7 @@ const Model* AssetLoader::readAssetModel(const aiScene* scene) {
         }
     }
 
-    return new Model(data.data(), static_cast<int>(data.size()), static_cast<ModelOptions>(ModelOptions::VERTICES | ModelOptions::NORMALS | ModelOptions::TEXTURED_UV));
+    return Model(data.data(), static_cast<int>(data.size()), static_cast<ModelOptions>(ModelOptions::VERTICES | ModelOptions::NORMALS | ModelOptions::TEXTURED_UV));
 }
 
 Material AssetLoader::readMaterial(const aiScene* scene) {
