@@ -8,6 +8,7 @@ find_library(SOIL_LIBRARY NAMES SOIL PATHS /usr/lib)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(assimp REQUIRED)
 add_subdirectory(libs/glm)
 
 include_directories(${OPENGL_INCLUDE_DIRS})
@@ -16,12 +17,14 @@ include_directories(${GLEW_INCLUDE_DIRS})
 link_libraries(${GLEW_LIBRARIES})
 
 add_executable(zpg src/main.cpp
-        # core functionalities and loaders
+        # core functionalities
         src/core/application.h src/core/application.cpp
         src/core/scene.h src/core/scene.cpp
+        # loaders
         src/core/loaders/scene_loader.h src/core/loaders/scene_loader.cpp
         src/core/loaders/model_loader.h src/core/loaders/model_loader.cpp
         src/core/loaders/texture_loader.h src/core/loaders/texture_loader.cpp
+        src/core/loaders/asset_loader.h src/core/loaders/asset_loader.cpp
         # utilities and constants
         src/util/const.h
         src/util/const_lights.h
@@ -59,4 +62,4 @@ add_executable(zpg src/main.cpp
         src/rendering/shaders/uniforms/dynamic_uniforms.h src/rendering/shaders/uniforms/dynamic_uniforms.cpp
         )
 
-target_link_libraries(zpg ${OPENGL_LIBRARIES} ${SOIL_LIBRARY} glfw glm::glm GLEW::GLEW)
+target_link_libraries(zpg ${OPENGL_LIBRARIES} ${SOIL_LIBRARY} glfw glm::glm GLEW::GLEW assimp::assimp)
