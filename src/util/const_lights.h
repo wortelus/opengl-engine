@@ -13,7 +13,7 @@
 
 inline static Spotlight FLASHLIGHT(glm::vec3(0.0),
         glm::vec3(1.0),
-        glm::vec3(0.6f, 1.f, 0.6f),
+        glm::vec3(0.9f, 1.f, 0.9f),
         2.f,
         1, 0.1, 0.01,
         std::cos(glm::radians(12.5f)),
