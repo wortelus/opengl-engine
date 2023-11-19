@@ -95,6 +95,8 @@ We call globally directly in scene all transformation operations (*no notify*).
 - [libgl1-mesa-dev](https://www.mesa3d.org/) - *v22.3.6-1+deb12u1*
 - [libglew-dev](https://glew.sourceforge.net/) - *2.2.0-4+b1*
 - [glew-utils](https://glew.sourceforge.net/) - *2.2.0-4+b1*
+- [libsoil-dev](https://www.&q=libsoil) - *1.07~20080707.dfsg-4*
+- [libassimp-dev](https://www.assimp.org/) - *5.2.5~ds0-1+b1*
 
 ## Seek the Scribe
 Daniel Slavík, _known in revered circles as wortelus_, keeper of the chronicles.

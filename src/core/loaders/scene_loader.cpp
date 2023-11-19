@@ -9,6 +9,7 @@
 #include "model_loader.h"
 #include "../../rendering/light/point_light.h"
 #include "texture_loader.h"
+#include "asset_loader.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -125,6 +126,14 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
                                       suzie_pos, "blinn");
     suzie.setProperties(glm::vec3(0.185, 0.247, 0.812),
                         glm::vec3(0.2, 0.8, 0.4),
+                        32.f);
+
+    auto [house_obj, house_mat, house_tex] = lazyLoadAssetModel("building.obj", "building.png");
+    auto& house = scene->appendObject(house_obj,
+                                      glm::vec3(15.f, 0.f, 10.f), "phong_tex");
+    house.assignTexture(house_tex);
+    house.setProperties(glm::vec3(0.385, 0.647, 0.812),
+                        glm::vec3(1.0, 1.0, 1.0),
                         32.f);
 
 
@@ -526,7 +535,8 @@ const Model* SceneLoader::lazyLoadModel(const char* name) {
     return ModelLoader::getInstance().loadModel(name);
 }
 
-std::pair<const Model*, const Texture*> SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
+std::pair<const Model*, const Texture*>
+SceneLoader::lazyLoadModel(const char* name, const char* texture_name) {
     const Model* m = ModelLoader::getInstance().loadModel(ModelKey{name,
                                                                    static_cast<ModelOptions>(ModelOptions::VERTICES |
                                                                                              ModelOptions::NORMALS |
@@ -541,6 +551,13 @@ SceneLoader::lazyLoadCubeMap(const char* name, const char* skybox_name, const ch
             ModelKey{name, static_cast<ModelOptions>(ModelOptions::VERTICES | ModelOptions::SKYBOX)});
     const Texture* t = TextureLoader::getInstance().loadCubeMap(skybox_name, texture_extension);
     return std::make_pair(m, t);
+}
+
+std::tuple<const Model*, const Material, const Texture*>
+SceneLoader::lazyLoadAssetModel(const char* obj_name, const char* texture_name) {
+    const auto* asset = AssetLoader::getInstance().loadAssetModel(obj_name);
+    const Texture* t = TextureLoader::getInstance().loadTexture(texture_name);
+    return std::make_tuple(asset->model, asset->material, t);
 }
 
 #pragma clang diagnostic pop

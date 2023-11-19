@@ -41,6 +41,8 @@ private:
     static std::pair<const Model*, const Texture*> lazyLoadModel(const char* name, const char* texture_name);
     static std::pair<const Model*, const Texture*> lazyLoadCubeMap(const char* name, const char* skybox_name,
                                                                  const char* texture_extension);
+
+    static std::tuple<const Model*, const Material, const Texture*> lazyLoadAssetModel(const char* obj_name, const char* texture_name);
 };
 
 #endif //ZPG_SCENE_LOADER_H
