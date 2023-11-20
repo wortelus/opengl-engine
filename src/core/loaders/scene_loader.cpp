@@ -50,24 +50,28 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
     sphere_south_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                       glm::vec3(1.0, 1.0, 1.0),
                                       32.f);
+    sphere_south_object.setInteractionID();
 
     auto& sphere_east_object = scene->appendObject(lazyLoadModel("sphere"),
                                                    glm::vec3(-2.f, height, 0.f), "phong");
     sphere_east_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                      glm::vec3(1.0, 1.0, 1.0),
                                      32.f);
+    sphere_east_object.setInteractionID();
 
     auto& sphere_north_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, height, 2.f), "phong");
     sphere_north_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                       glm::vec3(1.0, 1.0, 1.0),
                                       32.f);
+    sphere_north_object.setInteractionID();
 
     auto& sphere_west_object = scene->appendObject(lazyLoadModel("sphere"),
                                                    glm::vec3(2.f, height, 0.f), "phong");
     sphere_west_object.setProperties(glm::vec3(0.385, 0.647, 0.812),
                                      glm::vec3(1.0, 1.0, 1.0),
                                      32.f);
+    sphere_west_object.setInteractionID();
 
     std::shared_ptr<PointLight> light_a = std::make_unique<PointLight>(glm::vec3(0.f, height, 0.f),
                                                                        glm::vec3(1.f, 1.f, 1.f),

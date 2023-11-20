@@ -55,10 +55,18 @@ void Application::init() {
 
     glfwSetWindowUserPointer(window, this);
 
+    /*
+     * Buffer settings
+     *
+     * Z-buffer */
     glfwWindowHint(GLFW_DEPTH_BITS, 24);
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    // Stencil buffer
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
     glfwSetKeyCallback(window, keyCallback);
     glfwSetWindowCloseCallback(window, windowCloseCallback);

@@ -31,12 +31,16 @@ private:
     glm::mat4 view;
     glm::mat4 projection;
 
+    double mouse_x;
+    double mouse_y;
+
     double yaw = 0;
     double pitch = 0;
 
     bool is_jumping = false;
     float current_jump_speed = 0;
 
+    int width, height;
     float aspect_ratio;
 
     std::weak_ptr<Spotlight> flashlight;
@@ -48,13 +52,20 @@ private:
     void notifyPosition();
     void notifyFlashlight();
 public:
-    explicit Camera(float aspect);
+    explicit Camera(const int& init_width, const int& init_height);
 
     void start();
 
     void setFlashlight(const std::weak_ptr<Spotlight>& weak_flashlight);
 
-    void update_aspect_ratio(const int& width, const int& height);
+    void update_aspect_ratio(const int& _width, const int& _height);
+
+    [[nodiscard]] double getMouseX() const { return mouse_x; }
+    [[nodiscard]] double getMouseY() const { return mouse_y; }
+    void setMouseXY(const double& x, const double& y) { mouse_x = x; mouse_y = y; }
+
+    [[nodiscard]] int getWidth() const { return width; }
+    [[nodiscard]] int getHeight() const { return height; }
 
     void move(const double& x_offset, const double& y_offset);
     void moveCharacterSide(const float& offset);

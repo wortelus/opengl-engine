@@ -22,10 +22,8 @@
 #include "../../assets/suzi_smooth.h"
 
 Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height) :
-        scene_id(id), window(&window_reference),
-        last_x(initial_width / 2.0), last_y(initial_height / 2.0) {
-    float ratio = (float) initial_width / (float) initial_height;
-    this->camera = std::make_unique<Camera>(ratio);
+        scene_id(id), window(&window_reference) {
+    this->camera = std::make_unique<Camera>(initial_width, initial_height);
     this->object_manager = std::make_unique<ObjectManager>();
     this->animation_manager = std::make_unique<AnimationManager>();
 }
@@ -153,7 +151,6 @@ void Scene::run() {
     this->optimizeObjects();
 
     while (!is_finished) {
-
         auto current_frame_time = (float)glfwGetTime() * 300.0f;
         float delta_time = current_frame_time - last_frame_time;
         last_frame_time = current_frame_time;
@@ -161,6 +158,8 @@ void Scene::run() {
         continuousMovement(delta_time);
         camera->jumpProgress(delta_time);
 
+        // wipe the stencil buffer identifying objects
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);
         // wipe the drawing surface clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         if (const auto& skybox = object_manager->getSkybox(); object_manager->hasSkybox()) {
@@ -267,13 +266,17 @@ void Scene::handleKeyEventRelease(int key, int scancode, int action, int mods) {
 Scene::~Scene() {}
 
 void Scene::handleMouseMovementEvent(double x_pos, double y_pos) {
+    last_mouse_x = x_pos;
+    last_mouse_y = y_pos;
+
     if (!right_mouse_button_pressed)
         return;
 
-    double x_offset = x_pos - last_x;
-    double y_offset = last_y - y_pos;
-    last_x = x_pos;
-    last_y = y_pos;
+    double mouse_x = camera->getMouseX();
+    double mouse_y = camera->getMouseY();
+    double x_offset = x_pos - mouse_x;
+    double y_offset = mouse_y - y_pos;
+    camera->setMouseXY(x_pos, y_pos);
 
     x_offset *= MOUSE_SENSITIVITY;
     y_offset *= MOUSE_SENSITIVITY;
@@ -318,7 +321,35 @@ void Scene::handleMouseButtonEventRelease(int button, int action, int mods) {
         case GLFW_MOUSE_BUTTON_RIGHT:
             right_mouse_button_pressed = false;
             break;
+        case GLFW_MOUSE_BUTTON_LEFT:
+            handleObjectPress(last_mouse_x, last_mouse_y);
         default:
             break;
     }
+}
+
+void Scene::handleObjectPress(double x_pos, double y_pos) {
+    GLbyte color[4];
+    GLfloat depth;
+    GLuint index;
+
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+
+    int newy = camera->getHeight() - y;
+
+    glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+    glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+    glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+    printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
+           x, y, color[0], color[1], color[2], color[3], depth, index);
+
+    glm::vec3 screenX = glm::vec3(x, newy, depth);
+    glm::mat4 view;
+    glm::mat4 projection;
+    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
+    glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
+
+    printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
 }

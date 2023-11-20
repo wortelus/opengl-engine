@@ -5,10 +5,17 @@
 #include <algorithm>
 #include "camera.h"
 
-Camera::Camera(float aspect) : aspect_ratio(aspect), position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
-                               pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
+Camera::Camera(const int& init_width, const int& init_height) : width(init_width), height(init_height),
+                                                                aspect_ratio(
+                                                                        static_cast<float>(init_width) /
+                                                                        static_cast<float>(init_height)),
+                                                                position(CAMERA_POS), front(CAMERA_TARGET - CAMERA_POS),
+                                                                pitch(CAMERA_PITCH), yaw(CAMERA_YAW) {
+    mouse_x = width / 2.;
+    mouse_y = height / 2.;
+
     view = glm::lookAt(CAMERA_POS, CAMERA_TARGET, CAMERA_UP);
-    projection = glm::perspective(PROJECTION_FOV, aspect, PROJECTION_NEAR, PROJECTION_FAR);
+    projection = glm::perspective(PROJECTION_FOV, aspect_ratio, PROJECTION_NEAR, PROJECTION_FAR);
 }
 
 void Camera::move(const double& x_offset, const double& y_offset) {
@@ -86,8 +93,10 @@ void Camera::jump() {
     }
 }
 
-void Camera::update_aspect_ratio(const int& width, const int& height) {
-    aspect_ratio = (float) width / (float) height;
+void Camera::update_aspect_ratio(const int& _width, const int& _height) {
+    this->width = _width;
+    this->height = _height;
+    aspect_ratio = (float) _width / (float) _height;
     projection = glm::perspective(PROJECTION_FOV, aspect_ratio, PROJECTION_NEAR, PROJECTION_FAR);
 
     notifyProjection();

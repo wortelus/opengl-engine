@@ -6,6 +6,8 @@
 
 #include <utility>
 
+char DrawableObject::interaction_id_counter = 0;
+
 DrawableObject::DrawableObject(const glm::vec3& position, const Model* model,
                                std::string shader_name)
         : position(position),
@@ -50,6 +52,8 @@ DrawableObject::DrawableObject(const glm::vec3& position,
 
 
 void DrawableObject::draw() const {
+    if (this->interaction_id != 0)
+        glStencilFunc(GL_ALWAYS, this->interaction_id, 0xFF);
     if (this->model->isTextured())
         this->material.texture->bind();
     this->model->draw();

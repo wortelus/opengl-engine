@@ -44,8 +44,8 @@ private:
     const glm::vec3 scene_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     bool right_mouse_button_pressed = false;
-    double last_x = 0.0;
-    double last_y = 0.0;
+    double last_mouse_x = 0;
+    double last_mouse_y = 0;
     float last_frame_time = 0.0f;
 
     bool is_finished = false;
@@ -85,8 +85,8 @@ public:
     void finish() { is_finished = true; }
 
     inline void continuousMovement(const float& delta_time);
-
     void update_aspect_ratio(const int& new_width, const int& new_height);
+    void handleObjectPress(double x_pos, double y_pos);
 
     void handleKeyEventPress(int key, int scancode, int action, int mods);
     void handleKeyEventRelease(int key, int scancode, int action, int mods);
