@@ -13,6 +13,7 @@ using SHADER_ALIAS_DATATYPE = int;
 using SHADER_UNIFORM_LOCATION = GLint;
 using TEXTURE_ID = GLuint;
 using TEXTURE_UNIT = GLuint;
+using TEXTURE_TARGET = GLenum;
 
 inline constexpr bool ENABLE_CULL_FACE = false;
 inline constexpr bool DISABLE_VSYNC = false;

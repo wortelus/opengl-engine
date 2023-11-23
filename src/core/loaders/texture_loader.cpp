@@ -24,7 +24,11 @@ const Texture* TextureLoader::loadTexture(const char* name) {
             throw std::runtime_error("TextureLoader::loadTexture: Failed to load texture: " + std::string(name));
         }
         auto* tex = new Texture(tex_id);
-        texture_repository.insert(std::pair<std::string, Texture*>(name, tex));
+        auto in = texture_repository.insert(std::pair<std::string, Texture*>(name, tex));
+        if (!in.second) {
+            throw std::runtime_error("TextureLoader::loadTexture: Texture trying to be inserted already exists: " +
+                                     std::string(name));
+        }
         return tex;
     }
     return it->second;
@@ -46,12 +50,16 @@ const Texture* TextureLoader::loadCubeMap(const char* name, const char* extensio
                 skybox_texture_names[0].c_str(), skybox_texture_names[1].c_str(),
                 skybox_texture_names[2].c_str(), skybox_texture_names[3].c_str(),
                 skybox_texture_names[4].c_str(), skybox_texture_names[5].c_str(),
-                SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, 0);
+                SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, 0);
         if (tex_id == 0) {
             throw std::runtime_error("TextureLoader::loadCubeMap: Failed to load cube map at: " + path);
         }
-        auto* tex = new Texture(tex_id);
-        texture_repository.insert(std::pair<std::string, Texture*>(name, tex));
+        auto* tex = new Texture(tex_id, GL_TEXTURE0, GL_TEXTURE_CUBE_MAP);
+        auto in = texture_repository.insert(std::pair<std::string, Texture*>(name, tex));
+        if (!in.second) {
+            throw std::runtime_error("TextureLoader::loadTexture: Texture trying to be inserted already exists: " +
+                                     std::string(name));
+        }
         return tex;
     }
     return it->second;

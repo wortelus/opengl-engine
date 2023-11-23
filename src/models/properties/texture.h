@@ -11,9 +11,11 @@ class Texture {
 private:
     const TEXTURE_ID texture_id;
     const GLenum texture_unit;
+    const TEXTURE_TARGET target;
 public:
     explicit Texture(TEXTURE_ID id);
     explicit Texture(TEXTURE_ID id, GLenum unit);
+    explicit Texture(TEXTURE_ID id, GLenum unit, TEXTURE_TARGET bind_target);
 
     [[nodiscard]] TEXTURE_UNIT getTextureUnit() const { return (texture_unit - GL_TEXTURE0); }
 
