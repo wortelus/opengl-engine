@@ -5,8 +5,7 @@
 #include "drawable.h"
 
 #include <utility>
-
-char DrawableObject::interaction_id_counter = 0;
+#include <stdexcept>
 
 DrawableObject::DrawableObject(const glm::vec3& position, const Model* model,
                                std::string shader_name)
@@ -161,4 +160,18 @@ void DrawableObject::notifyModelParameters() const {
 
 void DrawableObject::assignTexture(const Texture* texture) {
     this->material.texture = texture;
+}
+
+void DrawableObject::setInteractionID(const char& id) {
+    if (this->interaction_id != 0)
+        throw std::runtime_error("Interaction ID already set");
+    interaction_id = id;
+}
+
+char DrawableObject::getInteractionID() const {
+    if (!this->isInteract())
+        throw std::runtime_error("Object is not interactive.");
+    if (this->interaction_id == 0)
+        throw std::runtime_error("Interaction ID not set.");
+    return this->interaction_id;
 }

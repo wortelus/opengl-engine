@@ -13,10 +13,20 @@ private:
     std::unique_ptr<DrawableObject> skybox;
     std::vector<std::unique_ptr<DrawableObject>> objects;
 
+    // interaction id is used for stencil buffer
+    std::array<DrawableObject*, 256> interaction_ids = {nullptr};
+
     // not part of the scene yet
     std::vector<std::unique_ptr<DrawableObject>> queued_objects;
+    // prepared to be deleted
+    std::vector<char> inter_ids_to_delete;
+
+    // static variable for interaction id assignment
+    static char next_interact_id;
 private:
     void enqueue(ShaderLoader* shader_loader);
+    void sortObjects();
+    void deleteObjects();
 public:
     ~ObjectManager();
 
@@ -26,6 +36,10 @@ public:
     [[nodiscard]] bool hasSkybox() const { return skybox != nullptr; }
     [[nodiscard]] DrawableObject& getSkybox() const { return *skybox; }
 
+    DrawableObject* getByInteractID(const char& id);
+    void deleteByInteractID(const char& id);
+
+    // enqueue and sort objects by shader alias
     void preprocess(ShaderLoader* shader_loader);
 
     // global objects components

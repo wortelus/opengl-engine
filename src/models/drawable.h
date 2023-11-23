@@ -26,8 +26,8 @@ private:
 
     Material material;
 
+    bool interact = false;
     char interaction_id = 0;
-    static char interaction_id_counter;
 public:
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name);
     DrawableObject(const glm::vec3& position, const Model* model, std::string shader_name,
@@ -46,8 +46,11 @@ public:
     void assignShaderAlias(const SHADER_ALIAS_DATATYPE& alias) { this->shader_alias = alias; }
     [[nodiscard]] SHADER_ALIAS_DATATYPE getShaderAlias() const { return this->shader_alias; }
 
-    char setInteractionID () { return this->interaction_id = ++interaction_id_counter; }
-    [[nodiscard]] char getInteractionID() const { return this->interaction_id; }
+    void markInteract() { this->interact = true; }
+    [[nodiscard]] bool isInteract() const { return this->interact; }
+
+    void setInteractionID(const char& id);
+    [[nodiscard]] char getInteractionID() const;
 
     void setTranslate(const glm::vec3& location);
     void translate(const glm::vec3& delta);

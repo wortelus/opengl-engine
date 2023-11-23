@@ -333,7 +333,7 @@ void Scene::handleObjectPress(double x_pos, double y_pos) {
     printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
            x, y, color[0], color[1], color[2], color[3], depth, index);
 
-    if (index != 0) {
+    if (index == 0) {
         glm::vec3 screenX = glm::vec3(x, new_y, depth);
         glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
         glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
@@ -344,6 +344,9 @@ void Scene::handleObjectPress(double x_pos, double y_pos) {
 }
 
 void Scene::plantTree(float x, float y, float z) {
-    auto tree_model = ModelLoader::getInstance().loadModel("tree");
-    auto tree_obj = this->appendObject(tree_model, glm::vec3(x, y, z), "phong");
+    const auto* tree_model = ModelLoader::getInstance().loadModel("tree");
+    auto& tree_obj = this->appendObject(tree_model, glm::vec3(x, y, z), "blinn");
+    tree_obj.setProperties(glm::vec3(0.55, 0.75, 0.1),
+                           glm::vec3(0.99, 0.15, 0.1),
+                           2.5f);
 }
