@@ -49,6 +49,8 @@ private:
     float last_frame_time = 0.0f;
 
     bool is_finished = false;
+private:
+    void plantTree(float x, float y, float z);
 public:
     void setAmbient(const glm::vec3& ambient) { scene_ambient = ambient; }
 
@@ -77,7 +79,7 @@ public:
     ~Scene();
 
     void init(std::shared_ptr<ShaderLoader> preloaded_shader_loader);
-    void optimizeObjects();
+    void prepareObjects();
     void run();
 
     [[nodiscard]] char getSceneId() const { return scene_id; }

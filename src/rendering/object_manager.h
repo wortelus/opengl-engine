@@ -6,11 +6,17 @@
 #define ZPG_OBJECT_MANAGER_H
 
 #include "../models/drawable.h"
+#include "shaders/shader_loader.h"
 
 class ObjectManager {
 private:
     std::unique_ptr<DrawableObject> skybox;
     std::vector<std::unique_ptr<DrawableObject>> objects;
+
+    // not part of the scene yet
+    std::vector<std::unique_ptr<DrawableObject>> queued_objects;
+private:
+    void enqueue(ShaderLoader* shader_loader);
 public:
     ~ObjectManager();
 
@@ -20,7 +26,7 @@ public:
     [[nodiscard]] bool hasSkybox() const { return skybox != nullptr; }
     [[nodiscard]] DrawableObject& getSkybox() const { return *skybox; }
 
-    void preprocess();
+    void preprocess(ShaderLoader* shader_loader);
 
     // global objects components
     void translate(const glm::vec3& translation);

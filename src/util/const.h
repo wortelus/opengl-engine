@@ -38,7 +38,7 @@ inline constexpr float CAMERA_SPEED = 0.1f;
 // Jumping
 inline constexpr float INITIAL_JUMP_VELOCITY = 0.25;
 inline constexpr float GRAVITY = 0.0025;
-inline constexpr float GROUND_LEVEL = 2.0;
+inline constexpr float GROUND_LEVEL = 2.0; //TODO: change to eye_level or similar
 
 // Initial camera position
 inline constexpr glm::vec3 CAMERA_POS = glm::vec3(0.0f, GROUND_LEVEL, 3.0f);

@@ -18,6 +18,7 @@
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 
 #include "scene.h"
+#include "loaders/model_loader.h"
 #include "../../assets/sphere.h"
 #include "../../assets/suzi_smooth.h"
 
@@ -30,11 +31,6 @@ Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_wi
 
 void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     this->shader_loader = std::move(preloaded_shader_loader);
-
-    // assign shader aliases
-    for (const auto object: *object_manager) {
-        assignShaderAlias(*object);
-    }
 
     // assign shader aliases for animations
     for (const auto object: *animation_manager) {
@@ -51,16 +47,6 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     // subscribe shaders to light manager
     for (auto shader: *this->shader_loader) {
         light_manager.attach(shader);
-    }
-
-    // subscribe single shader to drawable objects
-    for (const auto object: *object_manager) {
-        Shader* sh = this->shader_loader->loadShader(object->getShaderAlias());
-        object->attach(sh);
-
-        // make use of the loaded shader, and pre-pass uniforms just enough before the rendering loop
-        object->notifyModel();
-        object->notifyMaterial();
     }
 
     // subscribe single shader to drawable objects inside animations
@@ -92,8 +78,8 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     light_manager.notifyShaders();
 }
 
-void Scene::optimizeObjects() {
-    object_manager->preprocess();
+void Scene::prepareObjects() {
+    object_manager->preprocess(this->shader_loader.get());
 }
 
 std::unique_ptr<DrawableObject> Scene::newObject(
@@ -148,9 +134,10 @@ void Scene::appendLight(const std::shared_ptr<Light>& light) {
 
 
 void Scene::run() {
-    this->optimizeObjects();
 
     while (!is_finished) {
+        this->prepareObjects();
+
         auto current_frame_time = (float)glfwGetTime() * 300.0f;
         float delta_time = current_frame_time - last_frame_time;
         last_frame_time = current_frame_time;
@@ -337,18 +324,26 @@ void Scene::handleObjectPress(double x_pos, double y_pos) {
     auto x = static_cast<GLint>(x_pos);
     auto y = static_cast<GLint>(y_pos);
 
-    int newy = camera->getHeight() - y;
+    int new_y = camera->getHeight() - y;
 
-    glReadPixels(x, newy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-    glReadPixels(x, newy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-    glReadPixels(x, newy, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+    glReadPixels(x, new_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+    glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
 
     printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
            x, y, color[0], color[1], color[2], color[3], depth, index);
 
-    glm::vec3 screenX = glm::vec3(x, newy, depth);
-    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
-    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+    if (index != 0) {
+        glm::vec3 screenX = glm::vec3(x, new_y, depth);
+        glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
+        glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
 
-    printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+        printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
+        plantTree(pos.x, 0, pos.z);
+    }
+}
+
+void Scene::plantTree(float x, float y, float z) {
+    auto tree_model = ModelLoader::getInstance().loadModel("tree");
+    auto tree_obj = this->appendObject(tree_model, glm::vec3(x, y, z), "phong");
 }
