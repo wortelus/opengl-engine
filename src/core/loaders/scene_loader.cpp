@@ -41,9 +41,9 @@ SceneLoader::loadSceneA(GLFWwindow& window_reference, const int& initial_width, 
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(0, window_reference, initial_width, initial_height);
 
-    auto skybox_assets = lazyLoadCubeMap("cube", "skybox", ".jpg");
-    auto& skybox = scene->assignSkybox(skybox_assets.first);
-    skybox.assignTexture(skybox_assets.second);
+    auto [skybox_model, skybox_tex] = lazyLoadCubeMap("cube", "skybox", ".jpg");
+    auto& skybox = scene->assignSkybox(skybox_model);
+    skybox.assignTexture(skybox_tex);
 
     auto& sphere_south_object = scene->appendObject(lazyLoadModel("sphere"),
                                                     glm::vec3(0.f, height, -2.f), "phong");
@@ -230,9 +230,9 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     glm::vec3 axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
-    auto skybox_assets = lazyLoadCubeMap("cube", "skybox_space", ".png");
-    auto& skybox = scene->assignSkybox(skybox_assets.first);
-    skybox.assignTexture(skybox_assets.second);
+    auto [skybox_model, skybox_tex] = lazyLoadCubeMap("cube", "skybox_space", ".png");
+    auto& skybox = scene->assignSkybox(skybox_model);
+    skybox.assignTexture(skybox_tex);
     scene->setAmbient(glm::vec3(0.5, 0.5, 0.5));
 
     glm::vec3 sun_pos = glm::vec3(0.0f, -2.0f, -100.0f);
@@ -397,9 +397,9 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
-    auto skybox_assets = lazyLoadCubeMap("cube", "skybox", ".jpg");
-    auto& skybox = scene->assignSkybox(skybox_assets.first);
-    skybox.assignTexture(skybox_assets.second);
+    auto [skybox_model, skybox_tex] = lazyLoadCubeMap("cube", "skybox", ".jpg");
+    auto& skybox = scene->assignSkybox(skybox_model);
+    skybox.assignTexture(skybox_tex);
     scene->setAmbient(glm::vec3(0, 0, 0));
 
     float tree_height = 0.0f;

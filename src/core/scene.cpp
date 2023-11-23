@@ -163,13 +163,14 @@ void Scene::run() {
         // wipe the drawing surface clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         if (const auto& skybox = object_manager->getSkybox(); object_manager->hasSkybox()) {
+            glDisable(GL_DEPTH_TEST);
             Shader* sh = shader_loader->loadShader(skybox.getShaderAlias());
             skybox.notifyModelParameters();
             sh->lazyPassUniforms();
             skybox.draw();
+            glEnable(GL_DEPTH_TEST);
         }
 
-        glClear(GL_DEPTH_BUFFER_BIT);
         for (const auto object: *object_manager) {
             Shader* sh = shader_loader->loadShader(object->getShaderAlias());
             object->notifyModelParameters();
@@ -346,10 +347,8 @@ void Scene::handleObjectPress(double x_pos, double y_pos) {
            x, y, color[0], color[1], color[2], color[3], depth, index);
 
     glm::vec3 screenX = glm::vec3(x, newy, depth);
-    glm::mat4 view;
-    glm::mat4 projection;
     glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
-    glm::vec3 pos = glm::unProject(screenX, view, projection, viewPort);
+    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
 
     printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
 }
