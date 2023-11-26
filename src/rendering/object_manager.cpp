@@ -62,28 +62,24 @@ void ObjectManager::enqueue(ShaderLoader* shader_loader) {
 
 void ObjectManager::deleteObjects() {
     for (auto& inter_id_obj: inter_ids_to_delete) {
-        auto& del_obj = objects[inter_id_obj];
-        del_obj.reset();
-        interaction_ids[inter_id_obj] = nullptr;
+        for (auto it = objects.begin(); it != objects.end(); ++it) {
+            if ((*it)->isInteract() && (*it)->getInteractionID() == inter_id_obj) {
+                objects.erase(it);
+                break;
+            }
+        }
     }
     inter_ids_to_delete.clear();
 }
 
 void ObjectManager::preprocess(ShaderLoader* shader_loader) {
-    bool dirty = false;
-    if (!inter_ids_to_delete.empty()) {
+    if (!inter_ids_to_delete.empty())
         deleteObjects();
-        dirty = true;
-    }
 
-    if (!queued_objects.empty()) {
+    if (!queued_objects.empty())
         enqueue(shader_loader);
-        dirty = true;
-    }
-
-    if (dirty) {
+    else
         sortObjects();
-    }
 }
 
 //
@@ -110,24 +106,18 @@ void ObjectManager::scale(const glm::vec3& scale) {
 
 ObjectManager::~ObjectManager() {
     objects.clear();
+    queued_objects.clear();
+    inter_ids_to_delete.clear();
 }
 
 //
 // Interactions with concrete objects
 //
 
-// TODO: check race condition scenarios
-
 DrawableObject* ObjectManager::getByInteractID(const char& id) {
     return interaction_ids[id];
 }
 
 void ObjectManager::deleteByInteractID(const char& id) {
-    auto obj_ref = interaction_ids[id];
-    if (obj_ref != nullptr) {
-        inter_ids_to_delete.push_back(id);
-    } else {
-        throw std::runtime_error(
-                "Object with interaction ID " + std::to_string(id) + " can't be removed as it doesn't exist!");
-    }
+    inter_ids_to_delete.push_back(id);
 }

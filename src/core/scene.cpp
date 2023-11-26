@@ -112,6 +112,12 @@ DrawableObject& Scene::appendObject(
     return obj;
 }
 
+DrawableObject& Scene::appendObject(std::unique_ptr<DrawableObject> object_ptr) {
+    auto& obj = object_manager->addObject(std::move(object_ptr));
+    obj.setAmbient(scene_ambient);
+    return obj;
+}
+
 DrawableObject& Scene::assignSkybox(const Model* model_ptr) {
     std::unique_ptr<DrawableObject> object = std::make_unique<DrawableObject>(glm::vec3(0, 0, 0), model_ptr,
                                                                               "skybox", scene_ambient);
@@ -244,6 +250,12 @@ void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
             object_manager->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
             animation_manager->scale(glm::vec3(-0.1f, -0.1f, -0.1f));
             break;
+        case GLFW_KEY_I:
+            showBuffers(last_mouse_x, last_mouse_y);
+            break;
+        case GLFW_KEY_O:
+            deleteTargetObject();
+            break;
         default:
             break;
     }
@@ -310,13 +322,13 @@ void Scene::handleMouseButtonEventRelease(int button, int action, int mods) {
             right_mouse_button_pressed = false;
             break;
         case GLFW_MOUSE_BUTTON_LEFT:
-            handleObjectPress(last_mouse_x, last_mouse_y);
+            handlePlantTree(last_mouse_x, last_mouse_y);
         default:
             break;
     }
 }
 
-void Scene::handleObjectPress(double x_pos, double y_pos) {
+void Scene::showBuffers(double x_pos, double y_pos) {
     GLbyte color[4];
     GLfloat depth;
     GLuint index;
@@ -332,21 +344,55 @@ void Scene::handleObjectPress(double x_pos, double y_pos) {
 
     printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
            x, y, color[0], color[1], color[2], color[3], depth, index);
+}
 
-    if (index == 0) {
-        glm::vec3 screenX = glm::vec3(x, new_y, depth);
-        glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
-        glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+char Scene::getStencilIndex(double x_pos, double y_pos) {
+    GLuint index;
 
-        printf("unProject [%f,%f,%f]\n", pos.x, pos.y, pos.z);
-        plantTree(pos.x, 0, pos.z);
-    }
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = camera->getHeight() - y;
+
+    glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+    return static_cast<char>(index);
+}
+
+void Scene::handlePlantTree(double x_pos, double y_pos) {
+    GLfloat depth;
+
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = camera->getHeight() - y;
+
+    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+
+    glm::vec3 screenX = glm::vec3(x, new_y, depth);
+    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
+    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+
+    plantTree(pos.x, 0, pos.z);
+    printf("Tree planted at %f, %f, %f\n", pos.x, 0., pos.z);
 }
 
 void Scene::plantTree(float x, float y, float z) {
     const auto* tree_model = ModelLoader::getInstance().loadModel("tree");
-    auto& tree_obj = this->appendObject(tree_model, glm::vec3(x, y, z), "blinn");
-    tree_obj.setProperties(glm::vec3(0.55, 0.75, 0.1),
+    auto tree_obj = this->newObject(tree_model, glm::vec3(x, y, z), "blinn");
+    tree_obj->setProperties(glm::vec3(0.55, 0.75, 0.1),
                            glm::vec3(0.99, 0.15, 0.1),
                            2.5f);
+
+    // we need to mark the object as interact before we pass it to the object manager
+    // to avoid race condition where the interact flag is set after the object's enqueue
+    tree_obj->markInteract();
+    this->appendObject(std::move(tree_obj));
+}
+
+void Scene::deleteTargetObject() {
+    char id = getStencilIndex(last_mouse_x, last_mouse_y);
+    if (id != 0) {
+        object_manager->deleteByInteractID(id);
+        printf("Object with id %d deleted\n", id);
+    } else {
+        printf("No object to delete\n");
+    }
 }

@@ -51,6 +51,9 @@ private:
     bool is_finished = false;
 private:
     void plantTree(float x, float y, float z);
+    void showBuffers(double x_pos, double y_pos);
+    char getStencilIndex(double x_pos, double y_pos);
+    void deleteTargetObject();
 public:
     void setAmbient(const glm::vec3& ambient) { scene_ambient = ambient; }
 
@@ -59,15 +62,15 @@ public:
     std::unique_ptr<DrawableObject> newObject(const Model* model_ptr,
                                               const glm::vec3& position,
                                               const std::string& shader_name);
-
     std::unique_ptr<DrawableObject> newObject(const Model* model_ptr,
                                               const glm::vec3& position,
                                               const std::string& shader_name,
                                               const glm::vec3& axis);
-
     DrawableObject& appendObject(const Model* model_ptr,
                                  const glm::vec3& position,
                                  const std::string& shader_name);
+    DrawableObject& appendObject(std::unique_ptr<DrawableObject> object_ptr);
+
     DrawableObject& assignSkybox(const Model* model_ptr);
 
     void appendAnimation(const std::shared_ptr<Animation>& animation);
@@ -88,7 +91,7 @@ public:
 
     inline void continuousMovement(const float& delta_time);
     void update_aspect_ratio(const int& new_width, const int& new_height);
-    void handleObjectPress(double x_pos, double y_pos);
+    void handlePlantTree(double x_pos, double y_pos);
 
     void handleKeyEventPress(int key, int scancode, int action, int mods);
     void handleKeyEventRelease(int key, int scancode, int action, int mods);
