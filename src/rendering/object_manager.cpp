@@ -5,8 +5,6 @@
 #include <algorithm>
 #include "object_manager.h"
 
-char ObjectManager::next_interact_id = 1;
-
 DrawableObject& ObjectManager::addObject(std::unique_ptr<DrawableObject> obj) {
     queued_objects.push_back(std::move(obj));
     return *queued_objects.back();
@@ -48,7 +46,6 @@ void ObjectManager::enqueue(ShaderLoader* shader_loader) {
         // assign interaction id to the object if it's marked as one
         if (q_obj->isInteract()) {
             q_obj->setInteractionID(next_interact_id);
-            interaction_ids[next_interact_id] = q_obj.get();
             next_interact_id++;
         }
 
@@ -83,6 +80,14 @@ void ObjectManager::preprocess(ShaderLoader* shader_loader) {
 }
 
 //
+// Object access
+//
+
+void ObjectManager::deleteByInteractID(const char& id) {
+    inter_ids_to_delete.push_back(id);
+}
+
+//
 // Global object transformations
 //
 
@@ -108,16 +113,4 @@ ObjectManager::~ObjectManager() {
     objects.clear();
     queued_objects.clear();
     inter_ids_to_delete.clear();
-}
-
-//
-// Interactions with concrete objects
-//
-
-DrawableObject* ObjectManager::getByInteractID(const char& id) {
-    return interaction_ids[id];
-}
-
-void ObjectManager::deleteByInteractID(const char& id) {
-    inter_ids_to_delete.push_back(id);
 }

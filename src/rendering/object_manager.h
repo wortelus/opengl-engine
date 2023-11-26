@@ -10,19 +10,16 @@
 
 class ObjectManager {
 private:
+    // skybox
     std::unique_ptr<DrawableObject> skybox;
+    // objects currently participating in rendering pipeline
     std::vector<std::unique_ptr<DrawableObject>> objects;
-
-    // interaction id is used for stencil buffer
-    std::array<DrawableObject*, 256> interaction_ids = {nullptr};
-
     // not part of the scene yet
     std::vector<std::unique_ptr<DrawableObject>> queued_objects;
     // prepared to be deleted
     std::vector<char> inter_ids_to_delete;
-
-    // static variable for interaction id assignment
-    static char next_interact_id;
+    // next interaction id
+    char next_interact_id = 1;
 private:
     void enqueue(ShaderLoader* shader_loader);
     void sortObjects();
