@@ -82,7 +82,7 @@ void Scene::prepareObjects() {
     object_manager->preprocess(this->shader_loader.get());
 }
 
-std::unique_ptr<DrawableObject> Scene::newObject(
+std::unique_ptr<DrawableObject> Scene::draftObject(
         const Model* model_ptr,
         const glm::vec3 &position,
         const std::string &shader_name) {
@@ -91,7 +91,7 @@ std::unique_ptr<DrawableObject> Scene::newObject(
     return object;
 }
 
-std::unique_ptr<DrawableObject>Scene::newObject(
+std::unique_ptr<DrawableObject>Scene::draftObject(
         const Model* model_ptr,
         const glm::vec3& position,
         const std::string& shader_name,
@@ -376,7 +376,7 @@ void Scene::handlePlantTree(double x_pos, double y_pos) {
 
 void Scene::plantTree(float x, float y, float z) {
     const auto* tree_model = ModelLoader::getInstance().loadModel("tree");
-    auto tree_obj = this->newObject(tree_model, glm::vec3(x, y, z), "blinn");
+    auto tree_obj = this->draftObject(tree_model, glm::vec3(x, y, z), "blinn");
     tree_obj->setProperties(glm::vec3(0.55, 0.75, 0.1),
                            glm::vec3(0.99, 0.15, 0.1),
                            2.5f);

@@ -245,8 +245,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     scene->appendLight(light_a);
 
     // sun
-    auto sun_obj = scene->newObject(lazyLoadModel("sphere"),
-                                    sun_pos, "blinn");
+    auto sun_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                      sun_pos, "blinn");
     sun_obj->setAmbient(glm::vec3(1.0, 0.35, 0.0));
     sun_obj->setScale(glm::vec3(20.f, 20.f, 20.f));
     sun_obj->setProperties(glm::vec3(1.0, 0.25, 0.0),
@@ -256,8 +256,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto sun_composite = std::make_unique<CentricComposite>(std::move(sun_obj));
 
     // mercury
-    auto mercury_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(3, 0, 0), "blinn", axis);
+    auto mercury_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                          glm::vec3(3, 0, 0), "blinn", axis);
     mercury_obj->setAmbient(glm::vec3(0.45, 0.45, 0.45));
     mercury_obj->setProperties(glm::vec3(0.15, 0.15, 0.15),
                                glm::vec3(1.0, 1.0, 1.0),
@@ -266,8 +266,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto mercury_composite = std::make_unique<CentricComposite>(std::move(mercury_obj));
 
     // venus
-    auto venus_obj = scene->newObject(lazyLoadModel("sphere"),
-                                      glm::vec3(6, 0, 0), "blinn", axis);
+    auto venus_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                        glm::vec3(6, 0, 0), "blinn", axis);
     venus_obj->setAmbient(glm::vec3(0.75, 0.75, 0.0));
     venus_obj->setProperties(glm::vec3(0.15, 0.15, 0.0),
                              glm::vec3(1.0, 1.0, 1.0),
@@ -276,8 +276,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto venus_composite = std::make_unique<CentricComposite>(std::move(venus_obj));
 
     // earth
-    auto earth_obj = scene->newObject(lazyLoadModel("sphere"),
-                                      glm::vec3(10, 0, 0), "blinn", axis);
+    auto earth_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                        glm::vec3(10, 0, 0), "blinn", axis);
     earth_obj->setAmbient(glm::vec3(0.0, 0.75, 1.0));
     earth_obj->setProperties(glm::vec3(0.0, 0.15, 1.0),
                              glm::vec3(1.0, 1.0, 1.0),
@@ -286,8 +286,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto earth_composite = std::make_unique<CentricComposite>(std::move(earth_obj));
 
     // moon
-    auto moon_obj = scene->newObject(lazyLoadModel("sphere"),
-                                     glm::vec3(2, 0, 0), "blinn", glm::vec3(0.0f, 1.0f, 1.0f));
+    auto moon_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                       glm::vec3(2, 0, 0), "blinn", glm::vec3(0.0f, 1.0f, 1.0f));
     moon_obj->setAmbient(glm::vec3(0.5, 0.5, 0.5));
     moon_obj->setProperties(glm::vec3(0.5, 0.5, 0.5),
                             glm::vec3(0.5, 0.5, 0.5),
@@ -296,8 +296,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto moon_leaf = std::make_unique<CentricModelLeaf>(std::move(moon_obj));
 
     // mars
-    auto mars_obj = scene->newObject(lazyLoadModel("sphere"),
-                                     glm::vec3(14, 0, 0), "blinn", axis);
+    auto mars_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                       glm::vec3(14, 0, 0), "blinn", axis);
     mars_obj->setAmbient(glm::vec3(0.7, 0.2, 0.0));
     mars_obj->setProperties(glm::vec3(0.8, 0.3, 0.0),
                             glm::vec3(1.0, 1.0, 1.0),
@@ -306,8 +306,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto mars_leaf = std::make_unique<CentricModelLeaf>(std::move(mars_obj));
 
     // jupiter
-    auto jupiter_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(18, 0, 0), "blinn", axis);
+    auto jupiter_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                          glm::vec3(18, 0, 0), "blinn", axis);
     jupiter_obj->setAmbient(glm::vec3(0.9, 0.7, 0.5));
     jupiter_obj->setProperties(glm::vec3(1.0, 0.8, 0.6),
                                glm::vec3(1.0, 1.0, 1.0),
@@ -316,8 +316,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto jupiter_leaf = std::make_unique<CentricModelLeaf>(std::move(jupiter_obj));
 
     // saturn
-    auto saturn_obj = scene->newObject(lazyLoadModel("sphere"),
-                                       glm::vec3(20, 0, 0), "blinn", axis);
+    auto saturn_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                         glm::vec3(20, 0, 0), "blinn", axis);
     saturn_obj->setAmbient(glm::vec3(0.8, 0.6, 0.2));
     saturn_obj->setProperties(glm::vec3(0.9, 0.7, 0.3),
                               glm::vec3(1.0, 1.0, 1.0),
@@ -326,8 +326,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto saturn_leaf = std::make_unique<CentricModelLeaf>(std::move(saturn_obj));
 
     // uranus
-    auto uranus_obj = scene->newObject(lazyLoadModel("sphere"),
-                                       glm::vec3(26, 0, 0), "blinn", axis);
+    auto uranus_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                         glm::vec3(26, 0, 0), "blinn", axis);
     uranus_obj->setAmbient(glm::vec3(0.4, 0.7, 0.7));
     uranus_obj->setProperties(glm::vec3(0.5, 0.8, 0.8),
                               glm::vec3(1.0, 1.0, 1.0),
@@ -336,8 +336,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
     auto uranus_leaf = std::make_unique<CentricModelLeaf>(std::move(uranus_obj));
 
     // neptune
-    auto neptune_obj = scene->newObject(lazyLoadModel("sphere"),
-                                        glm::vec3(32, 0, 0), "blinn", axis);
+    auto neptune_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                          glm::vec3(32, 0, 0), "blinn", axis);
     neptune_obj->setAmbient(glm::vec3(0.04, 0.18, 0.55));
     neptune_obj->setProperties(glm::vec3(0.05, 0.2, 0.6),
                                glm::vec3(1.0, 1.0, 1.0),
@@ -380,8 +380,8 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
         float z = asteroid_belt_radius * std::sin(angle);
         float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * (asteroid_belt_y_randomness) -
                   (asteroid_belt_y_randomness / 2.f);
-        auto asteroid_obj = scene->newObject(lazyLoadModel("sphere"),
-                                             glm::vec3(x, y, z), "constant", axis);
+        auto asteroid_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                               glm::vec3(x, y, z), "constant", axis);
         asteroid_obj->setAmbient(glm::vec3(0.5, 0.5, 0.5));
         asteroid_obj->setScale(glm::vec3(asteroid_belt_scale, asteroid_belt_scale, asteroid_belt_scale));
         auto asteroid_leaf = std::make_unique<CentricModelLeaf>(std::move(asteroid_obj));

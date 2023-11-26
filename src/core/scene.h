@@ -56,27 +56,24 @@ private:
     void deleteTargetObject();
 public:
     void setAmbient(const glm::vec3& ambient) { scene_ambient = ambient; }
-
     void assignShaderAlias(DrawableObject& object);
 
-    std::unique_ptr<DrawableObject> newObject(const Model* model_ptr,
-                                              const glm::vec3& position,
-                                              const std::string& shader_name);
-    std::unique_ptr<DrawableObject> newObject(const Model* model_ptr,
-                                              const glm::vec3& position,
-                                              const std::string& shader_name,
-                                              const glm::vec3& axis);
+    std::unique_ptr<DrawableObject> draftObject(const Model* model_ptr,
+                                                const glm::vec3& position,
+                                                const std::string& shader_name);
+    std::unique_ptr<DrawableObject> draftObject(const Model* model_ptr,
+                                                const glm::vec3& position,
+                                                const std::string& shader_name,
+                                                const glm::vec3& axis);
     DrawableObject& appendObject(const Model* model_ptr,
                                  const glm::vec3& position,
                                  const std::string& shader_name);
     DrawableObject& appendObject(std::unique_ptr<DrawableObject> object_ptr);
-
-    DrawableObject& assignSkybox(const Model* model_ptr);
-
     void appendAnimation(const std::shared_ptr<Animation>& animation);
-
     void appendLight(const Light& light);
     void appendLight(const std::shared_ptr<Light>& light);
+
+    DrawableObject& assignSkybox(const Model* model_ptr);
 public:
     Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height);
     ~Scene();
