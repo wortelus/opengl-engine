@@ -19,14 +19,16 @@ unyielding, using the scriptures of CMake.
 - [x] Point lights, directional lights and spotlights
 - [x] Dynamic shader loading
 - [x] Dynamic model loading
-- [x] Materials
+- [x] Materials, textures
 - [x] Global illumination, constant, Phong, Blinn-Phong point lights
 - [x] Multiple scenes
+- [x] Animations
+- [x] Object selection, deletion, creation in runtime
 
 ## Scenes
 - [x] Phong shader test
 - [x] Solar system with planets and moons
-- [x] Random scene with random objects
+- [x] Forest with trees and grass
 ______________________________________________________________________________________
 - [x] Phong creep specular test
 - [x] Directional and spotlight test
