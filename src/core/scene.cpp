@@ -154,12 +154,16 @@ void Scene::run() {
         // wipe the drawing surface clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         if (const auto& skybox = object_manager->getSkybox(); object_manager->hasSkybox()) {
+            if (CYCLE_CULL_FACE_SKYBOX)
+                glDisable(GL_CULL_FACE);
             glDisable(GL_DEPTH_TEST);
             Shader* sh = shader_loader->loadShader(skybox.getShaderAlias());
             skybox.notifyModelParameters();
             sh->lazyPassUniforms();
             skybox.draw();
             glEnable(GL_DEPTH_TEST);
+            if (CYCLE_CULL_FACE_SKYBOX)
+                glEnable(GL_CULL_FACE);
         }
 
         for (const auto object: *object_manager) {

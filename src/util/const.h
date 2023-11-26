@@ -15,7 +15,9 @@ using TEXTURE_ID = GLuint;
 using TEXTURE_UNIT = GLuint;
 using TEXTURE_TARGET = GLenum;
 
-inline constexpr bool ENABLE_CULL_FACE = false;
+inline constexpr bool CYCLE_CULL_FACE_SKYBOX = true;
+inline constexpr bool ENABLE_CULL_FACE = true;
+
 inline constexpr bool DISABLE_VSYNC = false;
 
 inline constexpr SHADER_ALIAS_DATATYPE SHADER_UNLOADED = (-1);
