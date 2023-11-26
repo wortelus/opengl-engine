@@ -96,10 +96,10 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     light_obj.setAmbient(glm::vec3(1.0, 0.75, 0.0));
 
 
-    auto wall_a_assets = lazyLoadModel("triangle_tex", "wood.png");
-    auto& wall_a = scene->appendObject(wall_a_assets.first,
+    auto [square_model, square_tex] = lazyLoadModel("square_uv", "wood.png");
+    auto& wall_a = scene->appendObject(square_model,
                                        glm::vec3(-4.f, 0.f, -5.f), "phong_tex");
-    wall_a.assignTexture(wall_a_assets.second);
+    wall_a.assignTexture(square_tex);
     wall_a.setProperties(glm::vec3(0.385, 0.647, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
@@ -107,18 +107,18 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     wall_a.setScale(glm::vec3(6.f, 6.f, 6.f));
 
 
-    auto& wall_b = scene->appendObject(wall_a_assets.first,
+    auto& wall_b = scene->appendObject(square_model,
                                        glm::vec3(6.f, 0.f, -8.f), "phong_tex");
-    wall_b.assignTexture(wall_a_assets.second);
+    wall_b.assignTexture(square_tex);
     wall_b.setProperties(glm::vec3(0.785, 0.9, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
     wall_b.rotate(glm::vec3(glm::vec3(30, 0, 0)));
     wall_b.setScale(glm::vec3(8.f, 8.f, 8.f));
 
-    auto& wall_c = scene->appendObject(wall_a_assets.first,
+    auto& wall_c = scene->appendObject(square_model,
                                        glm::vec3(12.f, 0.f, -3.f), "phong_tex");
-    wall_c.assignTexture(wall_a_assets.second);
+    wall_c.assignTexture(square_tex);
     wall_c.setProperties(glm::vec3(0.385, 0.647, 0.812),
                          glm::vec3(1.0, 1.0, 1.0),
                          32.f);
@@ -496,10 +496,10 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
                                                                                       0.15f);
     scene->appendLight(main_light);
 
-    auto plain_assets = lazyLoadModel("triangle_tex", "grass.png");
-    auto& plain_obj = scene->appendObject(plain_assets.first,
+    auto [square_model, square_tex] = lazyLoadModel("square_uv", "grass.png");
+    auto& plain_obj = scene->appendObject(square_model,
                                           glm::vec3(0.f, 0.f, 0.f), "phong_tex");
-    plain_obj.assignTexture(plain_assets.second);
+    plain_obj.assignTexture(square_tex);
     plain_obj.setProperties(glm::vec3(0.15, 0.45, 0.25),
                             glm::vec3(0.0, 0.0, 0.0),
                             10.f);

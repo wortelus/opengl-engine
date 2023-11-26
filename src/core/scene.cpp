@@ -19,8 +19,6 @@
 
 #include "scene.h"
 #include "loaders/model_loader.h"
-#include "../../assets/sphere.h"
-#include "../../assets/suzi_smooth.h"
 
 Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_width, const int& initial_height) :
         scene_id(id), window(&window_reference) {

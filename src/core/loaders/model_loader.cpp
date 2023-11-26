@@ -5,15 +5,15 @@
 #include <stdexcept>
 #include "model_loader.h"
 
-#include "../../../assets/bushes.h"
-#include "../../../assets/gift.h"
-#include "../../../assets/plain.h"
-#include "../../../assets/sphere.h"
-#include "../../../assets/suzi_flat.h"
-#include "../../../assets/suzi_smooth.h"
-#include "../../../assets/tree.h"
-#include "../../../assets/triangle_tex.h"
-#include "../../../assets/cube.h"
+#include "../../../assets/static/bushes.h"
+#include "../../../assets/static/gift.h"
+#include "../../../assets/static/plain.h"
+#include "../../../assets/static/sphere.h"
+#include "../../../assets/static/suzi_flat.h"
+#include "../../../assets/static/suzi_smooth.h"
+#include "../../../assets/static/tree.h"
+#include "../../../assets/static/square_uv.h"
+#include "../../../assets/static/cube.h"
 
 ModelLoader::~ModelLoader() {
     for (auto& model : model_repository) {
@@ -40,8 +40,8 @@ const Model* ModelLoader::loadModel(const ModelKey& model_key) {
         return loadModel(model_key, suziSmooth, sizeof(suziSmooth));
     } else if (strcmp(model_key.name, "tree") == 0) {
         return loadModel(model_key, tree, sizeof(tree));
-    } else if (strcmp(model_key.name, "triangle_tex") == 0) {
-        return loadModel(model_key, triangle, sizeof(triangle));
+    } else if (strcmp(model_key.name, "square_uv") == 0) {
+        return loadModel(model_key, square_uv, sizeof(square_uv));
     } else if (strcmp(model_key.name, "cube") == 0) {
         return loadModel(model_key, skycube, sizeof(skycube));
     } else {
