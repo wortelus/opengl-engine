@@ -39,6 +39,7 @@ add_executable(zpg src/main.cpp
         # models animations
         src/models/animations/animation.h
         src/models/animations/centric_model.h src/models/animations/centric_model.cpp
+        src/models/animations/cubic_bezier.h src/models/animations/cubic_bezier.cpp
         # shaders
         src/rendering/shaders/shader_loader.h src/rendering/shaders/shader_loader.cpp
         src/rendering/shaders/shader.h src/rendering/shaders/shader.cpp

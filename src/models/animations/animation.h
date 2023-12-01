@@ -24,4 +24,10 @@ public:
     virtual DrawableObject& getDrawableObject() = 0;
 };
 
+enum AnimationArgs {
+    RESTART = (1u << 0u),
+    CYCLE = (1u << 1u),
+};
+
+
 #endif //ZPG_ANIMATION_H
