@@ -29,6 +29,8 @@ inline constexpr char DEFAULT_SCENE = 0;
 
 inline constexpr glm::vec3 AMBIENT_LIGHT = glm::vec3(0.05f, 0.05f, 0.05f);
 
+inline constexpr float FRAME_TIME_MULTIPLIER = 300.f;
+
 // Mouse sensitivity for camera movement
 inline constexpr float MOVEMENT_SENSITIVITY = 0.5f;
 inline constexpr float MOUSE_SENSITIVITY = 0.5f;

@@ -138,11 +138,11 @@ void Scene::appendLight(const std::shared_ptr<Light>& light) {
 
 
 void Scene::run() {
-
+    last_frame_time = (float)glfwGetTime() * FRAME_TIME_MULTIPLIER;
     while (!is_finished) {
         this->prepareObjects();
 
-        auto current_frame_time = (float)glfwGetTime() * 300.0f;
+        auto current_frame_time = (float)glfwGetTime() * FRAME_TIME_MULTIPLIER;
         float delta_time = current_frame_time - last_frame_time;
         last_frame_time = current_frame_time;
 
