@@ -10,6 +10,7 @@
 #include "../../rendering/light/point_light.h"
 #include "texture_loader.h"
 #include "asset_loader.h"
+#include "../../models/animations/cubic_bezier.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -136,6 +137,19 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     auto& house = scene->appendObject(house_obj,
                                       glm::vec3(15.f, 0.f, 10.f), "phong_tex");
     house.assignTexture(house_tex);
+
+    auto sphere_bezier_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                             glm::vec3(0.f, 0.f, 0.f), "phong");
+    sphere_bezier_obj->setProperties(glm::vec3(0.185, 0.247, 0.812),
+                                glm::vec3(0.2, 0.8, 0.4),
+                                32.f);
+    std::unique_ptr<CubicBezier> sphere_bezier = std::make_unique<CubicBezier>(std::move(sphere_bezier_obj),
+                                            glm::mat4x3(glm::vec3(-10, 0, 0),
+                                                        glm::vec3(0, 10, 0),
+                                                        glm::vec3(0, -10, 0),
+                                                        glm::vec3(10, 0, 0)),
+                                            .001f, AnimationArgs::CYCLE);
+    scene->appendAnimation(std::move(sphere_bezier));
 
     auto reflector_pos = glm::vec3(-5.f, 0.f, 10.f);
     auto& reflector = scene->appendObject(lazyLoadModel("sphere"),
@@ -397,7 +411,7 @@ SceneLoader::loadSceneD(GLFWwindow& window_reference, const int& initial_width, 
 std::unique_ptr<Scene>
 SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, const int& initial_height) {
     std::unique_ptr<Scene> scene = std::make_unique<Scene>(2, window_reference, initial_width, initial_height);
-    auto [skybox_model, skybox_tex] = lazyLoadCubeMap("cube", "skybox", ".jpg");
+    auto [skybox_model, skybox_tex] = lazyLoadCubeMap("cube", "skybox_space", ".jpg");
     auto& skybox = scene->assignSkybox(skybox_model);
     skybox.assignTexture(skybox_tex);
     scene->setAmbient(glm::vec3(0, 0, 0));
@@ -491,20 +505,19 @@ SceneLoader::loadSceneE(GLFWwindow& window_reference, const int& initial_width, 
         }
     }
 
-    std::shared_ptr<DirectionalLight> main_light = std::make_unique<DirectionalLight>(glm::vec3(-1.f, -1.f, -1.f),
-                                                                                      glm::vec3(1.f, 0.75f, 0.75f),
-                                                                                      0.15f);
-    scene->appendLight(main_light);
+    //    std::shared_ptr<DirectionalLight> main_light = std::make_unique<DirectionalLight>(glm::vec3(-1.f, -1.f, -1.f),
+    //                                                                                      glm::vec3(1.f, 0.75f, 0.75f),
+    //                                                                                      0.15f);
+    //    scene->appendLight(main_light);
 
-    auto [square_model, square_tex] = lazyLoadModel("square_uv", "grass.png");
+    auto [square_model, _, square_tex] = lazyLoadAssetModel("plane_128.obj", "grass.png");
     auto& plain_obj = scene->appendObject(square_model,
                                           glm::vec3(0.f, 0.f, 0.f), "phong_tex");
     plain_obj.assignTexture(square_tex);
     plain_obj.setProperties(glm::vec3(0.15, 0.45, 0.25),
                             glm::vec3(0.0, 0.0, 0.0),
                             10.f);
-    plain_obj.scale(glm::vec3(128.f, 128.f, 1.f));
-    plain_obj.rotate(glm::vec3(-90.f, 0.f, 0.f));
+    plain_obj.scale(glm::vec3(128.f, 1.f, 128.f));
 
     return std::move(scene);
 }
