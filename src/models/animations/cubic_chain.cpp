@@ -6,20 +6,18 @@
 #include "cubic_chain.h"
 #include "cubic_bezier.h"
 
-CubicChain::CubicChain(std::unique_ptr<DrawableObject> object, const glm::vec3 initial_position, float speed,
+CubicChain::CubicChain(std::unique_ptr<DrawableObject> object, float speed,
                        AnimationArgs args)
         : object(std::move(object)), speed(speed), args(args), t(0.0f) {
     if (args & CYCLE)
         throw std::runtime_error("CubicChain::CubicChain: CYCLE is not supported");
 
-    control_points.push_back(initial_position);
+    control_points.push_back(this->object->getPosition());
 }
 
 void CubicChain::translate() {
-    if (control_points.size() < 4) {
-        this->object->setTranslate(control_points[0]);
+    if (control_points.size() < 4)
         return;
-    }
 
     int offset = current_control_point * 3;
     glm::mat4x3 points = glm::mat4x3(control_points[offset], control_points[offset + 1],

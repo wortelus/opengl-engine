@@ -34,11 +34,11 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     // note: this is just a test, this should be done in a better way
     // and importantly, in a better place
     const auto* bezier_model = ModelLoader::getInstance().loadModel("sphere");
-    auto bezier_obj = this->draftObject(bezier_model, glm::vec3(0, 2, -2), "blinn");
+    auto bezier_obj = this->draftObject(bezier_model, glm::vec3(-4, 1, 0), "blinn");
     bezier_obj->setProperties(glm::vec3(0.06, 0.75, 0.1),
                               glm::vec3(0.65, 0.84, 0.87),
                               18.5f);
-    std::shared_ptr<CubicChain> bezier_animation = std::make_shared<CubicChain>(std::move(bezier_obj), glm::vec3(-1, 0, 0), .001f, AnimationArgs::RESTART);
+    std::shared_ptr<CubicChain> bezier_animation = std::make_shared<CubicChain>(std::move(bezier_obj), .001f, AnimationArgs::RESTART);
     animation_manager->addAnimation(bezier_animation);
     bezier = bezier_animation.get();
     // ok, awkward part ends here, back to normal

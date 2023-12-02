@@ -21,7 +21,7 @@ private:
 private:
     void translate();
 public:
-    CubicChain(std::unique_ptr<DrawableObject> object, const glm::vec3 initial_position, float speed, AnimationArgs args);
+    CubicChain(std::unique_ptr<DrawableObject> object, float speed, AnimationArgs args);
     ~CubicChain() override = default;
 
     void addControlPoint(glm::mat3x3 control_point);
