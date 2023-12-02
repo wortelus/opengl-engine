@@ -146,33 +146,44 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     // Bezier test
     //
     auto sphere_bezier_obj = scene->draftObject(lazyLoadModel("sphere"),
-                                             glm::vec3(0.f, 0.f, 0.f), "phong");
+                                                glm::vec3(0.f, 0.f, 0.f), "phong");
     sphere_bezier_obj->setProperties(glm::vec3(0.185, 0.247, 0.812),
-                                glm::vec3(0.2, 0.8, 0.4),
-                                32.f);
+                                     glm::vec3(0.2, 0.8, 0.4),
+                                     32.f);
     std::unique_ptr<CubicBezier> sphere_bezier = std::make_unique<CubicBezier>(std::move(sphere_bezier_obj),
-                                            glm::mat4x3(glm::vec3(-10, 0, 0),
-                                                        glm::vec3(0, 10, 0),
-                                                        glm::vec3(0, -10, 0),
-                                                        glm::vec3(10, 0, 0)),
-                                            .001f, AnimationArgs::CYCLE);
+                                                                               glm::mat4x3(glm::vec3(-10, 0, 0),
+                                                                                           glm::vec3(0, 10, 0),
+                                                                                           glm::vec3(0, -10, 0),
+                                                                                           glm::vec3(10, 0, 0)),
+                                                                               .001f, AnimationArgs::CYCLE);
     scene->appendAnimation(std::move(sphere_bezier));
 
     //
     // Linear test
     //
     auto sphere_linear_obj = scene->draftObject(lazyLoadModel("sphere"),
-                                             glm::vec3(0.f, 0.f, 0.f), "phong");
+                                                glm::vec3(0.f, 0.f, 0.f), "phong");
 
     sphere_linear_obj->setProperties(glm::vec3(0.185, 0.247, 0.812),
-                                glm::vec3(0.2, 0.8, 0.4),
-                                32.f);
+                                     glm::vec3(0.2, 0.8, 0.4),
+                                     32.f);
     std::unique_ptr<Linear> sphere_linear = std::make_unique<Linear>(std::move(sphere_linear_obj),
-                                            glm::vec3(0, 0, 0),
-                                            glm::vec3(1, 1, 0),
-                                            10.f, .01f, AnimationArgs::CYCLE);
+                                                                     glm::vec3(0, 0, 0),
+                                                                     glm::vec3(1, 1, 0),
+                                                                     10.f, .01f, AnimationArgs::CYCLE);
     scene->appendAnimation(std::move(sphere_linear));
 
+
+    auto suzie_linear_obj = scene->draftObject(lazyLoadModel("suzi_smooth"),
+                                               glm::vec3(0.f, 0.f, 0.f), "phong");
+    suzie_linear_obj->setProperties(glm::vec3(0.867, 0.1, 0.1),
+                                    glm::vec3(0.8, 0.8, 0.5),
+                                    32.f);
+    std::unique_ptr<Linear> suzie_linear = std::make_unique<Linear>(std::move(suzie_linear_obj),
+                                                                    glm::vec3(0, 0, 0),
+                                                                    glm::vec3(-1, 1, 0),
+                                                                    10.f, .01f, AnimationArgs::RESTART);
+    scene->appendAnimation(std::move(suzie_linear));
 
 
     auto reflector_pos = glm::vec3(-5.f, 0.f, 10.f);
