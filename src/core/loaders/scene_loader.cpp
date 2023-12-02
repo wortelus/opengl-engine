@@ -155,7 +155,7 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
                                                                                            glm::vec3(0, 10, 0),
                                                                                            glm::vec3(0, -10, 0),
                                                                                            glm::vec3(10, 0, 0)),
-                                                                               .001f, AnimationArgs::CYCLE);
+                                                                               .0008f, AnimationArgs::CYCLE);
     scene->appendAnimation(std::move(sphere_bezier));
 
     //
@@ -170,7 +170,7 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     std::unique_ptr<Linear> sphere_linear = std::make_unique<Linear>(std::move(sphere_linear_obj),
                                                                      glm::vec3(0, 0, 0),
                                                                      glm::vec3(1, 1, 0),
-                                                                     10.f, .01f, AnimationArgs::CYCLE);
+                                                                     10.f, .015f, AnimationArgs::CYCLE);
     scene->appendAnimation(std::move(sphere_linear));
 
 
@@ -182,7 +182,7 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
     std::unique_ptr<Linear> suzie_linear = std::make_unique<Linear>(std::move(suzie_linear_obj),
                                                                     glm::vec3(0, 0, 0),
                                                                     glm::vec3(-1, 1, 0),
-                                                                    10.f, .01f, AnimationArgs::RESTART);
+                                                                    10.f, .005f, AnimationArgs::RESTART);
     scene->appendAnimation(std::move(suzie_linear));
 
 
