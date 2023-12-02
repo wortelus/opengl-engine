@@ -9,11 +9,12 @@
 #include "animation.h"
 
 class CubicBezier : public Animation {
-private:
+public:
     static constexpr glm::mat4 bezier_coefficients = glm::mat4(glm::vec4(-1.0, 3.0, -3.0, 1.0),
                                               glm::vec4(3.0, -6.0, 3.0, 0),
                                               glm::vec4(-3.0, 3.0, 0, 0),
                                               glm::vec4(1, 0, 0, 0));
+private:
     AnimationArgs args;
     const glm::mat4x3 control_points;
     float t = 0.0f;
