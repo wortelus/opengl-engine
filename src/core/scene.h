@@ -28,6 +28,7 @@
 #include "../rendering/light_manager.h"
 #include "../rendering/object_manager.h"
 #include "../rendering/animation_manager.h"
+#include "../models/animations/cubic_chain.h"
 
 class Scene {
 private:
@@ -47,6 +48,10 @@ private:
     double last_mouse_x = 0;
     double last_mouse_y = 0;
     float last_frame_time = 0.0f;
+
+    char mode = 't'; // t - tree planting, b - bezier adding
+    std::vector<glm::vec3> incomplete_bezier_points;
+    CubicChain* bezier;
 
     bool is_finished = false;
 private:
@@ -88,6 +93,8 @@ public:
 
     inline void continuousMovement(const float& delta_time);
     void update_aspect_ratio(const int& new_width, const int& new_height);
+
+    void handleBezier(double x_pos, double y_pos);
     void handlePlantTree(double x_pos, double y_pos);
 
     void handleKeyEventPress(int key, int scancode, int action, int mods);

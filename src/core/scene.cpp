@@ -30,6 +30,19 @@ Scene::Scene(const char& id, GLFWwindow& window_reference, const int& initial_wi
 void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     this->shader_loader = std::move(preloaded_shader_loader);
 
+    // create bezier
+    // note: this is just a test, this should be done in a better way
+    // and importantly, in a better place
+    const auto* bezier_model = ModelLoader::getInstance().loadModel("sphere");
+    auto bezier_obj = this->draftObject(bezier_model, glm::vec3(0, 0, 0), "blinn");
+    bezier_obj->setProperties(glm::vec3(0.55, 0.75, 0.1),
+                              glm::vec3(0.99, 0.15, 0.1),
+                              2.5f);
+    std::shared_ptr<CubicChain> bezier_animation = std::make_shared<CubicChain>(std::move(bezier_obj), glm::vec3(-1, 0, 0), .001f, AnimationArgs::RESTART);
+    animation_manager->addAnimation(bezier_animation);
+    bezier = bezier_animation.get();
+    // ok, awkward part ends here, back to normal
+
     // assign shader aliases for animations
     for (const auto object: *animation_manager) {
         animation_manager->applyAnimations([this](Animation* object) {
@@ -66,6 +79,7 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
         skybox.notifyMaterial();
     }
 
+    // create flashlight
     std::unique_ptr<Spotlight> flashlight = std::make_unique<Spotlight>(FLASHLIGHT);
     auto fl_id = light_manager.addLight(std::move(flashlight));
     auto fl = light_manager.getLight(fl_id);
@@ -255,6 +269,14 @@ void Scene::handleKeyEventPress(int key, int scancode, int action, int mods) {
         case GLFW_KEY_I:
             showBuffers(last_mouse_x, last_mouse_y);
             break;
+        case GLFW_KEY_B:
+            printf("Bezier mode\n");
+            mode = 'b';
+            break;
+        case GLFW_KEY_N:
+            printf("Tree mode\n");
+            mode = 't';
+            break;
         case GLFW_KEY_O:
             deleteTargetObject();
             break;
@@ -324,7 +346,10 @@ void Scene::handleMouseButtonEventRelease(int button, int action, int mods) {
             right_mouse_button_pressed = false;
             break;
         case GLFW_MOUSE_BUTTON_LEFT:
-            handlePlantTree(last_mouse_x, last_mouse_y);
+            if (mode == 't')
+                handlePlantTree(last_mouse_x, last_mouse_y);
+            else if (mode == 'b')
+                handleBezier(last_mouse_x, last_mouse_y);
         default:
             break;
     }
@@ -344,8 +369,13 @@ void Scene::showBuffers(double x_pos, double y_pos) {
     glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
     glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
 
+    glm::vec3 screenX = glm::vec3(x, new_y, depth);
+    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
+    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+
     printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
            x, y, color[0], color[1], color[2], color[3], depth, index);
+    printf("World coordinates: %f, %f, %f\n", pos.x, pos.y, pos.z);
 }
 
 char Scene::getStencilIndex(double x_pos, double y_pos) {
@@ -357,6 +387,40 @@ char Scene::getStencilIndex(double x_pos, double y_pos) {
 
     glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
     return static_cast<char>(index);
+}
+
+void Scene::handleBezier(double x_pos, double y_pos) {
+    if (bezier == nullptr)
+        return;
+
+
+    GLfloat depth;
+
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = camera->getHeight() - y;
+
+    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+
+    glm::vec3 screenX = glm::vec3(x, new_y, depth);
+    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
+    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+
+    glm::vec3 ground_pos = glm::vec3(pos.x, 0, pos.z);
+    incomplete_bezier_points.push_back(ground_pos);
+
+    if (incomplete_bezier_points.size() == 3) {
+        glm::mat3x3 points = glm::mat3x3(
+                incomplete_bezier_points[0],
+                incomplete_bezier_points[1],
+                incomplete_bezier_points[2]
+        );
+        bezier->addControlPoint(points);
+        incomplete_bezier_points.clear();
+        printf("Next bezier points added");
+    } else {
+        printf("%zu/3 bezier points added\n", incomplete_bezier_points.size());
+    }
 }
 
 void Scene::handlePlantTree(double x_pos, double y_pos) {
