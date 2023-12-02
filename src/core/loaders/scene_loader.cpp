@@ -5,12 +5,16 @@
 #include "scene_loader.h"
 
 #include <cmath>
-#include "../../models/animations/centric_model.h"
+// loaders
 #include "model_loader.h"
-#include "../../rendering/light/point_light.h"
 #include "texture_loader.h"
 #include "asset_loader.h"
+// animation types
 #include "../../models/animations/cubic_bezier.h"
+#include "../../models/animations/linear.h"
+// other
+#include "../../models/animations/centric_model.h"
+#include "../../rendering/light/point_light.h"
 
 std::unique_ptr<Scene> SceneLoader::loadScene(int* scene_id, GLFWwindow& window_reference, const int& initial_width,
                                               const int& initial_height) {
@@ -138,6 +142,9 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
                                       glm::vec3(15.f, 0.f, 10.f), "phong_tex");
     house.assignTexture(house_tex);
 
+    //
+    // Bezier test
+    //
     auto sphere_bezier_obj = scene->draftObject(lazyLoadModel("sphere"),
                                              glm::vec3(0.f, 0.f, 0.f), "phong");
     sphere_bezier_obj->setProperties(glm::vec3(0.185, 0.247, 0.812),
@@ -150,6 +157,23 @@ SceneLoader::loadSceneB(GLFWwindow& window_reference, const int& initial_width, 
                                                         glm::vec3(10, 0, 0)),
                                             .001f, AnimationArgs::CYCLE);
     scene->appendAnimation(std::move(sphere_bezier));
+
+    //
+    // Linear test
+    //
+    auto sphere_linear_obj = scene->draftObject(lazyLoadModel("sphere"),
+                                             glm::vec3(0.f, 0.f, 0.f), "phong");
+
+    sphere_linear_obj->setProperties(glm::vec3(0.185, 0.247, 0.812),
+                                glm::vec3(0.2, 0.8, 0.4),
+                                32.f);
+    std::unique_ptr<Linear> sphere_linear = std::make_unique<Linear>(std::move(sphere_linear_obj),
+                                            glm::vec3(0, 0, 0),
+                                            glm::vec3(1, 1, 0),
+                                            10.f, .01f, AnimationArgs::CYCLE);
+    scene->appendAnimation(std::move(sphere_linear));
+
+
 
     auto reflector_pos = glm::vec3(-5.f, 0.f, 10.f);
     auto& reflector = scene->appendObject(lazyLoadModel("sphere"),
