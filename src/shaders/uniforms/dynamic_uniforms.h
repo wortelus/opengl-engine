@@ -8,15 +8,15 @@
 #include <array>
 #include <memory>
 #include <stdexcept>
-#include "../../../models/properties/material.h"
-#include "../../../util/const.h"
-#include "../../light/light.h"
-#include "../../light/point_light.h"
-#include "../../light/directional_light.h"
-#include "../../light/spotlight.h"
+#include "../../models/properties/material.h"
+#include "../../util/const.h"
+#include "../../rendering/light/light.h"
+#include "../../rendering/light/point_light.h"
+#include "../../rendering/light/directional_light.h"
+#include "../../rendering/light/spotlight.h"
 #include "uniforms.h"
-#include "../../../util/event_args.h"
-#include "../../../util/const_lights.h"
+#include "../../util/event_args.h"
+#include "../../util/const_lights.h"
 
 class DynamicUniforms {
 public:

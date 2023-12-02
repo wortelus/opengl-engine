@@ -18,11 +18,11 @@
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 #include <memory>
 
-#include "../../util/observer.h"
-#include "../../util/const.h"
+#include "../util/observer.h"
+#include "../util/const.h"
 
 #include "uniforms/shader_uniforms.h"
-#include "../light/light.h"
+#include "../rendering/light/light.h"
 #include "uniforms/dynamic_uniforms.h"
 
 enum class ShaderType {

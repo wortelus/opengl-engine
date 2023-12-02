@@ -6,7 +6,7 @@
 #define ZPG_OBJECT_MANAGER_H
 
 #include "../models/drawable.h"
-#include "shaders/shader_loader.h"
+#include "../shaders/shader_loader.h"
 
 class ObjectManager {
 private:

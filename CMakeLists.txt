@@ -43,8 +43,8 @@ add_executable(zpg src/main.cpp
         src/models/animations/cubic_chain.h src/models/animations/cubic_chain.cpp
         src/models/animations/linear.h src/models/animations/linear.cpp
         # shaders
-        src/rendering/shaders/shader_loader.h src/rendering/shaders/shader_loader.cpp
-        src/rendering/shaders/shader.h src/rendering/shaders/shader.cpp
+        src/shaders/shader_loader.h src/shaders/shader_loader.cpp
+        src/shaders/shader.h src/shaders/shader.cpp
         # camera
         src/rendering/camera.h src/rendering/camera.cpp
         # light
@@ -60,9 +60,9 @@ add_executable(zpg src/main.cpp
         src/transform/transform.h src/transform/transform.cpp
         src/transform/transform_composite.h src/transform/transform_composite.cpp
         # shader uniforms
-        src/rendering/shaders/uniforms/uniforms.h src/rendering/shaders/uniforms/uniforms.cpp
-        src/rendering/shaders/uniforms/shader_uniforms.h src/rendering/shaders/uniforms/shader_uniforms.cpp
-        src/rendering/shaders/uniforms/dynamic_uniforms.h src/rendering/shaders/uniforms/dynamic_uniforms.cpp
+        src/shaders/uniforms/uniforms.h src/shaders/uniforms/uniforms.cpp
+        src/shaders/uniforms/shader_uniforms.h src/shaders/uniforms/shader_uniforms.cpp
+        src/shaders/uniforms/dynamic_uniforms.h src/shaders/uniforms/dynamic_uniforms.cpp
         )
 
 target_link_libraries(zpg ${OPENGL_LIBRARIES} ${SOIL_LIBRARY} glfw glm::glm GLEW::GLEW assimp::assimp)

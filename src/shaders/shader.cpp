@@ -18,7 +18,7 @@
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 
 #include "shader.h"
-#include "../light/point_light.h"
+#include "../rendering/light/point_light.h"
 
 
 void Shader::load() {

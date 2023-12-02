@@ -21,7 +21,7 @@
 
 #include <memory>
 #include <vector>
-#include "../rendering/shaders/shader_loader.h"
+#include "../shaders/shader_loader.h"
 #include "../models/drawable.h"
 #include "../rendering/camera.h"
 #include "../rendering/light/light.h"

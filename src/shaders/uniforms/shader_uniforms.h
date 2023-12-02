@@ -9,9 +9,9 @@
 #include <memory>
 #include "glm/ext/matrix_float4x4.hpp"
 
-#include "../../light/light.h"
-#include "../../../models/properties/material.h"
-#include "../../../util/event_args.h"
+#include "../../rendering/light/light.h"
+#include "../../models/properties/material.h"
+#include "../../util/event_args.h"
 #include "uniforms.h"
 
 struct ShaderUniforms {
