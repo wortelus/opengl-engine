@@ -23,6 +23,7 @@ unyielding, using the scriptures of CMake.
 - [x] Global illumination, constant, Phong, Blinn-Phong point lights
 - [x] Multiple scenes
 - [x] Animations
+- [x] Bézier curve, Bézier chain, Linear animations with different modes
 - [x] Object selection, deletion, creation in runtime
 
 ## Scenes
@@ -84,6 +85,10 @@ turning lines of text into a mosaic of pixels and logic, painting stories in rea
 
 ### Scene selection
 - **F2** for the next scene
+
+### Interaction modes
+- **N** for the tree plantation mode _(default)_
+- **B** for the Bézier curve positioning mode
 
 ## Tablets of Future Endeavors
 - Observer on transformations is currently not used.
