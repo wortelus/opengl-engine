@@ -34,10 +34,10 @@ void Scene::init(std::shared_ptr<ShaderLoader> preloaded_shader_loader) {
     // note: this is just a test, this should be done in a better way
     // and importantly, in a better place
     const auto* bezier_model = ModelLoader::getInstance().loadModel("sphere");
-    auto bezier_obj = this->draftObject(bezier_model, glm::vec3(0, 0, 0), "blinn");
-    bezier_obj->setProperties(glm::vec3(0.55, 0.75, 0.1),
-                              glm::vec3(0.99, 0.15, 0.1),
-                              2.5f);
+    auto bezier_obj = this->draftObject(bezier_model, glm::vec3(0, 2, -2), "blinn");
+    bezier_obj->setProperties(glm::vec3(0.06, 0.75, 0.1),
+                              glm::vec3(0.65, 0.84, 0.87),
+                              18.5f);
     std::shared_ptr<CubicChain> bezier_animation = std::make_shared<CubicChain>(std::move(bezier_obj), glm::vec3(-1, 0, 0), .001f, AnimationArgs::RESTART);
     animation_manager->addAnimation(bezier_animation);
     bezier = bezier_animation.get();
@@ -406,8 +406,7 @@ void Scene::handleBezier(double x_pos, double y_pos) {
     glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
     glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
 
-    glm::vec3 ground_pos = glm::vec3(pos.x, 0, pos.z);
-    incomplete_bezier_points.push_back(ground_pos);
+    incomplete_bezier_points.push_back(pos);
 
     if (incomplete_bezier_points.size() == 3) {
         glm::mat3x3 points = glm::mat3x3(
@@ -417,7 +416,7 @@ void Scene::handleBezier(double x_pos, double y_pos) {
         );
         bezier->addControlPoint(points);
         incomplete_bezier_points.clear();
-        printf("Next bezier points added");
+        printf("Next bezier points added\n");
     } else {
         printf("%zu/3 bezier points added\n", incomplete_bezier_points.size());
     }

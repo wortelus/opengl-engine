@@ -17,7 +17,7 @@ CubicChain::CubicChain(std::unique_ptr<DrawableObject> object, const glm::vec3 i
 
 void CubicChain::translate() {
     if (control_points.size() < 4) {
-        this->object->translate(control_points[0]);
+        this->object->setTranslate(control_points[0]);
         return;
     }
 
