@@ -57,7 +57,6 @@ private:
 private:
     void plantTree(float x, float y, float z);
     void showBuffers(double x_pos, double y_pos);
-    char getStencilIndex(double x_pos, double y_pos);
     void deleteTargetObject();
 public:
     void setAmbient(const glm::vec3& ambient) { scene_ambient = ambient; }

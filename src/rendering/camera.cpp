@@ -140,3 +140,40 @@ void Camera::notifyFlashlight() {
 void Camera::setFlashlight(const std::weak_ptr<Spotlight>& weak_flashlight) {
     this->flashlight = weak_flashlight;
 }
+
+glm::vec4 Camera::getColorBuffer(double x_ps, double y_pos) const {
+    auto x = static_cast<GLint>(x_ps);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = this->getHeight() - y;
+    unsigned char data[4];
+    glReadPixels(x, new_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    return {data[0], data[1], data[2], data[3]};
+}
+
+float Camera::getDepthBuffer(double x_pos, double y_pos) const {
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = this->getHeight() - y;
+    float data;
+    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &data);
+    return data;
+}
+
+char Camera::getStencilBuffer(double x_pos, double y_pos) const {
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = this->getHeight() - y;
+    char data;
+    glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_BYTE, &data);
+    return data;
+}
+
+glm::vec3 Camera::getWorldPosition(double x_pos, double y_pos, float depth) const {
+    auto x = static_cast<GLint>(x_pos);
+    auto y = static_cast<GLint>(y_pos);
+    int new_y = this->getHeight() - y;
+
+    glm::vec3 screenX = glm::vec3(x, new_y, depth);
+    glm::vec4 viewPort = glm::vec4(0, 0, this->getWidth(), this->getHeight());
+    return glm::unProject(screenX, this->getView(), this->getProjection(), viewPort);
+}

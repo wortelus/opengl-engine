@@ -62,6 +62,11 @@ public:
 
     [[nodiscard]] double getMouseX() const { return mouse_x; }
     [[nodiscard]] double getMouseY() const { return mouse_y; }
+
+    [[nodiscard]] glm::vec4 getColorBuffer(double x_ps, double y_pos) const;
+    [[nodiscard]] float getDepthBuffer(double x_pos, double y_pos) const;
+    [[nodiscard]] char getStencilBuffer(double x_pos, double y_pos) const;
+    [[nodiscard]] glm::vec3 getWorldPosition(double x_pos, double y_pos, float depth) const;
     void setMouseXY(const double& x, const double& y) { mouse_x = x; mouse_y = y; }
 
     [[nodiscard]] int getWidth() const { return width; }

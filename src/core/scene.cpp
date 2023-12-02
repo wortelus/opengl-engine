@@ -356,55 +356,22 @@ void Scene::handleMouseButtonEventRelease(int button, int action, int mods) {
 }
 
 void Scene::showBuffers(double x_pos, double y_pos) {
-    GLbyte color[4];
-    GLfloat depth;
-    GLuint index;
+    glm::vec4 color = camera->getColorBuffer(x_pos, y_pos);
+    float depth = camera->getDepthBuffer(x_pos, y_pos);
+    char index = camera->getStencilBuffer(x_pos, y_pos);
+    glm::vec3 pos = camera->getWorldPosition(x_pos, y_pos, depth);
 
-    auto x = static_cast<GLint>(x_pos);
-    auto y = static_cast<GLint>(y_pos);
-
-    int new_y = camera->getHeight() - y;
-
-    glReadPixels(x, new_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-    glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
-
-    glm::vec3 screenX = glm::vec3(x, new_y, depth);
-    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
-    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
-
-    printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
-           x, y, color[0], color[1], color[2], color[3], depth, index);
+    printf("Clicked on pixel %f, %f, color (%.0f,%.0f,%.0f,%.0f), depth %f, stencil index %u\n",
+           x_pos, y_pos, color[0], color[1], color[2], color[3], depth, index);
     printf("World coordinates: %f, %f, %f\n", pos.x, pos.y, pos.z);
-}
-
-char Scene::getStencilIndex(double x_pos, double y_pos) {
-    GLuint index;
-
-    auto x = static_cast<GLint>(x_pos);
-    auto y = static_cast<GLint>(y_pos);
-    int new_y = camera->getHeight() - y;
-
-    glReadPixels(x, new_y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
-    return static_cast<char>(index);
 }
 
 void Scene::handleBezier(double x_pos, double y_pos) {
     if (bezier == nullptr)
         return;
 
-
-    GLfloat depth;
-
-    auto x = static_cast<GLint>(x_pos);
-    auto y = static_cast<GLint>(y_pos);
-    int new_y = camera->getHeight() - y;
-
-    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-
-    glm::vec3 screenX = glm::vec3(x, new_y, depth);
-    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
-    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+    float depth = camera->getDepthBuffer(x_pos, y_pos);
+    glm::vec3 pos = camera->getWorldPosition(x_pos, y_pos, depth);
 
     incomplete_bezier_points.push_back(pos);
 
@@ -423,17 +390,8 @@ void Scene::handleBezier(double x_pos, double y_pos) {
 }
 
 void Scene::handlePlantTree(double x_pos, double y_pos) {
-    GLfloat depth;
-
-    auto x = static_cast<GLint>(x_pos);
-    auto y = static_cast<GLint>(y_pos);
-    int new_y = camera->getHeight() - y;
-
-    glReadPixels(x, new_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-
-    glm::vec3 screenX = glm::vec3(x, new_y, depth);
-    glm::vec4 viewPort = glm::vec4(0, 0, camera->getWidth(), camera->getHeight());
-    glm::vec3 pos = glm::unProject(screenX, camera->getView(), camera->getProjection(), viewPort);
+    float depth = camera->getDepthBuffer(x_pos, y_pos);
+    glm::vec3 pos = camera->getWorldPosition(x_pos, y_pos, depth);
 
     plantTree(pos.x, 0, pos.z);
     printf("Tree planted at %f, %f, %f\n", pos.x, 0., pos.z);
@@ -453,7 +411,7 @@ void Scene::plantTree(float x, float y, float z) {
 }
 
 void Scene::deleteTargetObject() {
-    char id = getStencilIndex(last_mouse_x, last_mouse_y);
+    char id = camera->getStencilBuffer(last_mouse_x, last_mouse_y);
     if (id != 0) {
         object_manager->deleteByInteractID(id);
         printf("Object with id %d deleted\n", id);
