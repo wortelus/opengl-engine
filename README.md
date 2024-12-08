@@ -7,9 +7,6 @@ testament for the course **Principles of Computer Graphics**.
 "Let there be a 3D realm," it was decreed, and thus, using the sacred 
 tools of OpenGL and GLSL, a scene was birthed.
 
-Crafted upon the foundation of Debian 12 bookworm, the steadfast and 
-unyielding, using the scriptures of CMake.
-
 ## Current state
 - [x] Camera
 - [x] Transformations
@@ -34,16 +31,11 @@ ________________________________________________________________________________
 - [x] Phong creep specular test
 - [x] Directional and spotlight test
 
-## Sacred Scripts of Luminescence
-- **Constant**: The foundational beacon, it emanates unwavering light, 
-gracing every form with steadfast illumination.
-- **Lambert**: Echoing the wisdom of yore, it scatters diffuse 
-reflections with equanimity, painting every crevice and crest with its gentle touch.
-- **Phong**: Renowned as the luminary elite, it ushers in a dance of specular 
-reflections, lending a glint reminiscent of stars. 
-- **Blinn-Phong**: An evolved descendant of Phong, it merges 
-the essence of view and light, casting reflections that dazzle 
-with a sophistication only matched by its predecessors.
+## Sacred GLSL Scripts of Luminescence
+- **Constant**
+- **Lambert**
+- **Phong**
+- **Blinn-Phong**
 
 ## Building the Shrine
 1. **Invoking the Oracle, `CMake`**
@@ -106,6 +98,6 @@ We call globally directly in scene all transformation operations (*no notify*).
 - [libassimp-dev](https://www.assimp.org/) - *5.2.5~ds0-1+b1*
 
 ## Seek the Scribe
-Daniel Slavík, _known in revered circles as wortelus_, keeper of the chronicles.
+Daniel Slavík, keeper of the chronicles.
 
 [The digital temple - wortelus.eu](https://www.wortelus.eu) 
